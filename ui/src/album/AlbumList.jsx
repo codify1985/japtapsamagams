@@ -16,7 +16,7 @@ import {
   useRefresh,
   useTranslate,
   useVersion,
-  useListContext
+  useListContext,
 } from 'react-admin'
 import FavoriteIcon from '@material-ui/icons/Favorite'
 import { withWidth } from '@material-ui/core'
@@ -46,7 +46,7 @@ const useChipStyles = makeStyles({
   },
 })
 
-const useFilterStyles = makeStyles(theme => ({
+const useFilterStyles = makeStyles((theme) => ({
   form: {
     // desktop layout
     display: 'flex',
@@ -58,7 +58,7 @@ const useFilterStyles = makeStyles(theme => ({
     '& .MuiFormControl-marginDense': { margin: 0 },
     '& .MuiInputBase-root': { margin: 0 },
 
-     [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('sm')]: {
       // stack and add padding so the first row clears the sticky toolbar
       paddingTop: theme.spacing(1.5),
       paddingLeft: theme.spacing(2),
@@ -68,14 +68,17 @@ const useFilterStyles = makeStyles(theme => ({
         width: '100%',
         margin: 0,
       },
-     },
+    },
   },
 }))
 
-
-
 // Reusable YearDropdown that works with react-admin Filter/FilterButton
-const YearDropdown = ({ source = 'year', alwaysOn = true, fullWidth, ...rest }) => {
+const YearDropdown = ({
+  source = 'year',
+  alwaysOn = true,
+  fullWidth,
+  ...rest
+}) => {
   const yearChoices = React.useMemo(() => {
     const currentYear = new Date().getFullYear()
     const choices = [{ id: '', name: 'All' }]
@@ -85,7 +88,7 @@ const YearDropdown = ({ source = 'year', alwaysOn = true, fullWidth, ...rest }) 
     return choices
   }, [])
 
-  console.log('YearDropdown fullWidth', fullWidth);
+  console.log('YearDropdown fullWidth', fullWidth)
 
   return (
     <SelectInput
@@ -105,32 +108,45 @@ const YearDropdown = ({ source = 'year', alwaysOn = true, fullWidth, ...rest }) 
   )
 }
 
-
-
-
 const AlbumFilter = (props) => {
- const chipClasses = useChipStyles()
- const filterClasses = useFilterStyles()
- const theme = useTheme()
- const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
+  const chipClasses = useChipStyles()
+  const filterClasses = useFilterStyles()
+  const theme = useTheme()
+  const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
 
   const translate = useTranslate()
   const { permissions } = usePermissions()
   const isAdmin = permissions === 'admin'
 
-  console.log('isSmall', isSmall, filterClasses.form);
+  console.log('isSmall', isSmall, filterClasses.form)
 
   return (
-      <Filter {...props} variant="outlined" classes={{ form: filterClasses.form }}>
-        <YearDropdown key="year" source="year" alwaysOn fullWidth={isSmall} margin="dense" />
-        <SearchInput id="search" source="name" alwaysOn fullWidth={isSmall} margin="dense" />
-        <ReferenceInput
-          label={translate('resources.album.fields.artist')}
-          source="artist_id"
-          reference="artist"
-          sort={{ field: 'name', order: 'ASC' }}
-          filterToQuery={(searchText) => ({ name: [searchText] })}
-        >
+    <Filter
+      {...props}
+      variant="outlined"
+      classes={{ form: filterClasses.form }}
+    >
+      <YearDropdown
+        key="year"
+        source="year"
+        alwaysOn
+        fullWidth={isSmall}
+        margin="dense"
+      />
+      <SearchInput
+        id="search"
+        source="name"
+        alwaysOn
+        fullWidth={isSmall}
+        margin="dense"
+      />
+      <ReferenceInput
+        label={translate('resources.album.fields.artist')}
+        source="artist_id"
+        reference="artist"
+        sort={{ field: 'name', order: 'ASC' }}
+        filterToQuery={(searchText) => ({ name: [searchText] })}
+      >
         <AutocompleteInput emptyText="-- None --" />
       </ReferenceInput>
       <ReferenceArrayInput
@@ -264,17 +280,16 @@ const AlbumList = (props) => {
     .replace(/^\/album/, '')
     .replace(/^\//, '')
 
-  
   // // Transform yearFilter to year for backend
   const transformFilters = (filters) => {
     const { yearFilter, ...otherFilters } = filters
-    
+
     if (yearFilter && yearFilter !== '') {
       return { ...otherFilters, year: yearFilter }
     }
-    
+
     return otherFilters
-  }  
+  }
 
   // Workaround to force album columns to appear the first time.
   // See https://github.com/navidrome/navidrome/pull/923#issuecomment-833004842
@@ -333,8 +348,6 @@ const AlbumList = (props) => {
     </>
   )
 }
-
-
 
 const AlbumListWithWidth = withWidth()(AlbumList)
 
