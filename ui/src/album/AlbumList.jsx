@@ -6,7 +6,6 @@ import {
   AutocompleteInput,
   Filter,
   NullableBooleanInput,
-  //NumberInput,
   Pagination,
   ReferenceArrayInput,
   ReferenceInput,
@@ -16,7 +15,6 @@ import {
   useRefresh,
   useTranslate,
   useVersion,
-  useListContext,
 } from 'react-admin'
 import FavoriteIcon from '@material-ui/icons/Favorite'
 import { withWidth } from '@material-ui/core'
@@ -81,7 +79,7 @@ const YearDropdown = ({
 }) => {
   const yearChoices = React.useMemo(() => {
     const currentYear = new Date().getFullYear()
-    const choices = [{ id: '', name: 'All' }]
+    const choices = []
     for (let y = currentYear; y >= 2009; y--) {
       choices.push({ id: y, name: String(y) })
     }
@@ -93,13 +91,15 @@ const YearDropdown = ({
       source={source}
       alwaysOn={alwaysOn}
       choices={yearChoices}
-      label="Year"
-      //style={{ minWidth: 140 }}
+      label="All Years"
+      emptyText="All" // single empty option labeled "All"
+      emptyValue="" // value for empty option
       margin="dense"
       fullWidth={fullWidth}
       style={fullWidth ? { marginTop: 10 } : { minWidth: 140 }}
-      // Keep "All" while no filter is applied; numbers when selected
-      format={(v) => (v == null ? '' : String(v))}
+      // undefined/null in form -> show empty option ("All")
+      format={(v) => (v == null ? '' : v)}
+      // selecting "All" -> remove filter; selecting year -> ensure number
       parse={(v) => (v === '' ? undefined : Number(v))}
       {...rest}
     />
