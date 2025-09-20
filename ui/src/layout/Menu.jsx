@@ -5,12 +5,34 @@ import clsx from 'clsx'
 import { useTranslate, MenuItemLink, getResources } from 'react-admin'
 import ViewListIcon from '@material-ui/icons/ViewList'
 import AlbumIcon from '@material-ui/icons/Album'
+import MusicNoteIcon from '@material-ui/icons/MusicNote'
 import SubMenu from './SubMenu'
 import { humanize, pluralize } from 'inflection'
 import albumLists from '../album/albumLists'
 import PlaylistsSubMenu from './PlaylistsSubMenu'
 import LibrarySelector from '../common/LibrarySelector'
 import config from '../config'
+
+// Added new Default Library Song Lists here
+const songLists = {
+  all: {
+    params: 'sort=title&order=ASC&page=1&perPage=36&filter={}',
+  },
+  recentKirtan: {
+    params: 'sort=createdAt&order=DESC&page=1&perPage=36&filter={}',
+  },
+  starred: {
+    params:
+      'displayedFilters={"starred":true}&filter={"starred":true}&order=ASC&page=1&perPage=15&sort=title',
+  },
+  simran: {
+    params:
+      'displayedFilters={}&filter={"title":"simran"}&order=ASC&page=1&perPage=15&sort=title',
+  },
+}
+
+// Hide specific root-level resources from the song list
+const HIDE_ROOT_RESOURCES = new Set(['song', 'share'])
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,6 +79,7 @@ const Menu = ({ dense = false }) => {
   const [state, setState] = useState({
     menuAlbumList: true,
     menuPlaylists: true,
+    menuSongList: true, // NEW
     menuSharedPlaylists: true,
   })
 
@@ -102,6 +125,36 @@ const Menu = ({ dense = false }) => {
     )
   }
 
+  // Helper to render a song list item
+  const defaultSongParams =
+    'displayedFilters={}&filter={}&order=ASC&page=1&perPage=36&sort=title'
+
+  const renderSongMenuItemLink = (type) => {
+    const resource = resources.find((r) => r.name === 'song')
+    if (!resource) return null
+
+    // Use the params from songLists (starred, simran, etc.)
+    const params = songLists[type]?.params || defaultSongParams
+    const to = `/song/${type}?${params}` // <-- append params directly
+
+    const name = translate(`resources.song.lists.${type}`, {
+      _: translatedResourceName(resource, translate),
+    })
+
+    return (
+      <MenuItemLink
+        key={to}
+        to={to}
+        activeClassName={classes.active}
+        primaryText={name}
+        leftIcon={resource?.icon || <MusicNoteIcon />}
+        sidebarIsOpen={open}
+        dense={dense}
+        exact
+      />
+    )
+  }
+
   const subItems = (subMenu) => (resource) =>
     resource.hasList && resource.options && resource.options.subMenu === subMenu
 
@@ -125,7 +178,22 @@ const Menu = ({ dense = false }) => {
           renderAlbumMenuItemLink(type, albumLists[type]),
         )}
       </SubMenu>
-      {resources.filter(subItems(undefined)).map(renderResourceMenuItemLink)}
+      <SubMenu
+        handleToggle={() => handleToggle('menuSongList')}
+        isOpen={state.menuSongList}
+        sidebarIsOpen={open}
+        name="menu.songList"
+        icon={<AlbumIcon />}
+        dense={dense}
+      >
+        {Object.keys(songLists).map((type) => renderSongMenuItemLink(type))}
+      </SubMenu>
+      {/* {resources.filter(subItems(undefined)).map(renderResourceMenuItemLink)} */}
+      {/* Generic root resources, excluding song and share */}
+      {resources
+        .filter(subItems(undefined))
+        .filter((r) => !HIDE_ROOT_RESOURCES.has(r.name))
+        .map(renderResourceMenuItemLink)}
       {config.devSidebarPlaylists && open ? (
         <>
           <Divider />

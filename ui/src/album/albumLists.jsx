@@ -25,10 +25,11 @@ const albumLists = {
     ),
     params: 'sort=name&order=ASC&filter={}',
   },
-  random: {
-    icon: <ShuffleIcon />,
-    params: 'sort=random&order=ASC&filter={}',
-  },
+  // Commented out Random from Samagams Submenu
+  // random: {
+  //   icon: <ShuffleIcon />,
+  //   params: 'sort=random&order=ASC&filter={}',
+  // },
   ...(config.enableFavourites && {
     starred: {
       icon: (
@@ -63,20 +64,21 @@ const albumLists = {
     ),
     params: 'sort=recently_added&order=DESC&filter={}',
   },
-  recentlyPlayed: {
-    icon: (
-      <DynamicMenuIcon
-        path={'album/recentlyPlayed'}
-        icon={VideoLibraryOutlinedIcon}
-        activeIcon={VideoLibraryIcon}
-      />
-    ),
-    params: 'sort=play_date&order=DESC&filter={"recently_played":true}',
-  },
-  mostPlayed: {
-    icon: <RepeatIcon />,
-    params: 'sort=play_count&order=DESC&filter={"recently_played":true}',
-  },
+  // Commented out Recently Played and Most Played from Samagams Submenu
+  // recentlyPlayed: {
+  //   icon: (
+  //     <DynamicMenuIcon
+  //       path={'album/recentlyPlayed'}
+  //       icon={VideoLibraryOutlinedIcon}
+  //       activeIcon={VideoLibraryIcon}
+  //     />
+  //   ),
+  //   params: 'sort=play_date&order=DESC&filter={"recently_played":true}',
+  // },
+  // mostPlayed: {
+  //   icon: <RepeatIcon />,
+  //   params: 'sort=play_count&order=DESC&filter={"recently_played":true}',
+  // },
 }
 
 export default albumLists
