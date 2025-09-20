@@ -13,8 +13,8 @@ import {
   useTranslate,
   NullableBooleanInput,
   usePermissions,
-  useListContext
- } from 'react-admin'
+  useListContext,
+} from 'react-admin'
 import { useMediaQuery, withWidth } from '@material-ui/core'
 import FavoriteIcon from '@material-ui/icons/Favorite'
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
@@ -133,9 +133,9 @@ const ArtistListView = ({ hasShow, hasEdit, hasList, width, ...rest }) => {
   const isXsmall = useMediaQuery((theme) => theme.breakpoints.down('xs'))
   useResourceRefresh('artist')
 
-    // Create a handler that can find the record by ID
+  // Create a handler that can find the record by ID
   const handleArtistLinkWithRecord = (id) => {
-       // data is an object keyed by ID, not an array
+    // data is an object keyed by ID, not an array
     const record = data?.[id]
     if (record) {
       return handleArtistLink(record)
@@ -148,7 +148,6 @@ const ArtistListView = ({ hasShow, hasEdit, hasList, width, ...rest }) => {
     }
   }
 
-  
   // For mobile - return URL instead of calling history.push
   const getMobileArtistLink = (id) => {
     const record = data?.[id]
@@ -158,7 +157,6 @@ const ArtistListView = ({ hasShow, hasEdit, hasList, width, ...rest }) => {
       return `/artist/${id}/show`
     }
   }
-
 
   const role = filterValues?.role
   const getCounter = (record, counter) => {
@@ -199,11 +197,14 @@ const ArtistListView = ({ hasShow, hasEdit, hasList, width, ...rest }) => {
       //   console.log('link handleArtistLinkWithRecord', handleArtistLinkWithRecord);
       //   history.push(handleArtistLinkWithRecord)}}
       //   //linkType={(id) => history.push(handleArtistLink(id))}
-      
+
       {...rest}
     />
   ) : (
-    <ArtistDatagrid rowClick={handleArtistLinkWithRecord} classes={{ row: classes.row }}>
+    <ArtistDatagrid
+      rowClick={handleArtistLinkWithRecord}
+      classes={{ row: classes.row }}
+    >
       <TextField source="name" />
       <FunctionField
         source="albumCount"
