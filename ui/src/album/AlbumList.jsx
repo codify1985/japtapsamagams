@@ -295,11 +295,11 @@ const AlbumList = (props) => {
     [
       'artist',
       'songCount',
-      'playCount',
+      // 'playCount',
       'year',
-      'mood',
+      // 'mood',
       'duration',
-      'rating',
+      // 'rating',
       'size',
       'createdAt',
     ],
@@ -309,6 +309,9 @@ const AlbumList = (props) => {
   // If it does not have filter/sort params (usually coming from Menu),
   // reload with correct filter/sort params
   if (!location.search) {
+    // TODO: SET THE DEAFULT LIST TO GRID FOR DESKTOP AND TABLE FOR MOBILE
+    // const isXSmall = useMediaQuery((theme) => theme.breakpoints.down('xs'))
+    // const defaultAlbumList = isXSmall ? 'list' : 'grid'
     const type =
       albumListType || localStorage.getItem('defaultView') || defaultAlbumList
     const listParams = albumLists[type]
