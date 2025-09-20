@@ -102,9 +102,9 @@ const AlbumTableView = ({
       songCount: isDesktop && (
         <NumberField source="songCount" sortByOrder={'DESC'} />
       ),
-      playCount: isDesktop && (
-        <NumberField source="playCount" sortByOrder={'DESC'} />
-      ),
+      // playCount: isDesktop && (
+      //   <NumberField source="playCount" sortByOrder={'DESC'} />
+      // ),
       year: (
         <RangeField source={'year'} sortBy={'max_year'} sortByOrder={'DESC'} />
       ),
