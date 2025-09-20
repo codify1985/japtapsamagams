@@ -1,19 +1,22 @@
 import { useSelector } from 'react-redux'
+import React, { useMemo } from 'react'
 import { Redirect, useLocation } from 'react-router-dom'
 import {
   AutocompleteArrayInput,
   AutocompleteInput,
   Filter,
   NullableBooleanInput,
-  NumberInput,
+  //NumberInput,
   Pagination,
   ReferenceArrayInput,
   ReferenceInput,
   SearchInput,
+  SelectInput,
   usePermissions,
   useRefresh,
   useTranslate,
   useVersion,
+  useListContext
 } from 'react-admin'
 import FavoriteIcon from '@material-ui/icons/Favorite'
 import { withWidth } from '@material-ui/core'
@@ -33,30 +36,101 @@ import config from '../config'
 import AlbumInfo from './AlbumInfo'
 import ExpandInfoDialog from '../dialogs/ExpandInfoDialog'
 import { humanize } from 'inflection'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
+import { useMediaQuery } from '@material-ui/core'
 
-const useStyles = makeStyles({
+const useChipStyles = makeStyles({
   chip: {
     margin: 0,
     height: '24px',
   },
 })
 
+const useFilterStyles = makeStyles(theme => ({
+  form: {
+    // desktop layout
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: theme.spacing(1),
+    // normalize default control margins
+    '& .MuiFormControl-root': { margin: 0 },
+    '& .MuiFormControl-marginDense': { margin: 0 },
+    '& .MuiInputBase-root': { margin: 0 },
+
+     [theme.breakpoints.down('sm')]: {
+      // stack and add padding so the first row clears the sticky toolbar
+      paddingTop: theme.spacing(1.5),
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+      // kill any residual margins that cause left misalignment
+      '& .MuiFormControl-root, & .ra-input': {
+        width: '100%',
+        margin: 0,
+      },
+     },
+  },
+}))
+
+
+
+// Reusable YearDropdown that works with react-admin Filter/FilterButton
+const YearDropdown = ({ source = 'year', alwaysOn = true, fullWidth, ...rest }) => {
+  const yearChoices = React.useMemo(() => {
+    const currentYear = new Date().getFullYear()
+    const choices = [{ id: '', name: 'All' }]
+    for (let y = currentYear; y >= 2009; y--) {
+      choices.push({ id: y, name: String(y) })
+    }
+    return choices
+  }, [])
+
+  console.log('YearDropdown fullWidth', fullWidth);
+
+  return (
+    <SelectInput
+      source={source}
+      alwaysOn={alwaysOn}
+      choices={yearChoices}
+      label="Year"
+      //style={{ minWidth: 140 }}
+      margin="dense"
+      fullWidth={fullWidth}
+      style={fullWidth ? { marginTop: 10 } : { minWidth: 140 }}
+      // Keep "All" while no filter is applied; numbers when selected
+      format={(v) => (v == null ? '' : String(v))}
+      parse={(v) => (v === '' ? undefined : Number(v))}
+      {...rest}
+    />
+  )
+}
+
+
+
+
 const AlbumFilter = (props) => {
-  const classes = useStyles()
+ const chipClasses = useChipStyles()
+ const filterClasses = useFilterStyles()
+ const theme = useTheme()
+ const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
+
   const translate = useTranslate()
   const { permissions } = usePermissions()
   const isAdmin = permissions === 'admin'
+
+  console.log('isSmall', isSmall, filterClasses.form);
+
   return (
-    <Filter {...props} variant={'outlined'}>
-      <SearchInput id="search" source="name" alwaysOn />
-      <ReferenceInput
-        label={translate('resources.album.fields.artist')}
-        source="artist_id"
-        reference="artist"
-        sort={{ field: 'name', order: 'ASC' }}
-        filterToQuery={(searchText) => ({ name: [searchText] })}
-      >
+      <Filter {...props} variant="outlined" classes={{ form: filterClasses.form }}>
+        <YearDropdown key="year" source="year" alwaysOn fullWidth={isSmall} margin="dense" />
+        <SearchInput id="search" source="name" alwaysOn fullWidth={isSmall} margin="dense" />
+        <ReferenceInput
+          label={translate('resources.album.fields.artist')}
+          source="artist_id"
+          reference="artist"
+          sort={{ field: 'name', order: 'ASC' }}
+          filterToQuery={(searchText) => ({ name: [searchText] })}
+        >
         <AutocompleteInput emptyText="-- None --" />
       </ReferenceInput>
       <ReferenceArrayInput
@@ -67,7 +141,7 @@ const AlbumFilter = (props) => {
         sort={{ field: 'name', order: 'ASC' }}
         filterToQuery={(searchText) => ({ name: [searchText] })}
       >
-        <AutocompleteArrayInput emptyText="-- None --" classes={classes} />
+        <AutocompleteArrayInput emptyText="-- None --" classes={chipClasses} />
       </ReferenceArrayInput>
       <ReferenceInput
         label={translate('resources.album.fields.recordLabel')}
@@ -95,7 +169,7 @@ const AlbumFilter = (props) => {
       >
         <AutocompleteArrayInput
           emptyText="-- None --"
-          classes={classes}
+          classes={chipClasses}
           optionText="tagValue"
         />
       </ReferenceArrayInput>
@@ -112,7 +186,7 @@ const AlbumFilter = (props) => {
       >
         <AutocompleteArrayInput
           emptyText="-- None --"
-          classes={classes}
+          classes={chipClasses}
           optionText="tagValue"
         />
       </ReferenceArrayInput>
@@ -148,7 +222,7 @@ const AlbumFilter = (props) => {
         />
       </ReferenceInput>
       <NullableBooleanInput source="compilation" />
-      <NumberInput source="year" />
+      {/* // <NumberInput source="year" /> */}
       {config.enableFavourites && (
         <QuickFilter
           source="starred"
@@ -189,6 +263,18 @@ const AlbumList = (props) => {
   const albumListType = location.pathname
     .replace(/^\/album/, '')
     .replace(/^\//, '')
+
+  
+  // // Transform yearFilter to year for backend
+  const transformFilters = (filters) => {
+    const { yearFilter, ...otherFilters } = filters
+    
+    if (yearFilter && yearFilter !== '') {
+      return { ...otherFilters, year: yearFilter }
+    }
+    
+    return otherFilters
+  }  
 
   // Workaround to force album columns to appear the first time.
   // See https://github.com/navidrome/navidrome/pull/923#issuecomment-833004842
@@ -235,6 +321,7 @@ const AlbumList = (props) => {
         perPage={perPage}
         pagination={<Pagination rowsPerPageOptions={perPageOptions} />}
         title={<AlbumListTitle albumListType={albumListType} />}
+        // transform={transformFilters}
       >
         {albumView.grid ? (
           <AlbumGridView albumListType={albumListType} {...props} />
@@ -246,6 +333,8 @@ const AlbumList = (props) => {
     </>
   )
 }
+
+
 
 const AlbumListWithWidth = withWidth()(AlbumList)
 

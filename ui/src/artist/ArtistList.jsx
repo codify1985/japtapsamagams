@@ -13,7 +13,8 @@ import {
   useTranslate,
   NullableBooleanInput,
   usePermissions,
-} from 'react-admin'
+  useListContext
+ } from 'react-admin'
 import { useMediaQuery, withWidth } from '@material-ui/core'
 import FavoriteIcon from '@material-ui/icons/Favorite'
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
@@ -77,7 +78,7 @@ const ArtistFilter = (props) => {
     })
     return acc
   }, [])
-  roles?.sort((a, b) => a.name.localeCompare(b.name))
+  // roles?.sort((a, b) => a.name.localeCompare(b.name))
   return (
     <Filter {...props} variant={'outlined'}>
       <SearchInput id="search" source="name" alwaysOn />
@@ -125,11 +126,39 @@ const ArtistDatagrid = (props) => (
 
 const ArtistListView = ({ hasShow, hasEdit, hasList, width, ...rest }) => {
   const { filterValues } = rest
+  const { data } = useListContext() // Get data from list context
   const classes = useStyles()
   const handleArtistLink = useGetHandleArtistClick(width)
   const history = useHistory()
   const isXsmall = useMediaQuery((theme) => theme.breakpoints.down('xs'))
   useResourceRefresh('artist')
+
+    // Create a handler that can find the record by ID
+  const handleArtistLinkWithRecord = (id) => {
+       // data is an object keyed by ID, not an array
+    const record = data?.[id]
+    if (record) {
+      return handleArtistLink(record)
+
+      //   const url = handleArtistLink(record)
+      // history.push(url)
+    } else {
+      // Fallback to artist show page if record not found
+      history.push(`/artist/${id}/show`)
+    }
+  }
+
+  
+  // For mobile - return URL instead of calling history.push
+  const getMobileArtistLink = (id) => {
+    const record = data?.[id]
+    if (record) {
+      return handleArtistLink(record)
+    } else {
+      return `/artist/${id}/show`
+    }
+  }
+
 
   const role = filterValues?.role
   const getCounter = (record, counter) => {
@@ -165,11 +194,16 @@ const ArtistListView = ({ hasShow, hasEdit, hasList, width, ...rest }) => {
 
   return isXsmall ? (
     <ArtistSimpleList
-      linkType={(id) => history.push(handleArtistLink(id))}
+      linkType={(id) => history.push(getMobileArtistLink(id))}
+      // linkType={(id) => {
+      //   console.log('link handleArtistLinkWithRecord', handleArtistLinkWithRecord);
+      //   history.push(handleArtistLinkWithRecord)}}
+      //   //linkType={(id) => history.push(handleArtistLink(id))}
+      
       {...rest}
     />
   ) : (
-    <ArtistDatagrid rowClick={handleArtistLink} classes={{ row: classes.row }}>
+    <ArtistDatagrid rowClick={handleArtistLinkWithRecord} classes={{ row: classes.row }}>
       <TextField source="name" />
       <FunctionField
         source="albumCount"
