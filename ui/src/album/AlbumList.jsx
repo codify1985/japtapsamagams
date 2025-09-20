@@ -88,8 +88,6 @@ const YearDropdown = ({
     return choices
   }, [])
 
-  console.log('YearDropdown fullWidth', fullWidth)
-
   return (
     <SelectInput
       source={source}
@@ -117,8 +115,6 @@ const AlbumFilter = (props) => {
   const translate = useTranslate()
   const { permissions } = usePermissions()
   const isAdmin = permissions === 'admin'
-
-  console.log('isSmall', isSmall, filterClasses.form)
 
   return (
     <Filter
