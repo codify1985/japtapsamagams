@@ -98,7 +98,7 @@ const AlbumTableView = ({
 
   const toggleableFields = useMemo(() => {
     return {
-      artist: <ArtistLinkField source="albumArtist" />,
+      // artist: <ArtistLinkField source="albumArtist" />,
       songCount: isDesktop && (
         <NumberField source="songCount" sortByOrder={'DESC'} />
       ),
