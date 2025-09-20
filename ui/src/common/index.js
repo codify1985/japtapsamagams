@@ -1,4 +1,5 @@
 export * from './AddToPlaylistButton'
+export { default as PlayAllButton } from './PlayAllButton'
 export * from './ArtistLinkField'
 export * from './BatchPlayButton'
 export * from './BitrateField'

@@ -82,7 +82,7 @@ const ArtistFilter = (props) => {
   return (
     <Filter {...props} variant={'outlined'}>
       <SearchInput id="search" source="name" alwaysOn />
-      <SelectInput source="role" choices={roles} alwaysOn />
+      <SelectInput source="role" choices={roles} alwaysOn disabled hidden />
       {config.enableFavourites && (
         <QuickFilter
           source="starred"
@@ -245,7 +245,8 @@ const ArtistList = (props) => {
         exporter={false}
         bulkActionButtons={false}
         filters={<ArtistFilter />}
-        filterDefaultValues={{ role: 'albumartist' }}
+        filterDefaultValues={{ role: 'artist' }}
+        // default selected value to artist
         actions={<ArtistListActions />}
       >
         <ArtistListView {...props} />
