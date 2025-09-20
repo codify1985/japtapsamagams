@@ -2,15 +2,15 @@
   "languageName": "English",
   "resources": {
     "song": {
-      "name": "Song |||| Songs",
+      "name": "All Kirtan |||| All Kirtans",
       "fields": {
         "albumArtist": "Album Artist",
         "duration": "Time",
         "trackNumber": "#",
         "playCount": "Plays",
         "title": "Title",
-        "artist": "Artist",
-        "album": "Album",
+        "artist": "Kirtani",
+        "album": "Samagam",
         "path": "File path",
         "libraryName": "Library",
         "genre": "Genre",
@@ -47,15 +47,21 @@
         "download": "Download",
         "playNext": "Play Next",
         "info": "Get Info"
-      }
+      },
+      "lists": {
+        "recentKirtan": "Recently Added",
+        "simran": "Simran",
+        "starred": "Favourites"
+      },
+      "songList": "Default Library"
     },
     "album": {
-      "name": "Album |||| Albums",
+      "name": "Samagam |||| Samagams",
       "fields": {
         "albumArtist": "Album Artist",
         "artist": "Artist",
         "duration": "Time",
-        "songCount": "Songs",
+        "songCount": "Kirtans",
         "playCount": "Plays",
         "size": "Size",
         "name": "Name",
@@ -101,7 +107,7 @@
       }
     },
     "artist": {
-      "name": "Artist |||| Artists",
+      "name": "Kirtani |||| Kirtanis",
       "fields": {
         "name": "Name",
         "albumCount": "Album Count",
@@ -114,8 +120,8 @@
         "missing": "Missing"
       },
       "roles": {
-        "albumartist": "Album Artist |||| Album Artists",
         "artist": "Artist |||| Artists",
+        "albumartist": "Album Artist |||| Album Artists",
         "composer": "Composer |||| Composers",
         "conductor": "Conductor |||| Conductors",
         "lyricist": "Lyricist |||| Lyricists",
@@ -540,7 +546,8 @@
         }
       }
     },
-    "albumList": "Albums",
+    "albumList": "Samagams",
+    "songList": "Default Library",
     "playlists": "Playlists",
     "sharedPlaylists": "Shared Playlists",
     "about": "About"
