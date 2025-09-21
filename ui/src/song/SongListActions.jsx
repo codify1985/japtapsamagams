@@ -169,8 +169,8 @@ export const SongListActions = (props) => {
   const songDispLabel = currentFilter.title === 'simran' ? 'Simrans' : 'Kirtans'
   return (
     <TopToolbar className={className} {...sanitizeListRestProps(rest)}>
-      <PlayAllButton filters={filterValues} />
-      <ShuffleAllButton filters={filterValues} />
+      <PlayAllButton filters={currentFilter} />
+      <ShuffleAllButton filters={currentFilter} />
       {config.enableDownloads && !loading && songs && songs.length > 0 && (
         <Button
           onClick={handleDownloadAll}
