@@ -2,7 +2,7 @@ import { ALBUM_MODE_GRID, ALBUM_MODE_TABLE } from '../actions'
 
 export const albumViewReducer = (
   previousState = {
-    grid: true,
+    grid: false,
   },
   payload,
 ) => {
