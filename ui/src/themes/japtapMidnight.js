@@ -156,13 +156,28 @@ const japtapMidnight = createTheme({
     // App Bar / Header
     MuiAppBar: {
       root: {
-        backgroundColor: 'rgba(11, 16, 32, 0.9)',
+        backgroundColor: '#0B1020 !important',
+        color: '#0A84FF !important',
         backdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(230, 234, 242, 0.08)',
+        borderBottom: '0px',
+        // borderBottom: '1px solid rgba(230, 234, 242, 0.08)',
         boxShadow: '0 1px 3px rgba(0, 0, 0, 0.12)',
         '@supports not (backdrop-filter: blur(20px))': {
-          backgroundColor: 'rgba(11, 16, 32, 0.98)',
+          backgroundColor: '#0B1020 !important',
         },
+      },
+      colorPrimary: {
+        backgroundColor: '#0B1020 !important',
+      },
+      colorDefault: {
+        backgroundColor: '#0B1020 !important',
+      },
+    },
+
+    // Toolbar (inside AppBar)
+    MuiToolbar: {
+      root: {
+        backgroundColor: '#0B1020 !important',
       },
     },
 
@@ -174,6 +189,13 @@ const japtapMidnight = createTheme({
         borderRight: '1px solid rgba(230, 234, 242, 0.08)',
         '@supports not (backdrop-filter: blur(16px))': {
           backgroundColor: 'rgba(15, 20, 35, 0.95)',
+        },
+        // Style for sidebar icons
+        '& .MuiListItemIcon-root': {
+          color: '#0A84FF',
+        },
+        '& .MuiSvgIcon-root': {
+          color: '#0A84FF',
         },
       },
     },
@@ -254,6 +276,32 @@ const japtapMidnight = createTheme({
           outline: '2px solid #0A84FF',
           outlineOffset: '2px',
         },
+      },
+    },
+
+    // List items in sidebar
+    MuiListItem: {
+      root: {
+        '&.Mui-selected': {
+          backgroundColor: 'rgba(10, 132, 255, 0.15)',
+          '& .MuiListItemIcon-root': {
+            color: '#0A84FF',
+          },
+          '& .MuiListItemText-primary': {
+            color: '#0A84FF',
+          },
+        },
+        '&:hover': {
+          backgroundColor: 'rgba(10, 132, 255, 0.08)',
+        },
+      },
+    },
+
+    // List item icons
+    MuiListItemIcon: {
+      root: {
+        color: '#0A84FF',
+        minWidth: '40px',
       },
     },
 
