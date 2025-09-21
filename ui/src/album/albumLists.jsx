@@ -36,7 +36,9 @@ const albumLists = {
         activeIcon={AlbumIcon}
       />
     ),
-    params: 'sort=max_year&order=DESC&filter={}',
+    params: 'sort=all&filter={}',
+    // params: 'sort=createdAt&order=DESC&filter={}',
+    //params: 'sort=max_year&order=DESC&filter={}',
   },
   // Commented out Random from Samagams Submenu
   // random: {
