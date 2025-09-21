@@ -78,10 +78,10 @@ const YearDropdown = ({
   fullWidth,
   ...rest
 }) => {
-  const location = useLocation();
-  const isHomePage  = location.pathname.includes('recentlyAdded');
-  const currentYear = new Date().getFullYear();
-  
+  const location = useLocation()
+  const isHomePage = location.pathname.includes('recentlyAdded')
+  const currentYear = new Date().getFullYear()
+
   // Set default value based on isHomePage
   const defaultValue = React.useMemo(() => {
     if (isHomePage) {
@@ -135,14 +135,14 @@ const YearDropdown = ({
       //option 3
       // parse={(v) => {
       //   console.log('YearDropdown parse v=', v, typeof v);
-        
+
       //   if (v === 'all' || v === '') {
       //     // When "All" is selected, redirect with max_year sort
       //     const searchParams = new URLSearchParams(location.search);
       //     searchParams.set('sort', 'max_year');
       //     searchParams.set('order', 'DESC');
       //     searchParams.delete('filter'); // Remove year filter
-          
+
       //     history.push(`${location.pathname}?${searchParams.toString()}`);
       //     return undefined;
       //   } else {
@@ -150,7 +150,7 @@ const YearDropdown = ({
       //     const searchParams = new URLSearchParams(location.search);
       //     searchParams.set('sort', 'createdAt');
       //     searchParams.set('order', 'DESC');
-          
+
       //     history.push(`${location.pathname}?${searchParams.toString()}`);
       //     return Number(v);
       //   }
@@ -325,7 +325,7 @@ const AlbumList = (props) => {
   const refresh = useRefresh()
   useResourceRefresh('album')
 
- // just for debugging TODO: remove
+  // just for debugging TODO: remove
   // const listContext = useListContext();
   // const { setSort } = listContext || {};
   // const listContextSort = listContext?.sort || {};

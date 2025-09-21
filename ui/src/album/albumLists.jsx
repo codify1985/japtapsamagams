@@ -17,7 +17,7 @@ import config from '../config'
 import DynamicMenuIcon from '../layout/DynamicMenuIcon'
 
 const albumLists = {
-   recentlyAdded: {
+  recentlyAdded: {
     icon: (
       <DynamicMenuIcon
         path={'album/recentlyAdded'}
@@ -27,7 +27,7 @@ const albumLists = {
     ),
     params: `sort=createdAt&order=DESC&filter={"year":${new Date().getFullYear()}}`,
     // params: 'sort=recently_added&order=DESC&filter={}', // Original sortin
-  },  // Default
+  }, // Default
   all: {
     icon: (
       <DynamicMenuIcon
@@ -67,7 +67,7 @@ const albumLists = {
       params: 'sort=rating&order=DESC&filter={"has_rating":true}',
     },
   }),
- 
+
   // Commented out Recently Played and Most Played from Samagams Submenu
   // recentlyPlayed: {
   //   icon: (
