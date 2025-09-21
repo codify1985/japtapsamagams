@@ -72,10 +72,10 @@ const AlbumNavigator = ({ currentAlbum }) => {
         // eslint-disable-next-line no-console
         console.debug('[AlbumNavigator] Raw dataProvider result:', result)
         setYearAlbums(result.data || [])
-        console.debug(
-          '[AlbumNavigator] Processed yearAlbums:',
-          result.data || [],
-        )
+        // console.debug(
+        //   '[AlbumNavigator] Processed yearAlbums:',
+        //   result.data || [],
+        // )
 
         const id =
           result.data && result.data.length > 0 ? result.data[0].id : ''
@@ -129,7 +129,6 @@ const AlbumNavigator = ({ currentAlbum }) => {
   // Keep albumId in sync when yearAlbums changes
   React.useEffect(() => {
     setAlbumId(initialAlbumId)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialAlbumId])
 
   const handleYearChange = (event) => {
