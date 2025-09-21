@@ -51,6 +51,9 @@ const setRating = (id, rating) => httpClient(url('setRating', id, { rating }))
 const download = (id, format = 'raw', bitrate = '0') =>
   (window.location.href = baseUrl(url('download', id, { format, bitrate })))
 
+const downloadSongs = (ids, format = 'raw', bitrate = '0') =>
+  (window.location.href = baseUrl(url('downloadSongs', null, { ids: ids.join(','), format, bitrate })))
+
 const startScan = (options) => httpClient(url('startScan', null, options))
 
 const getScanStatus = () => httpClient(url('getScanStatus'))
@@ -116,6 +119,7 @@ export default {
   scrobble,
   nowPlaying,
   download,
+  downloadSongs,
   star,
   unstar,
   setRating,

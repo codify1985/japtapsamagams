@@ -20,6 +20,7 @@ type Archiver interface {
 	ZipArtist(ctx context.Context, id string, format string, bitrate int, w io.Writer) error
 	ZipShare(ctx context.Context, id string, w io.Writer) error
 	ZipPlaylist(ctx context.Context, id string, format string, bitrate int, w io.Writer) error
+	ZipSongs(ctx context.Context, ids []string, format string, bitrate int, w io.Writer) error
 }
 
 func NewArchiver(ms MediaStreamer, ds model.DataStore, shares Share) Archiver {
@@ -110,6 +111,27 @@ func (a *archiver) ZipPlaylist(ctx context.Context, id string, format string, bi
 	mfs := pls.MediaFiles()
 	log.Debug(ctx, "Zipping playlist", "name", pls.Name, "format", format, "bitrate", bitrate, "numTracks", len(mfs))
 	return a.zipMediaFiles(ctx, id, pls.Name, format, bitrate, out, mfs, true)
+}
+
+func (a *archiver) ZipSongs(ctx context.Context, ids []string, format string, bitrate int, out io.Writer) error {
+	// Get media files by IDs
+	mfs := make(model.MediaFiles, 0, len(ids))
+	for _, id := range ids {
+		mf, err := a.ds.MediaFile(ctx).Get(id)
+		if err != nil {
+			log.Warn(ctx, "Error loading mediafile for zip", "id", id, err)
+			continue // Skip missing files instead of failing the entire operation
+		}
+		mfs = append(mfs, *mf)
+	}
+
+	if len(mfs) == 0 {
+		return fmt.Errorf("no valid media files found for the provided IDs")
+	}
+
+	name := fmt.Sprintf("Songs_%d_items", len(mfs))
+	log.Debug(ctx, "Zipping songs", "name", name, "format", format, "bitrate", bitrate, "numTracks", len(mfs))
+	return a.zipMediaFiles(ctx, "songs-batch", name, format, bitrate, out, mfs, true)
 }
 
 func (a *archiver) zipMediaFiles(ctx context.Context, id, name string, format string, bitrate int, out io.Writer, mfs model.MediaFiles, addM3U bool) error {

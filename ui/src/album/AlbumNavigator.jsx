@@ -38,7 +38,7 @@ const AlbumNavigator = ({ currentAlbum }) => {
 
   const currentYear = React.useMemo(() => {
     // Prefer the album year if present, else current year
-    return currentAlbum?.year || new Date().getFullYear()
+    return currentAlbum?.date || new Date().getFullYear()
   }, [currentAlbum])
 
   const [year, setYear] = React.useState(currentYear)
@@ -72,6 +72,14 @@ const AlbumNavigator = ({ currentAlbum }) => {
         // eslint-disable-next-line no-console
         console.debug('[AlbumNavigator] Raw dataProvider result:', result)
         setYearAlbums(result.data || [])
+        console.debug('[AlbumNavigator] Processed yearAlbums:', result.data || [])
+
+        const id = result.data && result.data.length > 0 ? result.data[0].id : ''
+        if (id) {
+          setAlbumId(id)
+          redirect(`/album/${id}/show`)
+        }
+
         setLoaded(true)
       })
       .catch((error) => {
