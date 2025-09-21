@@ -1,11 +1,11 @@
 import React, { cloneElement } from 'react'
-import { 
-  sanitizeListRestProps, 
-  TopToolbar, 
-  useTranslate, 
+import {
+  sanitizeListRestProps,
+  TopToolbar,
+  useTranslate,
   useListContext,
   useDataProvider,
-  useNotify
+  useNotify,
 } from 'react-admin'
 import { useMediaQuery } from '@material-ui/core'
 import { useDispatch } from 'react-redux'
@@ -18,9 +18,15 @@ import config from '../config'
 import subsonic from '../subsonic'
 
 // Helper function to fetch all pages of results
-const fetchAllPaged = async (dataProvider, resource, sort, filter, page = null, perPage = null) => {
-
-    // If specific page and perPage are provided, fetch only that page
+const fetchAllPaged = async (
+  dataProvider,
+  resource,
+  sort,
+  filter,
+  page = null,
+  perPage = null,
+) => {
+  // If specific page and perPage are provided, fetch only that page
   if (page !== null && perPage !== null) {
     const { data } = await dataProvider.getList(resource, {
       pagination: { page, perPage },
@@ -39,7 +45,7 @@ const fetchAllPaged = async (dataProvider, resource, sort, filter, page = null, 
   // keep order as returned by backend (no shuffle)
   while (true) {
     const { data, total } = await dataProvider.getList(resource, {
-      pagination: { page:currentPage, perPage: defaultPerPage },
+      pagination: { page: currentPage, perPage: defaultPerPage },
       sort,
       filter,
     })
@@ -63,14 +69,14 @@ export const SongListActions = (props) => {
     showFilter,
     ...rest
   } = props
-  
+
   const isNotSmall = useMediaQuery((theme) => theme.breakpoints.up('sm'))
   const isDesktop = useMediaQuery((theme) => theme.breakpoints.up('md'))
   const dispatch = useDispatch()
   const translate = useTranslate()
   const dataProvider = useDataProvider()
   const notify = useNotify()
-  
+
   // Get list context to access current list state
   const listContext = useListContext()
   const currentSort = listContext?.currentSort ||
@@ -84,7 +90,7 @@ export const SongListActions = (props) => {
 
   const [loading, setLoading] = React.useState(false)
   const [songs, setSongs] = React.useState([])
-  
+
   // Fetch current songs when filters or sort change
   React.useEffect(() => {
     const fetchSongs = async (page, perPage) => {
@@ -97,7 +103,7 @@ export const SongListActions = (props) => {
           currentSort,
           currentFilter,
           page,
-          perPage
+          perPage,
         )
         setSongs(allSongs)
       } catch (error) {
@@ -113,11 +119,11 @@ export const SongListActions = (props) => {
     if (currentFilter.title || currentFilter.starred) {
       fetchSongs()
     } else {
-      fetchSongs(listContext.page, listContext.perPage);
+      fetchSongs(listContext.page, listContext.perPage)
       //setSongs([])
     }
   }, [dataProvider, resource, currentFilter, currentSort])
-  
+
   // Calculate total size of all songs for download
   const totalSize = React.useMemo(() => {
     return songs.reduce((acc, song) => acc + (song?.size || 0), 0)
@@ -128,28 +134,28 @@ export const SongListActions = (props) => {
       notify('No songs available for download', { type: 'warning' })
       return
     }
-    
+
     if (songs.length === 1) {
       // Single song - use the existing download dialog
       const song = songs[0]
       dispatch(openDownloadMenu(song, DOWNLOAD_MENU_SONG))
     } else {
       // Multiple songs - use the new batch download endpoint
-      const songIds = songs.map(song => song.id)
+      const songIds = songs.map((song) => song.id)
       notify(`Downloading ${songs.length} songs...`, { type: 'info' })
-      
+
       // Use the new downloadSongs function which calls the backend ZIP endpoint
       subsonic.downloadSongs(songIds, 'raw', '0')
     }
   }, [dispatch, songs, notify])
 
   // TODO: why this is rendering multiple times? find out
-  console.debug('[SongListActions] songs count:', songs.length, { songs });
-  console.debug('[SongListActions] totalSize:', totalSize);
-  console.debug('[SongListActions] filterValues:', filterValues);
-  console.debug('[SongListActions] currentFilter:', currentFilter);
-  console.debug('[SongListActions] listContext:', listContext);
-  
+  console.debug('[SongListActions] songs count:', songs.length, { songs })
+  console.debug('[SongListActions] totalSize:', totalSize)
+  console.debug('[SongListActions] filterValues:', filterValues)
+  console.debug('[SongListActions] currentFilter:', currentFilter)
+  console.debug('[SongListActions] listContext:', listContext)
+
   const songDispLabel = currentFilter.title === 'simran' ? 'Simrans' : 'Kirtans'
   return (
     <TopToolbar className={className} {...sanitizeListRestProps(rest)}>
@@ -159,9 +165,13 @@ export const SongListActions = (props) => {
         <Button
           onClick={handleDownloadAll}
           label={
-            songs.length === 1 
-              ? translate('ra.action.download') + (isDesktop ? ` (${formatBytes(totalSize)})` : '')
-              : translate('ra.action.download') + (isDesktop ? ` (${songs.length} ${songDispLabel}, ${formatBytes(totalSize)})` : ` (${songs.length})`)
+            songs.length === 1
+              ? translate('ra.action.download') +
+                (isDesktop ? ` (${formatBytes(totalSize)})` : '')
+              : translate('ra.action.download') +
+                (isDesktop
+                  ? ` (${songs.length} ${songDispLabel}, ${formatBytes(totalSize)})`
+                  : ` (${songs.length})`)
           }
         >
           <CloudDownloadOutlinedIcon />

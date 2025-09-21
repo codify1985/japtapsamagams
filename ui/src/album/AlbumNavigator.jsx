@@ -72,9 +72,13 @@ const AlbumNavigator = ({ currentAlbum }) => {
         // eslint-disable-next-line no-console
         console.debug('[AlbumNavigator] Raw dataProvider result:', result)
         setYearAlbums(result.data || [])
-        console.debug('[AlbumNavigator] Processed yearAlbums:', result.data || [])
+        console.debug(
+          '[AlbumNavigator] Processed yearAlbums:',
+          result.data || [],
+        )
 
-        const id = result.data && result.data.length > 0 ? result.data[0].id : ''
+        const id =
+          result.data && result.data.length > 0 ? result.data[0].id : ''
         if (id) {
           setAlbumId(id)
           redirect(`/album/${id}/show`)

@@ -52,7 +52,9 @@ const download = (id, format = 'raw', bitrate = '0') =>
   (window.location.href = baseUrl(url('download', id, { format, bitrate })))
 
 const downloadSongs = (ids, format = 'raw', bitrate = '0') =>
-  (window.location.href = baseUrl(url('downloadSongs', null, { ids: ids.join(','), format, bitrate })))
+  (window.location.href = baseUrl(
+    url('downloadSongs', null, { ids: ids.join(','), format, bitrate }),
+  ))
 
 const startScan = (options) => httpClient(url('startScan', null, options))
 
