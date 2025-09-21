@@ -162,7 +162,7 @@ const Player = () => {
   const onAudioProgress = useCallback(
     (info) => {
       if (info.ended) {
-        document.title = 'Navidrome'
+        document.title = 'Jap Tap Samagams'
       }
 
       const progress = (info.currentTime / info.duration) * 100
@@ -211,8 +211,8 @@ const Player = () => {
         setStartTime(Date.now())
       }
       if (info.duration) {
-        const song = info.song
-        document.title = `${song.title} - ${song.artist} - Navidrome`
+  const song = info.song
+  document.title = `${song.title} - ${song.artist} - Jap Tap Samagams`
         if (!info.isRadio) {
           const pos = startTime === null ? null : Math.floor(info.currentTime)
           subsonic.nowPlaying(info.trackId, pos)
@@ -278,7 +278,7 @@ const Player = () => {
   }, [dispatch])
 
   if (!visible) {
-    document.title = 'Navidrome'
+    document.title = 'Jap Tap Samagams'
   }
 
   const handlers = useMemo(

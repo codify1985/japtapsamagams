@@ -25,7 +25,7 @@ const albumLists = {
         activeIcon={HomeIcon}
       />
     ),
-    params: `sort=createdAt&order=DESC&filter={"year":${new Date().getFullYear()}}`,
+    params: `sort=all&filter={"year":${new Date().getFullYear()}}`,
     // params: 'sort=recently_added&order=DESC&filter={}', // Original sortin
   }, // Default
   all: {
