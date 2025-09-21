@@ -50,15 +50,18 @@ const AlbumNavigator = ({ currentAlbum }) => {
   const [loaded, setLoaded] = React.useState(false)
 
   // Stabilize libraryFilter to prevent infinite loops
-  const stableLibraryFilter = React.useMemo(() => libraryFilter, [JSON.stringify(libraryFilter)])
+  const stableLibraryFilter = React.useMemo(
+    () => libraryFilter,
+    [JSON.stringify(libraryFilter)],
+  )
 
   React.useEffect(() => {
     setLoaded(false)
     const serverFilter = { ...stableLibraryFilter, year: Number(year) }
-    
+
     // eslint-disable-next-line no-console
     console.debug('[AlbumNavigator] About to fetch with filter:', serverFilter)
-    
+
     dataProvider
       .getList('album', {
         pagination: { page: 1, perPage: 500 },
@@ -79,7 +82,10 @@ const AlbumNavigator = ({ currentAlbum }) => {
       })
   }, [dataProvider, stableLibraryFilter, year])
 
-  const albumChoices = React.useMemo(() => toAlbumChoices(yearAlbums), [yearAlbums])
+  const albumChoices = React.useMemo(
+    () => toAlbumChoices(yearAlbums),
+    [yearAlbums],
+  )
 
   // Debug logs
   React.useEffect(() => {
@@ -146,7 +152,9 @@ const AlbumNavigator = ({ currentAlbum }) => {
 
       <TextField
         select
-        label={translate('resources.album.name', { smart_count: 2 }) || 'Samagams'}
+        label={
+          translate('resources.album.name', { smart_count: 2 }) || 'Samagams'
+        }
         value={albumId}
         onChange={handleAlbumChange}
         className={classes.select}
@@ -156,7 +164,9 @@ const AlbumNavigator = ({ currentAlbum }) => {
       >
         {albumChoices.length === 0 ? (
           <MenuItem value="" disabled>
-            {translate('resources.album.navigator.no_albums', { _: 'No Samagams' })}
+            {translate('resources.album.navigator.no_albums', {
+              _: 'No Samagams',
+            })}
           </MenuItem>
         ) : (
           albumChoices.map((opt) => (
