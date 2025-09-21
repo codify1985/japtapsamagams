@@ -102,10 +102,12 @@ func NewAlbumRepository(ctx context.Context, db dbx.Builder) model.AlbumReposito
 		"artist":       "compilation, order_album_artist_name, order_album_name",
 		"album_artist": "compilation, order_album_artist_name, order_album_name",
 		// TODO Rename this to just year (or date)
-		"max_year":       "coalesce(nullif(original_date,''), cast(max_year as text)), release_date, name",
+		"max_year":       "coalesce(nullif(original_date,''), cast(max_year as text)), release_date",
 		"random":         "random",
 		"recently_added": recentlyAddedSort(),
 		"starred_at":     "starred, starred_at",
+		"createdAt":      "created_at",
+		"all":            "coalesce(nullif(original_date,''), cast(max_year as text)) DESC, created_at DESC",
 	})
 	return r
 }
