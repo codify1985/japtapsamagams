@@ -88,7 +88,7 @@ const YearDropdown = ({
       return currentYear // Current year
     }
     return 'all' // "All" (empty value)
-  }, [isHomePage])
+  }, [isHomePage, currentYear])
 
   const yearChoices = React.useMemo(() => {
     const choices = []
@@ -97,7 +97,7 @@ const YearDropdown = ({
       choices.push({ id: y, name: String(y) })
     }
     return choices
-  }, [])
+  }, [currentYear, isHomePage])
 
   return (
     <SelectInput
