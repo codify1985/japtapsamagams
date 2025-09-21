@@ -10,14 +10,15 @@ import NordTheme from './nord'
 import GruvboxDarkTheme from './gruvboxDark'
 import CatppuccinMacchiatoTheme from './catppuccinMacchiato'
 import NuclearTheme from './nuclear'
+import JaptapMidnightTheme from './japtapMidnight'
 
 export default {
   // Classic default themes
   LightTheme,
   DarkTheme,
-
   // New themes should be added here, in alphabetic order
   CatppuccinMacchiatoTheme,
+  JaptapMidnightTheme,
   ElectricPurpleTheme,
   ExtraDarkTheme,
   GreenTheme,

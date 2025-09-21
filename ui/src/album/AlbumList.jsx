@@ -319,6 +319,7 @@ const randomStartingSeed = Math.random().toString()
 const AlbumList = (props) => {
   const { width } = props
   const albumView = useSelector((state) => state.albumView)
+  console.log('AlbumList albumView=', albumView);
   const [perPage, perPageOptions] = useAlbumsPerPage(width)
   const location = useLocation()
   const version = useVersion()
