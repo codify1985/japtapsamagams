@@ -107,6 +107,7 @@ export const SongListActions = (props) => {
         )
         setSongs(allSongs)
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Failed to fetch songs:', error)
         setSongs([])
       } finally {
@@ -150,11 +151,11 @@ export const SongListActions = (props) => {
   }, [dispatch, songs, notify])
 
   // TODO: why this is rendering multiple times? find out
-  console.debug('[SongListActions] songs count:', songs.length, { songs })
-  console.debug('[SongListActions] totalSize:', totalSize)
-  console.debug('[SongListActions] filterValues:', filterValues)
-  console.debug('[SongListActions] currentFilter:', currentFilter)
-  console.debug('[SongListActions] listContext:', listContext)
+  // console.debug('[SongListActions] songs count:', songs.length, { songs })
+  // console.debug('[SongListActions] totalSize:', totalSize)
+  // console.debug('[SongListActions] filterValues:', filterValues)
+  // console.debug('[SongListActions] currentFilter:', currentFilter)
+  // console.debug('[SongListActions] listContext:', listContext)
 
   const songDispLabel = currentFilter.title === 'simran' ? 'Simrans' : 'Kirtans'
   return (
