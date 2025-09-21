@@ -39,11 +39,12 @@ const fetchAllPaged = async (
   const defaultPerPage = 500
   let currentPage = 1
   let all = []
+  let hasMore = true
   // get first page to know total
   // loop while there is more data
   // stop if backend doesn't return total (fallback to length)
   // keep order as returned by backend (no shuffle)
-  while (true) {
+  while (hasMore) {
     const { data, total } = await dataProvider.getList(resource, {
       pagination: { page: currentPage, perPage: defaultPerPage },
       sort,
@@ -51,10 +52,9 @@ const fetchAllPaged = async (
     })
     if (!data || data.length === 0) break
     all = all.concat(data)
-    const hasMore =
-      typeof total === 'number' ? all.length < total : data.length === perPage
-    if (!hasMore) break
-    page += 1
+    hasMore =
+      typeof total === 'number' ? all.length < total : data.length === defaultPerPage
+    currentPage += 1
   }
   return all
 }
