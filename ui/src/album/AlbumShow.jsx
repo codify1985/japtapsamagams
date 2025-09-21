@@ -11,6 +11,7 @@ import AlbumSongs from './AlbumSongs'
 import AlbumDetails from './AlbumDetails'
 import AlbumActions from './AlbumActions'
 import { useResourceRefresh, Title } from '../common'
+import AlbumNavigator from './AlbumNavigator'
 
 const useStyles = makeStyles(
   (theme) => ({
@@ -31,6 +32,7 @@ const AlbumShowLayout = (props) => {
 
   return (
     <>
+      {record && <AlbumNavigator currentAlbum={record} />}
       {record && <RaTitle title={<Title subTitle={record.name} />} />}
       {record && <AlbumDetails {...context} />}
       {record && (
