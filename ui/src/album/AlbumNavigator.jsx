@@ -49,7 +49,7 @@ const AlbumNavigator = ({ currentAlbum }) => {
   const [yearAlbums, setYearAlbums] = React.useState([])
   const [loaded, setLoaded] = React.useState(false)
 
-  // Stabilize libraryFilter to prevent infinite loops
+  // TODO: Stabilize libraryFilter to prevent infinite loops
   const stableLibraryFilter = React.useMemo(
     () => libraryFilter,
     [JSON.stringify(libraryFilter)],
@@ -92,7 +92,7 @@ const AlbumNavigator = ({ currentAlbum }) => {
         setYearAlbums([])
         setLoaded(true)
       })
-  }, [dataProvider, stableLibraryFilter, year])
+  }, [dataProvider, stableLibraryFilter, year, redirect])
 
   const albumChoices = React.useMemo(
     () => toAlbumChoices(yearAlbums),
