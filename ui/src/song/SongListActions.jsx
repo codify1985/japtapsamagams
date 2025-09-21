@@ -53,7 +53,9 @@ const fetchAllPaged = async (
     if (!data || data.length === 0) break
     all = all.concat(data)
     hasMore =
-      typeof total === 'number' ? all.length < total : data.length === defaultPerPage
+      typeof total === 'number'
+        ? all.length < total
+        : data.length === defaultPerPage
     currentPage += 1
   }
   return all
@@ -123,7 +125,14 @@ export const SongListActions = (props) => {
       fetchSongs(listContext.page, listContext.perPage)
       //setSongs([])
     }
-  }, [dataProvider, resource, currentFilter, currentSort])
+  }, [
+    dataProvider,
+    resource,
+    currentFilter,
+    currentSort,
+    listContext.page,
+    listContext.perPage,
+  ])
 
   // Calculate total size of all songs for download
   const totalSize = React.useMemo(() => {
