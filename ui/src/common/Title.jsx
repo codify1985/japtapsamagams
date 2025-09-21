@@ -10,5 +10,5 @@ export const Title = ({ subTitle, args }) => {
   if (isDesktop) {
     return <span>Jap Tap Samagams {text ? ` - ${text}` : ''}</span>
   }
-  return <span>{text ? text : 'Navidrome'}</span>
+  return <span>{text ? text : 'Jap Tap Samagams'}</span>
 }
