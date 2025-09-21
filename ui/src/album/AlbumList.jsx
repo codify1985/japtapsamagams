@@ -15,6 +15,7 @@ import {
   useRefresh,
   useTranslate,
   useVersion,
+  useListContext,
 } from 'react-admin'
 import FavoriteIcon from '@material-ui/icons/Favorite'
 import { withWidth } from '@material-ui/core'
@@ -77,10 +78,22 @@ const YearDropdown = ({
   fullWidth,
   ...rest
 }) => {
+  const location = useLocation();
+  const isHomePage  = location.pathname.includes('recentlyAdded');
+  const currentYear = new Date().getFullYear();
+  
+  // Set default value based on isHomePage
+  const defaultValue = React.useMemo(() => {
+    if (isHomePage) {
+      return currentYear // Current year
+    }
+    return 'all' // "All" (empty value)
+  }, [isHomePage])
+
   const yearChoices = React.useMemo(() => {
-    const currentYear = new Date().getFullYear()
     const choices = []
-    for (let y = currentYear; y >= 2009; y--) {
+    const maxYears = isHomePage ? currentYear - 5 : 2009 // from 2009 to current year
+    for (let y = currentYear; y >= maxYears; y--) {
       choices.push({ id: y, name: String(y) })
     }
     return choices
@@ -91,16 +104,57 @@ const YearDropdown = ({
       source={source}
       alwaysOn={alwaysOn}
       choices={yearChoices}
-      label="All Years"
+      label="Years"
       emptyText="All" // single empty option labeled "All"
-      emptyValue="" // value for empty option
+      emptyValue="all" // value for empty option
       margin="dense"
       fullWidth={fullWidth}
+      initialValue={defaultValue} // Add this line
       style={fullWidth ? { marginTop: 10 } : { minWidth: 140 }}
       // undefined/null in form -> show empty option ("All")
-      format={(v) => (v == null ? '' : v)}
-      // selecting "All" -> remove filter; selecting year -> ensure number
-      parse={(v) => (v === '' ? undefined : Number(v))}
+      format={(v) => (v == null ? 'all' : v)}
+      // Modified parse function: when 'all' is selected, return undefined to remove filter
+      parse={(v) => (v === 'all' || v === '' ? undefined : Number(v))}
+      // parse={(v) => {
+      //   console.log('YearDropdown parse v=', v, typeof v);
+      //   if (v === 'all' || v === '') {
+      //     // When "All" is selected, change sort to max_year DESC
+      //     console.log('LIST CONTEXT', listContext);
+      //     if (listContext?.setSort) {
+      //       listContext.setSort({ field: 'max_year', order: 'DESC' });
+      //     }
+      //     return undefined; // Remove year filter
+      //   } else {
+      //     // When a specific year is selected, change sort back to createdAt DESC
+      //     // if (listContext?.setSort) {
+      //     //   listContext.setSort({ field: 'createdAt', order: 'DESC' });
+      //     // }
+      //     return Number(v);
+      //   }
+      // }}
+      //option 3
+      // parse={(v) => {
+      //   console.log('YearDropdown parse v=', v, typeof v);
+        
+      //   if (v === 'all' || v === '') {
+      //     // When "All" is selected, redirect with max_year sort
+      //     const searchParams = new URLSearchParams(location.search);
+      //     searchParams.set('sort', 'max_year');
+      //     searchParams.set('order', 'DESC');
+      //     searchParams.delete('filter'); // Remove year filter
+          
+      //     history.push(`${location.pathname}?${searchParams.toString()}`);
+      //     return undefined;
+      //   } else {
+      //     // When a specific year is selected, redirect with createdAt sort
+      //     const searchParams = new URLSearchParams(location.search);
+      //     searchParams.set('sort', 'createdAt');
+      //     searchParams.set('order', 'DESC');
+          
+      //     history.push(`${location.pathname}?${searchParams.toString()}`);
+      //     return Number(v);
+      //   }
+      // }}
       {...rest}
     />
   )
@@ -128,6 +182,7 @@ const AlbumFilter = (props) => {
         alwaysOn
         fullWidth={isSmall}
         margin="dense"
+        pathname={location.pathname}
       />
       <SearchInput
         id="search"
@@ -269,6 +324,13 @@ const AlbumList = (props) => {
   const version = useVersion()
   const refresh = useRefresh()
   useResourceRefresh('album')
+
+ // just for debugging TODO: remove
+  // const listContext = useListContext();
+  // const { setSort } = listContext || {};
+  // const listContextSort = listContext?.sort || {};
+  // console.log('AlbumList listContext sort=', listContextSort);
+  // console.log('AlbumList props=', props);
 
   const seed = `${randomStartingSeed}-${version}`
 

@@ -113,8 +113,8 @@
       "name": "Kirtani |||| Kirtanis",
       "fields": {
         "name": "Name",
-        "albumCount": "Album Count",
-        "songCount": "Song Count",
+        "albumCount": "Samagam Count",
+        "songCount": "Kirtan Count",
         "size": "Size",
         "playCount": "Plays",
         "rating": "Rating",

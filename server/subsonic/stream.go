@@ -161,3 +161,72 @@ func (api *Router) Download(w http.ResponseWriter, r *http.Request) (*responses.
 
 	return nil, err
 }
+
+func (api *Router) DownloadSongs(w http.ResponseWriter, r *http.Request) (*responses.Subsonic, error) {
+	ctx := r.Context()
+	username, _ := request.UsernameFrom(ctx)
+	p := req.Params(r)
+
+	// Get the comma-separated list of song IDs
+	idsParam, err := p.String("ids")
+	if err != nil {
+		return nil, err
+	}
+
+	if !conf.Server.EnableDownloads {
+		log.Warn(ctx, "Downloads are disabled", "user", username, "ids", idsParam)
+		return nil, newError(responses.ErrorAuthorizationFail, "downloads are disabled")
+	}
+
+	// Parse comma-separated IDs
+	ids := strings.Split(idsParam, ",")
+	if len(ids) == 0 {
+		return nil, newError(responses.ErrorGeneric, "no song IDs provided")
+	}
+
+	// Clean up any empty IDs
+	var cleanIds []string
+	for _, id := range ids {
+		id = strings.TrimSpace(id)
+		if id != "" {
+			cleanIds = append(cleanIds, id)
+		}
+	}
+
+	if len(cleanIds) == 0 {
+		return nil, newError(responses.ErrorGeneric, "no valid song IDs provided")
+	}
+
+	maxBitRate := p.IntOr("bitrate", 0)
+	format, _ := p.String("format")
+
+	if format == "" {
+		if conf.Server.AutoTranscodeDownload {
+			transcoding, ok := request.TranscodingFrom(ctx)
+			if !ok {
+				format = "raw"
+			} else {
+				format = transcoding.TargetFormat
+				maxBitRate = transcoding.DefaultBitRate
+			}
+		} else {
+			format = "raw"
+		}
+	}
+
+	// Set headers for ZIP download
+	fileName := fmt.Sprintf("kirtans_%d_files.zip", len(cleanIds))
+	w.Header().Set("Content-Type", "application/zip")
+	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", fileName))
+
+	log.Debug(ctx, "Downloading songs as ZIP", "user", username, "numSongs", len(cleanIds), "format", format, "bitrate", maxBitRate)
+
+	// Use the archiver to create the ZIP file
+	err = api.archiver.ZipSongs(ctx, cleanIds, format, maxBitRate, w)
+	if err != nil {
+		log.Error(ctx, "Error creating songs ZIP", "user", username, "ids", idsParam, err)
+		return nil, err
+	}
+
+	return nil, nil
+}

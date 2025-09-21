@@ -9,12 +9,25 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
 import StarIcon from '@material-ui/icons/Star'
 import StarBorderIcon from '@material-ui/icons/StarBorder'
 import AlbumOutlinedIcon from '@material-ui/icons/AlbumOutlined'
+import HomeIcon from '@material-ui/icons/Home'
+import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined'
 import LibraryAddOutlinedIcon from '@material-ui/icons/LibraryAddOutlined'
 import VideoLibraryOutlinedIcon from '@material-ui/icons/VideoLibraryOutlined'
 import config from '../config'
 import DynamicMenuIcon from '../layout/DynamicMenuIcon'
 
 const albumLists = {
+   recentlyAdded: {
+    icon: (
+      <DynamicMenuIcon
+        path={'album/recentlyAdded'}
+        icon={HomeOutlinedIcon}
+        activeIcon={HomeIcon}
+      />
+    ),
+    params: `sort=createdAt&order=DESC&filter={"year":${new Date().getFullYear()}}`,
+    // params: 'sort=recently_added&order=DESC&filter={}', // Original sortin
+  },  // Default
   all: {
     icon: (
       <DynamicMenuIcon
@@ -23,7 +36,7 @@ const albumLists = {
         activeIcon={AlbumIcon}
       />
     ),
-    params: 'sort=name&order=ASC&filter={}',
+    params: 'sort=max_year&order=DESC&filter={}',
   },
   // Commented out Random from Samagams Submenu
   // random: {
@@ -54,16 +67,7 @@ const albumLists = {
       params: 'sort=rating&order=DESC&filter={"has_rating":true}',
     },
   }),
-  recentlyAdded: {
-    icon: (
-      <DynamicMenuIcon
-        path={'album/recentlyAdded'}
-        icon={LibraryAddOutlinedIcon}
-        activeIcon={LibraryAddIcon}
-      />
-    ),
-    params: 'sort=recently_added&order=DESC&filter={}',
-  },
+ 
   // Commented out Recently Played and Most Played from Samagams Submenu
   // recentlyPlayed: {
   //   icon: (
