@@ -17,7 +17,7 @@ const defaultConfig = {
   gaTrackingId: '',
   devActivityPanel: true,
   enableStarRating: false,
-  defaultTheme: 'Spotify-ish',
+  defaultTheme: 'Japtap Midnight',
   defaultLanguage: '',
   defaultUIVolume: 100,
   enableUserEditing: true,

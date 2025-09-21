@@ -62,6 +62,10 @@ const useStyles = makeStyles({
   ratingField: {
     visibility: 'hidden',
   },
+  numericCell: {
+    textAlign: 'right',
+    fontVariantNumeric: 'tabular-nums',
+  },
 })
 
 const ArtistFilter = (props) => {
@@ -210,13 +214,22 @@ const ArtistListView = ({ hasShow, hasEdit, hasList, width, ...rest }) => {
         source="albumCount"
         sortByOrder={'DESC'}
         render={getAlbumCount}
+        className={classes.numericCell}
+        aria-label="Samagams (count)"
       />
       <FunctionField
         source="songCount"
         sortByOrder={'DESC'}
         render={getSongCount}
+        className={classes.numericCell}
+        aria-label="Kirtans (count)"
       />
-      <FunctionField source="size" sortByOrder={'DESC'} render={getSize} />
+      <FunctionField 
+        source="size" 
+        sortByOrder={'DESC'} 
+        render={getSize}
+        className={classes.numericCell}
+      />
       {columns}
       <ArtistContextMenu
         source={'starred_at'}
