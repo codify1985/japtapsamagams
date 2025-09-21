@@ -88,4 +88,4 @@ const albumLists = {
 }
 
 export default albumLists
-export const defaultAlbumList = 'all'
+export const defaultAlbumList = 'recentlyAdded'
