@@ -73,10 +73,10 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: '0 !important',
     },
     [theme.breakpoints.down('sm')]: {
-        // stack and add padding so the first row clears the sticky toolbar
-        margin: '0.75rem',
-      },
+      // stack and add padding so the first row clears the sticky toolbar
+      margin: '0.75rem',
     },
+  },
 }))
 
 const SongFilter = (props) => {

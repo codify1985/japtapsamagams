@@ -88,7 +88,7 @@ const AlbumNavigator = ({ currentAlbum }) => {
   const initialAlbumId = React.useMemo(() => {
     if (!loaded || !albumChoices?.length) return ''
     const found = albumChoices.find((a) => a.id === currentAlbum?.id)
-    return found ? found.id : albumChoices[0].id;
+    return found ? found.id : albumChoices[0].id
   }, [loaded, albumChoices, currentAlbum])
 
   const [albumId, setAlbumId] = React.useState(initialAlbumId)
@@ -104,7 +104,7 @@ const AlbumNavigator = ({ currentAlbum }) => {
     if (found && albumId !== found.id) {
       setAlbumId(found.id)
     } else {
-      const id = yearAlbums.length > 0 ? yearAlbums[0].id : '';
+      const id = yearAlbums.length > 0 ? yearAlbums[0].id : ''
       setAlbumId(id)
       if (id) redirect(`/album/${id}/show`)
     }

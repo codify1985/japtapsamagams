@@ -6,20 +6,20 @@ const japtapMidnight = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main:  '#0A84FF', //'#50c8ff',//
-      light: '#5AA9FF', 
+      main: '#0A84FF', //'#50c8ff',//
+      light: '#5AA9FF',
       dark: '#0062D6',
       contrastText: '#FFFFFF',
     },
     secondary: {
       main: '#0A84FF', // #0A84FF',
-      light: '#5AA9FF', 
+      light: '#5AA9FF',
       dark: '#0062D6',
       contrastText: '#FFFFFF',
-    //   main: '#BF5AF2',
-    //   light: '#D47FFF',
-    //   dark: '#9C3DCF',
-    //   contrastText: '#FFFFFF',
+      //   main: '#BF5AF2',
+      //   light: '#D47FFF',
+      //   dark: '#9C3DCF',
+      //   contrastText: '#FFFFFF',
     },
     // primary: {
     //   main: '#62ec83',
@@ -31,7 +31,7 @@ const japtapMidnight = createTheme({
     //   main: '#62ec83',
     //   light: '#1db954',
     //   dark: '#008827',
-    //   contrastText: '#FFFFFF',  
+    //   contrastText: '#FFFFFF',
     // },
     secondary2: {
       main: '#FF9F0A',
@@ -75,15 +75,15 @@ const japtapMidnight = createTheme({
     },
     type: 'dark',
   },
-  
+
   shape: {
     borderRadius: 12,
   },
-  
+
   typography: {
     fontFamily: [
       'SF Pro Text',
-      'SF Pro Display', 
+      'SF Pro Display',
       'Inter',
       'system-ui',
       '-apple-system',
@@ -125,9 +125,9 @@ const japtapMidnight = createTheme({
       fontFamily: 'SF Pro Text, Inter, system-ui, sans-serif',
     },
   },
-  
+
   spacing: (factor) => `${0.5 * factor}rem`,
-  
+
   shadows: [
     'none',
     '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)',
@@ -642,7 +642,8 @@ const japtapMidnight = createTheme({
 
     NDMobileArtistDetails: {
       bgContainer: {
-        background: 'linear-gradient(to bottom, rgba(11, 16, 32, 0.8), rgba(20, 25, 45, 0.9))',
+        background:
+          'linear-gradient(to bottom, rgba(11, 16, 32, 0.8), rgba(20, 25, 45, 0.9))',
         backdropFilter: 'blur(8px)',
       },
     },

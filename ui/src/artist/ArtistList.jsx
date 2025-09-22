@@ -82,7 +82,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('sm')]: {
       margin: '0.75rem',
     },
-  }
+  },
 }))
 
 const ArtistFilter = (props) => {
@@ -241,9 +241,9 @@ const ArtistListView = ({ hasShow, hasEdit, hasList, width, ...rest }) => {
         className={classes.numericCell}
         aria-label="Kirtans (count)"
       />
-      <FunctionField 
-        source="size" 
-        sortByOrder={'DESC'} 
+      <FunctionField
+        source="size"
+        sortByOrder={'DESC'}
         render={getSize}
         className={classes.numericCell}
       />
