@@ -71,6 +71,15 @@ const useFilterStyles = makeStyles((theme) => ({
   },
 }))
 
+const useAlbumListStyles = makeStyles((theme) => ({
+  albumListContainer: {
+    // margin: '1rem',
+    [theme.breakpoints.down('sm')]: {
+      margin: '0.75rem',
+    },
+  },
+}))
+
 // Reusable YearDropdown that works with react-admin Filter/FilterButton
 const YearDropdown = ({
   source = 'year',
@@ -110,7 +119,7 @@ const YearDropdown = ({
       margin="dense"
       fullWidth={fullWidth}
       initialValue={defaultValue} // Add this line
-      style={fullWidth ? { marginTop: 10 } : { minWidth: 140 }}
+      style={fullWidth ? { marginTop: 10 } : { minWidth: 180 }}
       // undefined/null in form -> show empty option ("All")
       format={(v) => (v == null ? 'all' : v)}
       // Modified parse function: when 'all' is selected, return undefined to remove filter
@@ -324,6 +333,7 @@ const AlbumList = (props) => {
   const location = useLocation()
   const version = useVersion()
   const refresh = useRefresh()
+  const classes = useAlbumListStyles()
   useResourceRefresh('album')
 
   // just for debugging TODO: remove
@@ -387,7 +397,7 @@ const AlbumList = (props) => {
   }
 
   return (
-    <>
+    <div className={classes.albumListContainer}>
       <List
         {...props}
         exporter={false}
@@ -407,7 +417,7 @@ const AlbumList = (props) => {
         )}
       </List>
       <ExpandInfoDialog content={<AlbumInfo />} />
-    </>
+    </div>
   )
 }
 

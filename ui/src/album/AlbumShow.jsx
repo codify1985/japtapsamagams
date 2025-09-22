@@ -18,6 +18,9 @@ const useStyles = makeStyles(
     albumActions: {
       width: '100%',
     },
+    albumShowContainer: {
+      margin: '0.75rem',
+    },
   }),
   {
     name: 'NDAlbumShow',
@@ -61,9 +64,12 @@ const AlbumShowLayout = (props) => {
 
 const AlbumShow = (props) => {
   const controllerProps = useShowController(props)
+  const classes = useStyles()
   return (
     <ShowContextProvider value={controllerProps}>
-      <AlbumShowLayout {...props} {...controllerProps} />
+      <div className={classes.albumShowContainer}>
+        <AlbumShowLayout {...props} {...controllerProps} />
+      </div>
     </ShowContextProvider>
   )
 }
