@@ -60,8 +60,9 @@ const useFilterStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('sm')]: {
       // stack and add padding so the first row clears the sticky toolbar
       paddingTop: theme.spacing(1.5),
-      // paddingLeft: theme.spacing(2),
-      // paddingRight: theme.spacing(2),
+      marginLeft: 0, // Remove left margin to align with content
+      paddingLeft: 0, // Remove left padding to align with content
+      paddingRight: 0, // Remove right padding for consistency
       // kill any residual margins that cause left misalignment
       '& .MuiFormControl-root, & .ra-input': {
         width: '100%',
@@ -73,6 +74,17 @@ const useFilterStyles = makeStyles((theme) => ({
 
 const useAlbumListStyles = makeStyles((theme) => ({
   albumListContainer: {
+    '& [class*="RaListToolbar-toolbar"]': {
+      paddingLeft: '0 !important',
+      paddingRight: '0 !important',
+    },
+    '& .RaFilter-form': {
+      margin: 0,
+      padding: '0rem',
+      [theme.breakpoints.down('sm')]: {
+        padding: '0.25rem',
+      },
+    },
     // margin: '1rem',
     [theme.breakpoints.down('sm')]: {
       margin: '0.75rem',
@@ -91,17 +103,9 @@ const YearDropdown = ({
   const isHomePage = location.pathname.includes('recentlyAdded')
   const currentYear = new Date().getFullYear()
 
-  // Set default value based on isHomePage
-  const defaultValue = React.useMemo(() => {
-    if (isHomePage) {
-      return currentYear // Current year
-    }
-    return 'all' // "All" (empty value)
-  }, [isHomePage, currentYear])
-
   const yearChoices = React.useMemo(() => {
     const choices = []
-    const maxYears = isHomePage ? currentYear - 5 : 2009 // from 2009 to current year
+    const maxYears = 2009 // from 2009 to current year
     for (let y = currentYear; y >= maxYears; y--) {
       choices.push({ id: y, name: String(y) })
     }
@@ -118,8 +122,8 @@ const YearDropdown = ({
       emptyValue="all" // value for empty option
       margin="dense"
       fullWidth={fullWidth}
-      initialValue={defaultValue} // Add this line
-      style={fullWidth ? { marginTop: 10 } : { minWidth: 180 }}
+      initialValue={currentYear} // Add this line
+      style={fullWidth ? { marginTop: 10 } : { minWidth: 220 }} // Increased width to match search box
       // undefined/null in form -> show empty option ("All")
       format={(v) => (v == null ? 'all' : v)}
       // Modified parse function: when 'all' is selected, return undefined to remove filter

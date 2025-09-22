@@ -37,7 +37,7 @@ import { DraggableTypes } from '../consts'
 import en from '../i18n/en.json'
 import { formatBytes } from '../utils/index.js'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   contextHeader: {
     marginLeft: '3px',
     marginTop: '-2px',
@@ -66,7 +66,24 @@ const useStyles = makeStyles({
     textAlign: 'right',
     fontVariantNumeric: 'tabular-nums',
   },
-})
+  artistListContainer: {
+    '& [class*="RaListToolbar-toolbar"]': {
+      paddingLeft: '0 !important',
+      paddingRight: '0 !important',
+    },
+    '& .RaFilter-form': {
+      margin: 0,
+      padding: '0rem',
+      [theme.breakpoints.down('sm')]: {
+        padding: '0.25rem',
+      },
+    },
+    // margin: '1rem',
+    [theme.breakpoints.down('sm')]: {
+      margin: '0.75rem',
+    },
+  }
+}))
 
 const ArtistFilter = (props) => {
   const translate = useTranslate()
@@ -250,11 +267,12 @@ const ArtistListView = ({ hasShow, hasEdit, hasList, width, ...rest }) => {
 }
 
 const ArtistList = (props) => {
+  const classes = useStyles()
   return (
-    <>
+    <div className={classes.artistListContainer}>
       <List
         {...props}
-        sort={{ field: 'name', order: 'ASC' }}
+        sort={{ field: 'songCount', order: 'DESC' }}
         exporter={false}
         bulkActionButtons={false}
         filters={<ArtistFilter />}
@@ -264,7 +282,7 @@ const ArtistList = (props) => {
       >
         <ArtistListView {...props} />
       </List>
-    </>
+    </div>
   )
 }
 
