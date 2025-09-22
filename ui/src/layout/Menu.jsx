@@ -105,8 +105,7 @@ const Menu = ({ dense = false }) => {
     if (!resource) {
       return null
     }
-
-    const albumListAddress = `/album/${type}`
+    const albumListAddress = type === 'search' ? `/song/search?${albumLists[type]?.params}` : `/album/${type}`
 
     const name = translate(`resources.album.lists.${type || 'default'}`, {
       _: translatedResourceName(resource, translate),

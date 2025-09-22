@@ -99,6 +99,7 @@
       "lists": {
         "all": "All",
         "random": "Random",
+        "search": "Search",
         "recentlyAdded": "Home",
         "recentlyPlayed": "Recently Played",
         "mostPlayed": "Most Played",
