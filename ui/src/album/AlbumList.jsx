@@ -60,8 +60,8 @@ const useFilterStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('sm')]: {
       // stack and add padding so the first row clears the sticky toolbar
       paddingTop: theme.spacing(1.5),
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
+      // paddingLeft: theme.spacing(2),
+      // paddingRight: theme.spacing(2),
       // kill any residual margins that cause left misalignment
       '& .MuiFormControl-root, & .ra-input': {
         width: '100%',
