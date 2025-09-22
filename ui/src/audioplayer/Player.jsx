@@ -211,8 +211,8 @@ const Player = () => {
         setStartTime(Date.now())
       }
       if (info.duration) {
-  const song = info.song
-  document.title = `${song.title} - ${song.artist} - Jap Tap Samagams`
+        const song = info.song
+        document.title = `${song.title} - ${song.artist} - Jap Tap Samagams`
         if (!info.isRadio) {
           const pos = startTime === null ? null : Math.floor(info.currentTime)
           subsonic.nowPlaying(info.trackId, pos)
