@@ -213,7 +213,6 @@ const ArtistListView = ({ hasShow, hasEdit, hasList, width, ...rest }) => {
     columns: toggleableFields,
   })
 
-  console.log('Rendering ArtistListView, isAdmin:', isAdmin)
   return isXsmall ? (
     <ArtistSimpleList
       linkType={(id) => history.push(getMobileArtistLink(id))}
