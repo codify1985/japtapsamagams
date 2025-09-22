@@ -28,17 +28,27 @@ const albumLists = {
     params: `sort=all&filter={"year":${new Date().getFullYear()}}`,
     // params: 'sort=recently_added&order=DESC&filter={}', // Original sortin
   }, // Default
-  all: {
+  // all: {
+  //   icon: (
+  //     <DynamicMenuIcon
+  //       path={'album/all'}
+  //       icon={AlbumOutlinedIcon}
+  //       activeIcon={AlbumIcon}
+  //     />
+  //   ),
+  //   params: 'sort=all&filter={}',
+  //   // params: 'sort=createdAt&order=DESC&filter={}',
+  //   //params: 'sort=max_year&order=DESC&filter={}',
+  // },
+  search: {
     icon: (
       <DynamicMenuIcon
-        path={'album/all'}
+        path={'song/recentKirtan'}
         icon={AlbumOutlinedIcon}
         activeIcon={AlbumIcon}
       />
     ),
-    params: 'sort=all&filter={}',
-    // params: 'sort=createdAt&order=DESC&filter={}',
-    //params: 'sort=max_year&order=DESC&filter={}',
+    params: 'sort=createdAt&order=DESC&filter={}',
   },
   // Commented out Random from Samagams Submenu
   // random: {
