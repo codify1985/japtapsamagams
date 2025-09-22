@@ -38,7 +38,7 @@ import { SongBulkActions, QualityInfo, useSelectedFields } from '../common'
 import config from '../config'
 import ExpandInfoDialog from '../dialogs/ExpandInfoDialog'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   contextHeader: {
     marginLeft: '3px',
     marginTop: '-2px',
@@ -64,7 +64,20 @@ const useStyles = makeStyles({
     margin: 0,
     height: '24px',
   },
-})
+  songSimpleListContainer: {
+    // margin: '0.75rem',
+  },
+  songListContainer: {
+    '& [class*="RaListToolbar-toolbar"]': {
+      paddingLeft: '0 !important',
+      paddingRight: '0 !important',
+    },
+    [theme.breakpoints.down('sm')]: {
+        // stack and add padding so the first row clears the sticky toolbar
+        margin: '0.75rem',
+      },
+    },
+}))
 
 const SongFilter = (props) => {
   const classes = useStyles()
@@ -205,7 +218,7 @@ const SongList = (props) => {
   })
 
   return (
-    <>
+    <div className={classes.songListContainer}>
       <List
         {...props}
         sort={{ field: 'title', order: 'ASC' }}
@@ -243,7 +256,7 @@ const SongList = (props) => {
         )}
       </List>
       <ExpandInfoDialog content={<SongInfo />} />
-    </>
+    </div>
   )
 }
 

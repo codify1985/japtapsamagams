@@ -17,7 +17,7 @@ import config from '../config'
 // Added new Default Library Song Lists here
 const songLists = {
   all: {
-    params: 'sort=title&order=ASC&page=1&perPage=36&filter={}',
+    params: 'sort=random&order=ASC&page=1&perPage=36&filter={}',
   },
   recentKirtan: {
     params: 'sort=createdAt&order=DESC&page=1&perPage=36&filter={}',
@@ -28,7 +28,7 @@ const songLists = {
   },
   simran: {
     params:
-      'displayedFilters={}&filter={"title":"simran"}&order=ASC&page=1&perPage=15&sort=title',
+      'displayedFilters={}&filter={"title":"simran"}&order=ASC&page=1&perPage=15&sort=random',
   },
 }
 

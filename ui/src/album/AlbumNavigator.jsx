@@ -59,9 +59,6 @@ const AlbumNavigator = ({ currentAlbum }) => {
     setLoaded(false)
     const serverFilter = { ...stableLibraryFilter, year: Number(year) }
 
-    // eslint-disable-next-line no-console
-    console.debug('[AlbumNavigator] About to fetch with filter:', serverFilter)
-
     dataProvider
       .getList('album', {
         pagination: { page: 1, perPage: 500 },
@@ -70,20 +67,8 @@ const AlbumNavigator = ({ currentAlbum }) => {
       })
       .then((result) => {
         // eslint-disable-next-line no-console
-        console.debug('[AlbumNavigator] Raw dataProvider result:', result)
+        console.debug('[AlbumNavigator] Fetching Albums:', result)
         setYearAlbums(result.data || [])
-        // console.debug(
-        //   '[AlbumNavigator] Processed yearAlbums:',
-        //   result.data || [],
-        // )
-
-        const id =
-          result.data && result.data.length > 0 ? result.data[0].id : ''
-        if (id) {
-          setAlbumId(id)
-          redirect(`/album/${id}/show`)
-        }
-
         setLoaded(true)
       })
       .catch((error) => {
@@ -99,29 +84,11 @@ const AlbumNavigator = ({ currentAlbum }) => {
     [yearAlbums],
   )
 
-  // Debug logs
-  React.useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.debug('[AlbumNavigator]', {
-      selectedYear: year,
-      loaded,
-      fetchedCount: yearAlbums.length,
-      libraryFilter: stableLibraryFilter,
-      sample: yearAlbums[0] && {
-        id: yearAlbums[0].id,
-        name: yearAlbums[0].name,
-        year: yearAlbums[0].year,
-        min_year: yearAlbums[0].min_year,
-        max_year: yearAlbums[0].max_year,
-      },
-    })
-  }, [year, loaded, yearAlbums, stableLibraryFilter])
-
   // Pick current album id if it exists in the list; otherwise first in list
   const initialAlbumId = React.useMemo(() => {
     if (!loaded || !albumChoices?.length) return ''
     const found = albumChoices.find((a) => a.id === currentAlbum?.id)
-    return found ? found.id : albumChoices[0].id
+    return found ? found.id : albumChoices[0].id;
   }, [loaded, albumChoices, currentAlbum])
 
   const [albumId, setAlbumId] = React.useState(initialAlbumId)
@@ -130,6 +97,18 @@ const AlbumNavigator = ({ currentAlbum }) => {
   React.useEffect(() => {
     setAlbumId(initialAlbumId)
   }, [initialAlbumId])
+
+  React.useEffect(() => {
+    // If current album is not in the new list, redirect to first album of the list
+    const found = yearAlbums.find((a) => a.id === currentAlbum?.id)
+    if (found && albumId !== found.id) {
+      setAlbumId(found.id)
+    } else {
+      const id = yearAlbums.length > 0 ? yearAlbums[0].id : '';
+      setAlbumId(id)
+      if (id) redirect(`/album/${id}/show`)
+    }
+  }, [albumChoices, yearAlbums, redirect])
 
   const handleYearChange = (event) => {
     const y = Number(event.target.value)
