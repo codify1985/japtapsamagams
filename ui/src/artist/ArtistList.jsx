@@ -153,6 +153,8 @@ const ArtistListView = ({ hasShow, hasEdit, hasList, width, ...rest }) => {
   const history = useHistory()
   const isXsmall = useMediaQuery((theme) => theme.breakpoints.down('xs'))
   useResourceRefresh('artist')
+  const { permissions } = usePermissions()
+  const isAdmin = permissions === 'admin'
 
   // Create a handler that can find the record by ID
   const handleArtistLinkWithRecord = (id) => {
@@ -211,6 +213,7 @@ const ArtistListView = ({ hasShow, hasEdit, hasList, width, ...rest }) => {
     columns: toggleableFields,
   })
 
+  console.log('Rendering ArtistListView, isAdmin:', isAdmin)
   return isXsmall ? (
     <ArtistSimpleList
       linkType={(id) => history.push(getMobileArtistLink(id))}
@@ -227,20 +230,24 @@ const ArtistListView = ({ hasShow, hasEdit, hasList, width, ...rest }) => {
       classes={{ row: classes.row }}
     >
       <TextField source="name" />
-      <FunctionField
-        source="albumCount"
-        sortByOrder={'DESC'}
-        render={getAlbumCount}
-        className={classes.numericCell}
-        aria-label="Samagams (count)"
-      />
-      <FunctionField
-        source="songCount"
-        sortByOrder={'DESC'}
-        render={getSongCount}
-        className={classes.numericCell}
-        aria-label="Kirtans (count)"
-      />
+      {isAdmin && (
+        <FunctionField
+          source="albumCount"
+          sortByOrder={'DESC'}
+          render={getAlbumCount}
+          className={classes.numericCell}
+          aria-label="Samagams (count)"
+        />
+      )}
+      {isAdmin && (
+        <FunctionField
+          source="songCount"
+          sortByOrder={'DESC'}
+          render={getSongCount}
+          className={classes.numericCell}
+          aria-label="Kirtans (count)"
+        />
+      )}
       <FunctionField
         source="size"
         sortByOrder={'DESC'}
@@ -272,13 +279,14 @@ const ArtistList = (props) => {
     <div className={classes.artistListContainer}>
       <List
         {...props}
-        sort={{ field: 'songCount', order: 'DESC' }}
+        sort={{ field: 'name', order: 'ASC' }}
         exporter={false}
         bulkActionButtons={false}
         filters={<ArtistFilter />}
         filterDefaultValues={{ role: 'artist' }}
         // default selected value to artist
         actions={<ArtistListActions />}
+        perPage={25}
       >
         <ArtistListView {...props} />
       </List>

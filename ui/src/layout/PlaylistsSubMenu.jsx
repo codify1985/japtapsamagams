@@ -4,6 +4,7 @@ import {
   useDataProvider,
   useNotify,
   useQueryWithStore,
+  useGetIdentity,
 } from 'react-admin'
 import { useHistory } from 'react-router-dom'
 import QueueMusicIcon from '@material-ui/icons/QueueMusic'
@@ -63,6 +64,9 @@ const PlaylistsSubMenu = ({ state, setState, sidebarIsOpen, dense }) => {
     },
   })
 
+  const { identity } = useGetIdentity()
+  const currentUser = identity?.id
+
   const handleToggle = (menu) => {
     setState((state) => ({ ...state, [menu]: !state[menu] }))
   }
@@ -98,18 +102,20 @@ const PlaylistsSubMenu = ({ state, setState, sidebarIsOpen, dense }) => {
 
   return (
     <>
-      <SubMenu
-        handleToggle={() => handleToggle('menuPlaylists')}
-        isOpen={state.menuPlaylists}
-        sidebarIsOpen={sidebarIsOpen}
-        name={'menu.playlists'}
-        icon={<QueueMusicIcon />}
-        dense={dense}
-        actionIcon={<BiCog />}
-        onAction={onPlaylistConfig}
-      >
-        {myPlaylists.map(renderPlaylistMenuItemLink)}
-      </SubMenu>
+      {currentUser !== config.defaultUser && (
+        <SubMenu
+          handleToggle={() => handleToggle('menuPlaylists')}
+          isOpen={state.menuPlaylists}
+          sidebarIsOpen={sidebarIsOpen}
+          name={'menu.playlists'}
+          icon={<QueueMusicIcon />}
+          dense={dense}
+          actionIcon={<BiCog />}
+          onAction={onPlaylistConfig}
+        >
+          {myPlaylists.map(renderPlaylistMenuItemLink)}
+        </SubMenu>
+      )}
       {sharedPlaylists?.length > 0 && (
         <SubMenu
           handleToggle={() => handleToggle('menuSharedPlaylists')}

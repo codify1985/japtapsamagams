@@ -13,89 +13,99 @@ import HomeIcon from '@material-ui/icons/Home'
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined'
 import LibraryAddOutlinedIcon from '@material-ui/icons/LibraryAddOutlined'
 import VideoLibraryOutlinedIcon from '@material-ui/icons/VideoLibraryOutlined'
+import SearchIcon from '@material-ui/icons/Search'
+import { SearchOutlined } from '@material-ui/icons'
+import { useGetIdentity } from 'react-admin'
 import config from '../config'
 import DynamicMenuIcon from '../layout/DynamicMenuIcon'
 
-const albumLists = {
-  recentlyAdded: {
-    icon: (
-      <DynamicMenuIcon
-        path={'album/recentlyAdded'}
-        icon={HomeOutlinedIcon}
-        activeIcon={HomeIcon}
-      />
-    ),
-    params: `sort=all&filter={"year":${new Date().getFullYear()}}`,
-    // params: 'sort=recently_added&order=DESC&filter={}', // Original sortin
-  }, // Default
-  // all: {
-  //   icon: (
-  //     <DynamicMenuIcon
-  //       path={'album/all'}
-  //       icon={AlbumOutlinedIcon}
-  //       activeIcon={AlbumIcon}
-  //     />
-  //   ),
-  //   params: 'sort=all&filter={}',
-  //   // params: 'sort=createdAt&order=DESC&filter={}',
-  //   //params: 'sort=max_year&order=DESC&filter={}',
-  // },
-  search: {
-    icon: (
-      <DynamicMenuIcon
-        path={'song/recentKirtan'}
-        icon={AlbumOutlinedIcon}
-        activeIcon={AlbumIcon}
-      />
-    ),
-    params: 'sort=createdAt&order=DESC&filter={}',
-  },
-  // Commented out Random from Samagams Submenu
-  // random: {
-  //   icon: <ShuffleIcon />,
-  //   params: 'sort=random&order=ASC&filter={}',
-  // },
-  ...(config.enableFavourites && {
-    starred: {
-      icon: (
-        <DynamicMenuIcon
-          path={'album/starred'}
-          icon={FavoriteBorderIcon}
-          activeIcon={FavoriteIcon}
-        />
-      ),
-      params: 'sort=starred_at&order=DESC&filter={"starred":true}',
-    },
-  }),
-  ...(config.enableStarRating && {
-    topRated: {
-      icon: (
-        <DynamicMenuIcon
-          path={'album/topRated'}
-          icon={StarBorderIcon}
-          activeIcon={StarIcon}
-        />
-      ),
-      params: 'sort=rating&order=DESC&filter={"has_rating":true}',
-    },
-  }),
+const useAlbumLists = () => {
+  const { identity } = useGetIdentity()
+  const currentUser = identity?.id
 
-  // Commented out Recently Played and Most Played from Samagams Submenu
-  // recentlyPlayed: {
-  //   icon: (
-  //     <DynamicMenuIcon
-  //       path={'album/recentlyPlayed'}
-  //       icon={VideoLibraryOutlinedIcon}
-  //       activeIcon={VideoLibraryIcon}
-  //     />
-  //   ),
-  //   params: 'sort=play_date&order=DESC&filter={"recently_played":true}',
-  // },
-  // mostPlayed: {
-  //   icon: <RepeatIcon />,
-  //   params: 'sort=play_count&order=DESC&filter={"recently_played":true}',
-  // },
+  return {
+    recentlyAdded: {
+      icon: (
+        <DynamicMenuIcon
+          path={'album/recentlyAdded'}
+          icon={HomeOutlinedIcon}
+          activeIcon={HomeIcon}
+        />
+      ),
+      params: `sort=all&filter={"year":${new Date().getFullYear()}}`,
+      // params: 'sort=recently_added&order=DESC&filter={}', // Original sortin
+    }, // Default
+    // all: {
+    //   icon: (
+    //     <DynamicMenuIcon
+    //       path={'album/all'}
+    //       icon={AlbumOutlinedIcon}
+    //       activeIcon={AlbumIcon}
+    //     />
+    //   ),
+    //   params: 'sort=all&filter={}',
+    //   // params: 'sort=createdAt&order=DESC&filter={}',
+    //   //params: 'sort=max_year&order=DESC&filter={}',
+    // },
+    search: {
+      icon: (
+        <DynamicMenuIcon
+          path={'song/recentKirtan'}
+          icon={SearchOutlined}
+          activeIcon={SearchIcon}
+        />
+      ),
+      params: 'sort=createdAt&order=DESC&filter={}',
+    },
+    // Commented out Random from Samagams Submenu
+    // random: {
+    //   icon: <ShuffleIcon />,
+    //   params: 'sort=random&order=ASC&filter={}',
+    // },
+    // Only show starred if user is not 'japtaptest' and favourites are enabled
+    ...(config.enableFavourites &&
+      currentUser !== config.defaultUser && {
+        starred: {
+          icon: (
+            <DynamicMenuIcon
+              path={'album/starred'}
+              icon={FavoriteBorderIcon}
+              activeIcon={FavoriteIcon}
+            />
+          ),
+          params: 'sort=starred_at&order=DESC&filter={"starred":true}',
+        },
+      }),
+    ...(config.enableStarRating && {
+      topRated: {
+        icon: (
+          <DynamicMenuIcon
+            path={'album/topRated'}
+            icon={StarBorderIcon}
+            activeIcon={StarIcon}
+          />
+        ),
+        params: 'sort=rating&order=DESC&filter={"has_rating":true}',
+      },
+    }),
+
+    // Commented out Recently Played and Most Played from Samagams Submenu
+    // recentlyPlayed: {
+    //   icon: (
+    //     <DynamicMenuIcon
+    //       path={'album/recentlyPlayed'}
+    //       icon={VideoLibraryOutlinedIcon}
+    //       activeIcon={VideoLibraryIcon}
+    //     />
+    //   ),
+    //   params: 'sort=play_date&order=DESC&filter={"recently_played":true}',
+    // },
+    // mostPlayed: {
+    //   icon: <RepeatIcon />,
+    //   params: 'sort=play_count&order=DESC&filter={"recently_played":true}',
+    // },
+  }
 }
 
-export default albumLists
+export default useAlbumLists
 export const defaultAlbumList = 'recentlyAdded'

@@ -2,35 +2,22 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Divider, makeStyles } from '@material-ui/core'
 import clsx from 'clsx'
-import { useTranslate, MenuItemLink, getResources } from 'react-admin'
+import {
+  useTranslate,
+  MenuItemLink,
+  getResources,
+  useGetIdentity,
+} from 'react-admin'
 import ViewListIcon from '@material-ui/icons/ViewList'
 import AlbumIcon from '@material-ui/icons/Album'
 import MusicNoteIcon from '@material-ui/icons/MusicNote'
 import HomeIcon from '@material-ui/icons/Home'
 import SubMenu from './SubMenu'
 import { humanize, pluralize } from 'inflection'
-import albumLists from '../album/albumLists'
+import useAlbumLists from '../album/albumLists'
 import PlaylistsSubMenu from './PlaylistsSubMenu'
 import LibrarySelector from '../common/LibrarySelector'
 import config from '../config'
-
-// Added new Default Library Song Lists here
-const songLists = {
-  all: {
-    params: 'sort=random&order=ASC&page=1&perPage=36&filter={}',
-  },
-  recentKirtan: {
-    params: 'sort=createdAt&order=DESC&page=1&perPage=36&filter={}',
-  },
-  starred: {
-    params:
-      'displayedFilters={"starred":true}&filter={"starred":true}&order=ASC&page=1&perPage=15&sort=title',
-  },
-  simran: {
-    params:
-      'displayedFilters={}&filter={"title":"simran"}&order=ASC&page=1&perPage=15&sort=random',
-  },
-}
 
 // Hide specific root-level resources from the song list
 const HIDE_ROOT_RESOURCES = new Set(['song', 'share'])
@@ -75,6 +62,29 @@ const Menu = ({ dense = false }) => {
   const queue = useSelector((state) => state.player?.queue)
   const classes = useStyles({ addPadding: queue.length > 0 })
   const resources = useSelector(getResources)
+  const albumLists = useAlbumLists()
+  // Move the hook call inside the component
+  const { identity } = useGetIdentity()
+  const currentUser = identity?.id
+
+  // Added new Default Library Song Lists here
+  const songLists = {
+    all: {
+      params: 'sort=random&order=ASC&page=1&perPage=36&filter={}',
+    },
+    recentKirtan: {
+      params: 'sort=createdAt&order=DESC&page=1&perPage=36&filter={}',
+    },
+    ...(config.enableFavourites &&
+      currentUser !== config.defaultUser && {
+        starred: {
+          params: `displayedFilters={"starred":true}&filter={"starred":true}&order=ASC&page=1&perPage=${config.defaultPerPage}&sort=title`,
+        },
+      }),
+    simran: {
+      params: `displayedFilters={}&filter={"title":"simran"}&order=ASC&page=1&perPage=${config.defaultPerPage}&sort=random`,
+    },
+  }
 
   // TODO State is not persisted in mobile when you close the sidebar menu. Move to redux?
   const [state, setState] = useState({
@@ -105,7 +115,10 @@ const Menu = ({ dense = false }) => {
     if (!resource) {
       return null
     }
-    const albumListAddress = type === 'search' ? `/song/search?${albumLists[type]?.params}` : `/album/${type}`
+    const albumListAddress =
+      type === 'search'
+        ? `/song/search?${albumLists[type]?.params}`
+        : `/album/${type}`
 
     const name = translate(`resources.album.lists.${type || 'default'}`, {
       _: translatedResourceName(resource, translate),
