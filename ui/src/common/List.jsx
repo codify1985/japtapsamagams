@@ -4,7 +4,7 @@ import { Pagination } from './Pagination'
 import { Title } from './index'
 
 export const List = (props) => {
-  const { resource } = props
+  const { resource, perPage } = props
   return (
     <RAList
       title={
@@ -13,7 +13,7 @@ export const List = (props) => {
           args={{ smart_count: 2 }}
         />
       }
-      perPage={15}
+      perPage={perPage ? perPage : 15}
       pagination={<Pagination />}
       {...props}
     />

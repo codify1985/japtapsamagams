@@ -38,6 +38,8 @@ const defaultConfig = {
   publicBaseUrl: '/share',
   separator: '/',
   enableInspect: true,
+  defaultPerPage: 25,
+  defaultUser: 'japtaptest',
 }
 
 let config

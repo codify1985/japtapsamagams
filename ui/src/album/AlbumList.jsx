@@ -30,7 +30,7 @@ import {
 import AlbumListActions from './AlbumListActions'
 import AlbumTableView from './AlbumTableView'
 import AlbumGridView from './AlbumGridView'
-import albumLists, { defaultAlbumList } from './albumLists'
+import useAlbumLists, { defaultAlbumList } from './albumLists'
 import config from '../config'
 import AlbumInfo from './AlbumInfo'
 import ExpandInfoDialog from '../dialogs/ExpandInfoDialog'
@@ -197,13 +197,13 @@ const AlbumFilter = (props) => {
         margin="dense"
         pathname={location.pathname}
       />
-      <SearchInput
+      {/* <SearchInput
         id="search"
         source="name"
         alwaysOn
         fullWidth={isSmall}
         margin="dense"
-      />
+      /> */}
       <ReferenceInput
         label={translate('resources.album.fields.artist')}
         source="artist_id"
@@ -213,7 +213,7 @@ const AlbumFilter = (props) => {
       >
         <AutocompleteInput emptyText="-- None --" />
       </ReferenceInput>
-      <ReferenceArrayInput
+      {/* <ReferenceArrayInput
         label={translate('resources.album.fields.genre')}
         source="genre_id"
         reference="genre"
@@ -235,8 +235,8 @@ const AlbumFilter = (props) => {
         })}
       >
         <AutocompleteInput emptyText="-- None --" optionText="tagValue" />
-      </ReferenceInput>
-      <ReferenceArrayInput
+      </ReferenceInput> */}
+      {/* <ReferenceArrayInput
         label={translate('resources.album.fields.grouping')}
         source="grouping"
         reference="tag"
@@ -252,8 +252,8 @@ const AlbumFilter = (props) => {
           classes={chipClasses}
           optionText="tagValue"
         />
-      </ReferenceArrayInput>
-      <ReferenceArrayInput
+      </ReferenceArrayInput> */}
+      {/* <ReferenceArrayInput
         label={translate('resources.album.fields.mood')}
         source="mood"
         reference="tag"
@@ -269,8 +269,8 @@ const AlbumFilter = (props) => {
           classes={chipClasses}
           optionText="tagValue"
         />
-      </ReferenceArrayInput>
-      <ReferenceInput
+      </ReferenceArrayInput> */}
+      {/* <ReferenceInput
         label={translate('resources.album.fields.media')}
         source="media"
         reference="tag"
@@ -282,8 +282,8 @@ const AlbumFilter = (props) => {
         })}
       >
         <AutocompleteInput emptyText="-- None --" optionText="tagValue" />
-      </ReferenceInput>
-      <ReferenceInput
+      </ReferenceInput> */}
+      {/* <ReferenceInput
         label={translate('resources.album.fields.releaseType')}
         source="releasetype"
         reference="tag"
@@ -301,7 +301,7 @@ const AlbumFilter = (props) => {
           }
         />
       </ReferenceInput>
-      <NullableBooleanInput source="compilation" />
+      <NullableBooleanInput source="compilation" /> */}
       {/* // <NumberInput source="year" /> */}
       {config.enableFavourites && (
         <QuickFilter
@@ -337,6 +337,7 @@ const AlbumList = (props) => {
   const version = useVersion()
   const refresh = useRefresh()
   const classes = useAlbumListStyles()
+  const albumLists = useAlbumLists()
   useResourceRefresh('album')
 
   // just for debugging TODO: remove
