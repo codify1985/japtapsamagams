@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react'
 import {
-  Button,
+  Button as MuiButton,
   Menu,
   MenuItem,
   Dialog,
@@ -21,7 +21,7 @@ import {
   MoreHoriz as MoreIcon,
   GetApp as DownloadIcon,
 } from '@material-ui/icons'
-import { useTranslate, useNotify } from 'react-admin'
+import { useTranslate, useNotify, Button } from 'react-admin'
 import { useDispatch } from 'react-redux'
 import { openShareMenu } from '../actions'
 import { generateQRCodeLocal, downloadQRCode } from './qr'
@@ -550,17 +550,10 @@ const ShareButton = ({
         ref={buttonRef}
         onClick={handleButtonClick}
         disabled={isDisabled}
-        aria-label="Share"
-        color="inherit"
-        variant="text"
-        style={{ 
-          minWidth: 'auto',
-          padding: '6px 8px'
-        }}
+        label={finalLabel}
         {...buttonProps}
       >
         {icon}
-        {finalLabel && <span style={{ marginLeft: icon ? 4 : 0 }}>{finalLabel}</span>}
       </Button>
 
       {/* Desktop menu */}
@@ -642,12 +635,12 @@ const ShareButton = ({
         </DialogContent>
         <DialogActions style={{ justifyContent: 'space-between', padding: '16px' }}>
           <div>
-            <Button onClick={handleCopy} color="primary" variant="outlined">
+            <MuiButton onClick={handleCopy} color="primary" variant="outlined">
               <CopyIcon style={{ marginRight: 4 }} />
               Copy Link
-            </Button>
+            </MuiButton>
             {qrCodeDataUrl && !qrError && (
-              <Button 
+              <MuiButton 
                 onClick={handleQRDownload} 
                 color="primary" 
                 variant="outlined"
@@ -655,12 +648,12 @@ const ShareButton = ({
               >
                 <DownloadIcon style={{ marginRight: 4 }} />
                 Download PNG
-              </Button>
+              </MuiButton>
             )}
           </div>
-          <Button onClick={handleQRDialogClose} color="primary">
+          <MuiButton onClick={handleQRDialogClose} color="primary">
             {translate('ra.action.close') || 'Close'}
-          </Button>
+          </MuiButton>
         </DialogActions>
       </Dialog>
     </>

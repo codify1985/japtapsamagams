@@ -126,7 +126,7 @@ const AlbumActions = ({
                 errorCorrectionLevel: 'M'
               }}
               allowExternalQrFallback={false}
-              label={translate('ra.action.share')}
+              label={isNotSmall ? translate('ra.action.share') : undefined}
             />
           )}
           {config.enableDownloads && (
