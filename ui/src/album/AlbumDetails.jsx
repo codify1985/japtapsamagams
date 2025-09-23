@@ -39,11 +39,16 @@ const useStyles = makeStyles(
     root: {
       [theme.breakpoints.down('xs')]: {
         padding: '0.7em',
-        minWidth: '20em',
+        minLength: '10em',
+        height: '8em',
       },
       [theme.breakpoints.up('sm')]: {
         padding: '1em',
         minWidth: '32em',
+        height: '10em',
+      },
+      [theme.breakpoints.up('lg')]: {
+        height: '14em',
       },
     },
     cardContents: {
@@ -301,20 +306,28 @@ const AlbumDetails = (props) => {
               className={classes.recordName}
             >
               {record.name}
-              <LoveButton
-                className={classes.loveButton}
-                record={record}
-                resource={'album'}
-                size={isDesktop ? 'default' : 'small'}
-                aria-label="love"
-                color="primary"
-              />
+              {props.currentUser !== config.defaultUser && (
+                <LoveButton
+                  className={classes.loveButton}
+                  record={record}
+                  resource={'album'}
+                  size={isDesktop ? 'default' : 'small'}
+                  aria-label="love"
+                  color="primary"
+                />
+              )}
             </Typography>
             <Typography component={'h6'} className={classes.recordArtist}>
               {record?.tags?.['albumversion']}
             </Typography>
             <Typography component={'h6'} className={classes.recordArtist}>
-              <ArtistLinkField record={record} />
+              <Link to={'/artist'} onClick={(e) => e.stopPropagation()}>
+                {record.albumArtist}
+              </Link>
+              {/*
+                TODO
+                comment out the default functionality
+                 <ArtistLinkField record={record} /> */}
             </Typography>
             <Typography component={'div'} className={classes.recordMeta}>
               <Details />
@@ -333,15 +346,16 @@ const AlbumDetails = (props) => {
             ) : (
               <Typography component={'p'}>{record.genre}</Typography>
             )}
-            {!isXsmall && (
+            {/* {!isXsmall && (
               <Typography component={'div'} className={classes.recordMeta}>
                 {config.enableExternalServices && (
                   <AlbumExternalLinks className={classes.externalLinks} />
                 )}
               </Typography>
-            )}
+            )} */}
             {isDesktop && (
               <Collapse
+                // collapsedSize={'1.5em'}
                 collapsedHeight={'2.75em'}
                 in={expanded}
                 timeout={'auto'}

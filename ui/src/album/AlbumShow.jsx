@@ -39,7 +39,7 @@ const AlbumShowLayout = (props) => {
     <>
       {record && <AlbumNavigator currentAlbum={record} />}
       {record && <RaTitle title={<Title subTitle={record.name} />} />}
-      {record && <AlbumDetails {...context} />}
+      {record && <AlbumDetails {...context} currentUser={currentUser} />}
       {record && (
         <ReferenceManyField
           {...context}
