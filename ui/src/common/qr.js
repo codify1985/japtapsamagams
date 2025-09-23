@@ -14,9 +14,9 @@ const DEFAULT_QR_OPTIONS = {
   errorCorrectionLevel: 'M', // L, M, Q, H
   color: {
     dark: '#000000',
-    light: '#ffffff'
+    light: '#ffffff',
   },
-  type: 'image/png' // 'image/png' or 'image/svg+xml'
+  type: 'image/png', // 'image/png' or 'image/svg+xml'
 }
 
 /**
@@ -26,27 +26,30 @@ const DEFAULT_QR_OPTIONS = {
  */
 const validateQROptions = (options = {}) => {
   const validated = { ...DEFAULT_QR_OPTIONS, ...options }
-  
+
   // Clamp width between 64 and 1024
-  validated.width = Math.max(64, Math.min(1024, validated.width || DEFAULT_QR_OPTIONS.width))
-  
+  validated.width = Math.max(
+    64,
+    Math.min(1024, validated.width || DEFAULT_QR_OPTIONS.width),
+  )
+
   // Ensure valid error correction level
   const validECLevels = ['L', 'M', 'Q', 'H']
   if (!validECLevels.includes(validated.errorCorrectionLevel)) {
     validated.errorCorrectionLevel = DEFAULT_QR_OPTIONS.errorCorrectionLevel
   }
-  
+
   // Ensure valid type
   const validTypes = ['image/png', 'image/svg+xml']
   if (!validTypes.includes(validated.type)) {
     validated.type = DEFAULT_QR_OPTIONS.type
   }
-  
+
   // Ensure color object structure
   if (!validated.color || typeof validated.color !== 'object') {
     validated.color = DEFAULT_QR_OPTIONS.color
   }
-  
+
   return validated
 }
 
@@ -66,8 +69,11 @@ const createCacheKey = (text, options) => {
 const manageCache = () => {
   if (qrCache.size > MAX_CACHE_SIZE) {
     // Remove oldest entries (first in)
-    const keysToRemove = Array.from(qrCache.keys()).slice(0, qrCache.size - MAX_CACHE_SIZE)
-    keysToRemove.forEach(key => qrCache.delete(key))
+    const keysToRemove = Array.from(qrCache.keys()).slice(
+      0,
+      qrCache.size - MAX_CACHE_SIZE,
+    )
+    keysToRemove.forEach((key) => qrCache.delete(key))
   }
 }
 
@@ -80,15 +86,17 @@ const validateText = (text) => {
   if (!text || typeof text !== 'string') {
     throw new Error('Text must be a non-empty string')
   }
-  
+
   // Warn about very long text that might not scan well
   if (text.length > 2000) {
     // console.warn('QR: Text is very long and may result in a complex QR code that is difficult to scan')
   }
-  
+
   // Hard limit to prevent excessive processing
   if (text.length > 8000) {
-    throw new Error('Text is too long for QR code generation (max 8000 characters)')
+    throw new Error(
+      'Text is too long for QR code generation (max 8000 characters)',
+    )
   }
 }
 
@@ -102,13 +110,13 @@ export const generateQRCodeLocal = async (text, options = {}) => {
   // Validate inputs
   validateText(text)
   const validOptions = validateQROptions(options)
-  
+
   // Check cache first
   const cacheKey = createCacheKey(text, validOptions)
   if (qrCache.has(cacheKey)) {
     return qrCache.get(cacheKey)
   }
-  
+
   try {
     // Dynamic import to lazy-load the QR library
     // Wrap in a try-catch to prevent any import issues from breaking the app
@@ -118,9 +126,9 @@ export const generateQRCodeLocal = async (text, options = {}) => {
     } catch (importError) {
       throw new Error(`Failed to load QR code library: ${importError.message}`)
     }
-    
+
     let result
-    
+
     if (validOptions.type === 'image/svg+xml') {
       // Generate SVG
       const svgString = await QRCode.toString(text, {
@@ -128,16 +136,16 @@ export const generateQRCodeLocal = async (text, options = {}) => {
         width: validOptions.width,
         margin: validOptions.margin,
         errorCorrectionLevel: validOptions.errorCorrectionLevel,
-        color: validOptions.color
+        color: validOptions.color,
       })
-      
+
       // Convert SVG to data URL
       const dataUrl = `data:image/svg+xml;base64,${btoa(svgString)}`
-      
+
       result = {
         dataUrl,
         type: 'image/svg+xml',
-        svgString // Include raw SVG for direct rendering if needed
+        svgString, // Include raw SVG for direct rendering if needed
       }
     } else {
       // Generate PNG (default)
@@ -145,21 +153,20 @@ export const generateQRCodeLocal = async (text, options = {}) => {
         width: validOptions.width,
         margin: validOptions.margin,
         errorCorrectionLevel: validOptions.errorCorrectionLevel,
-        color: validOptions.color
+        color: validOptions.color,
       })
-      
+
       result = {
         dataUrl,
-        type: 'image/png'
+        type: 'image/png',
       }
     }
-    
+
     // Cache the result
     qrCache.set(cacheKey, result)
     manageCache()
-    
+
     return result
-    
   } catch (error) {
     // console.error('Local QR generation failed:', error)
     throw new Error(`Failed to generate QR code locally: ${error.message}`)
@@ -191,7 +198,7 @@ export const downloadQRCode = (dataUrl, filename = 'qrcode.png') => {
     // console.warn('Download not available in server environment')
     return
   }
-  
+
   try {
     const link = document.createElement('a')
     link.href = dataUrl
@@ -210,5 +217,5 @@ export default {
   clearQRCache,
   getQRCacheSize,
   downloadQRCode,
-  DEFAULT_QR_OPTIONS
+  DEFAULT_QR_OPTIONS,
 }
