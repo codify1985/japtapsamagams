@@ -17,6 +17,7 @@ import { AlbumContextMenu, PlayButton, ArtistLinkField } from '../common'
 import { DraggableTypes } from '../consts'
 import clsx from 'clsx'
 import { AlbumDatesField } from './AlbumDatesField.jsx'
+import config from '../config'
 
 const useStyles = makeStyles(
   (theme) => ({
@@ -160,7 +161,13 @@ const Cover = withContentRect('bounds')(({
   )
 })
 
-const AlbumGridTile = ({ showArtist, record, basePath, ...props }) => {
+const AlbumGridTile = ({
+  showArtist,
+  record,
+  basePath,
+  currentUser,
+  ...props
+}) => {
   const classes = useStyles()
   const isDesktop = useMediaQuery((theme) => theme.breakpoints.up('md'), {
     noSsr: true,
@@ -190,7 +197,13 @@ const AlbumGridTile = ({ showArtist, record, basePath, ...props }) => {
               />
             )
           }
-          actionIcon={<AlbumContextMenu record={record} color={'white'} />}
+          actionIcon={
+            <AlbumContextMenu
+              record={record}
+              color={'white'}
+              showLove={currentUser !== config.defaultUser}
+            />
+          }
         />
       </Link>
       <Link
@@ -215,7 +228,7 @@ const AlbumGridTile = ({ showArtist, record, basePath, ...props }) => {
   )
 }
 
-const LoadedAlbumGrid = ({ ids, data, basePath, width }) => {
+const LoadedAlbumGrid = ({ ids, data, basePath, width, currentUser }) => {
   const classes = useStyles()
   const { filterValues } = useListContext()
   const isArtistView = !!(filterValues && filterValues.artist_id)
@@ -233,6 +246,7 @@ const LoadedAlbumGrid = ({ ids, data, basePath, width }) => {
               record={data[id]}
               basePath={basePath}
               showArtist={!isArtistView}
+              currentUser={currentUser}
             />
           </GridListTile>
         ))}
@@ -241,10 +255,20 @@ const LoadedAlbumGrid = ({ ids, data, basePath, width }) => {
   )
 }
 
-const AlbumGridView = ({ albumListType, loaded, loading, ...props }) => {
+const AlbumGridView = ({
+  albumListType,
+  loaded,
+  loading,
+  currentUser,
+  ...props
+}) => {
   const hide =
     (loading && albumListType === 'random') || !props.data || !props.ids
-  return hide ? <Loading /> : <LoadedAlbumGrid {...props} />
+  return hide ? (
+    <Loading />
+  ) : (
+    <LoadedAlbumGrid currentUser={currentUser} {...props} />
+  )
 }
 
 const AlbumGridViewWithWidth = withWidth()(AlbumGridView)

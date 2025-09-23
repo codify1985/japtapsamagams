@@ -16,6 +16,7 @@ import {
   useTranslate,
   useVersion,
   useListContext,
+  useGetIdentity,
 } from 'react-admin'
 import FavoriteIcon from '@material-ui/icons/Favorite'
 import { withWidth } from '@material-ui/core'
@@ -339,6 +340,8 @@ const AlbumList = (props) => {
   const classes = useAlbumListStyles()
   const albumLists = useAlbumLists()
   useResourceRefresh('album')
+  const { identity } = useGetIdentity()
+  const currentUser = identity?.id
 
   // just for debugging TODO: remove
   // const listContext = useListContext();
@@ -415,9 +418,13 @@ const AlbumList = (props) => {
         // transform={transformFilters}
       >
         {albumView.grid ? (
-          <AlbumGridView albumListType={albumListType} {...props} />
+          <AlbumGridView
+            albumListType={albumListType}
+            currentUser={currentUser}
+            {...props}
+          />
         ) : (
-          <AlbumTableView {...props} />
+          <AlbumTableView currentUser={currentUser} {...props} />
         )}
       </List>
       <ExpandInfoDialog content={<AlbumInfo />} />

@@ -61,6 +61,7 @@ export const SongSimpleList = ({
   onToggleItem,
   selectedIds,
   total,
+  currentUser,
   ...rest
 }) => {
   const dispatch = useDispatch()
@@ -81,7 +82,7 @@ export const SongSimpleList = ({
                       <>
                         <span className={classes.secondary}>
                           <span className={classes.artist}>
-                            {data[id].artist}
+                            {data[id].album}
                           </span>
                           <span className={classes.timeStamp}>
                             <DurationField
@@ -103,7 +104,11 @@ export const SongSimpleList = ({
                   />
                   <ListItemSecondaryAction className={classes.rightIcon}>
                     <ListItemIcon>
-                      <SongContextMenu record={data[id]} visible={true} />
+                      <SongContextMenu
+                        record={data[id]}
+                        visible={true}
+                        showLove={currentUser !== config.defaultUser}
+                      />
                     </ListItemIcon>
                   </ListItemSecondaryAction>
                 </ListItem>
@@ -124,6 +129,7 @@ SongSimpleList.propTypes = {
   ids: PropTypes.array,
   onToggleItem: PropTypes.func,
   selectedIds: PropTypes.arrayOf(PropTypes.any).isRequired,
+  currentUser: PropTypes.string,
 }
 
 SongSimpleList.defaultProps = {
