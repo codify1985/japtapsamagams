@@ -111,7 +111,13 @@ export const generateQRCodeLocal = async (text, options = {}) => {
   
   try {
     // Dynamic import to lazy-load the QR library
-    const QRCode = await import('qrcode')
+    // Wrap in a try-catch to prevent any import issues from breaking the app
+    let QRCode
+    try {
+      QRCode = await import('qrcode')
+    } catch (importError) {
+      throw new Error(`Failed to load QR code library: ${importError.message}`)
+    }
     
     let result
     
