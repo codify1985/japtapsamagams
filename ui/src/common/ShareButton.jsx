@@ -35,92 +35,70 @@ const defaultShareUrl = () =>
 const generateQRCode = (text, size = 200) => {
   return new Promise((resolve, reject) => {
     try {
-      const canvas = document.createElement('canvas')
-      canvas.width = size
-      canvas.height = size
-      const ctx = canvas.getContext('2d')
-
-      // Fill background white
-      ctx.fillStyle = '#ffffff'
-      ctx.fillRect(0, 0, size, size)
-
-      // Set black for QR pattern
-      ctx.fillStyle = '#000000'
-
-      // Calculate module size (QR codes are typically 21x21, 25x25, 29x29, etc.)
-      const modules = 25
-      const moduleSize = Math.floor(size / modules)
-      const offset = Math.floor((size - modules * moduleSize) / 2)
-
-      // Generate a more realistic QR pattern based on the text
-      const textHash = text.split('').reduce((hash, char) => {
-        return ((hash << 5) - hash + char.charCodeAt(0)) & 0xffffffff
-      }, 0)
-
-      // Create QR-like pattern
-      for (let i = 0; i < modules; i++) {
-        for (let j = 0; j < modules; j++) {
-          const x = offset + i * moduleSize
-          const y = offset + j * moduleSize
-
-          // Create finder patterns (corner squares)
-          const isFinderPattern =
-            (i < 9 && j < 9) || // Top-left
-            (i < 9 && j >= modules - 9) || // Top-right
-            (i >= modules - 9 && j < 9) // Bottom-left
-
-          if (isFinderPattern) {
-            // Draw finder pattern borders
-            if (
-              (i < 7 && j < 7) ||
-              (i < 7 && j >= modules - 7) ||
-              (i >= modules - 7 && j < 7)
-            ) {
-              if (
-                i === 0 ||
-                i === 6 ||
-                j === 0 ||
-                j === 6 ||
-                (i >= 2 && i <= 4 && j >= 2 && j <= 4)
-              ) {
-                ctx.fillRect(x, y, moduleSize, moduleSize)
-              }
-            }
-          } else {
-            // Generate data pattern based on position and text hash
-            const shouldFill =
-              (i * j + textHash + i + j) % 3 === 0 ||
-              (i + j + textHash) % 5 === 0 ||
-              (i * 7 + j * 11 + textHash) % 13 < 6
-
-            if (shouldFill) {
-              ctx.fillRect(x, y, moduleSize, moduleSize)
-            }
-          }
+      // For now, let's use a QR code API service as fallback
+      // This ensures the QR code actually works
+      const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(text)}&format=png&margin=10`
+      
+      // Create an image element to load the QR code
+      const img = new Image()
+      img.crossOrigin = 'anonymous'
+      
+      img.onload = () => {
+        try {
+          // Create canvas and draw the loaded image
+          const canvas = document.createElement('canvas')
+          canvas.width = size
+          canvas.height = size
+          const ctx = canvas.getContext('2d')
+          
+          // Fill white background
+          ctx.fillStyle = '#ffffff'
+          ctx.fillRect(0, 0, size, size)
+          
+          // Draw the QR code image
+          ctx.drawImage(img, 0, 0, size, size)
+          
+          resolve(canvas.toDataURL())
+        } catch (error) {
+          // If canvas fails, fallback to the API URL directly
+          resolve(qrApiUrl)
         }
       }
-
-      // Add timing patterns (horizontal and vertical lines)
-      const timingRow = 6
-      const timingCol = 6
-      for (let i = 8; i < modules - 8; i++) {
-        if (i % 2 === 0) {
-          ctx.fillRect(
-            offset + i * moduleSize,
-            offset + timingRow * moduleSize,
-            moduleSize,
-            moduleSize,
-          )
-          ctx.fillRect(
-            offset + timingCol * moduleSize,
-            offset + i * moduleSize,
-            moduleSize,
-            moduleSize,
-          )
-        }
+      
+      img.onerror = () => {
+        // If API fails, create a simple text-based fallback
+        const canvas = document.createElement('canvas')
+        canvas.width = size
+        canvas.height = size
+        const ctx = canvas.getContext('2d')
+        
+        // Fill background
+        ctx.fillStyle = '#ffffff'
+        ctx.fillRect(0, 0, size, size)
+        
+        // Add border
+        ctx.strokeStyle = '#000000'
+        ctx.lineWidth = 2
+        ctx.strokeRect(1, 1, size - 2, size - 2)
+        
+        // Add text
+        ctx.fillStyle = '#000000'
+        ctx.font = '12px Arial'
+        ctx.textAlign = 'center'
+        ctx.fillText('QR Code not available', size / 2, size / 2 - 10)
+        ctx.fillText('Visit:', size / 2, size / 2 + 10)
+        
+        // Truncate URL if too long
+        const displayUrl = text.length > 30 ? text.substring(0, 27) + '...' : text
+        ctx.font = '10px Arial'
+        ctx.fillText(displayUrl, size / 2, size / 2 + 30)
+        
+        resolve(canvas.toDataURL())
       }
-
-      resolve(canvas.toDataURL())
+      
+      // Start loading the QR code from API
+      img.src = qrApiUrl
+      
     } catch (error) {
       reject(error)
     }
@@ -453,10 +431,16 @@ const ShareButton = ({
         onClick={handleButtonClick}
         disabled={isDisabled}
         aria-label="Share"
+        color="inherit"
+        variant="text"
+        style={{ 
+          minWidth: 'auto',
+          padding: '6px 8px'
+        }}
         {...buttonProps}
       >
         {icon}
-        {finalLabel}
+        {finalLabel && <span style={{ marginLeft: icon ? 4 : 0 }}>{finalLabel}</span>}
       </Button>
 
       {/* Desktop menu */}
@@ -487,16 +471,34 @@ const ShareButton = ({
               <img
                 src={qrCodeDataUrl}
                 alt="QR Code"
-                style={{ maxWidth: '100%', height: 'auto' }}
+                style={{ maxWidth: '100%', height: 'auto', maxHeight: '300px' }}
               />
-              <Typography variant="body2" style={{ marginTop: '10px' }}>
+              <Typography variant="body2" style={{ marginTop: '15px', marginBottom: '10px' }}>
                 {translate('resources.share.qr.description') ||
                   'Scan this QR code to share'}
+              </Typography>
+              <Typography 
+                variant="caption" 
+                style={{ 
+                  color: 'grey', 
+                  wordBreak: 'break-all',
+                  fontSize: '12px',
+                  backgroundColor: '#f5f5f5',
+                  padding: '8px',
+                  borderRadius: '4px',
+                  display: 'block',
+                  marginTop: '10px'
+                }}
+              >
+                {finalShareUrl}
               </Typography>
             </>
           )}
         </DialogContent>
-        <DialogActions>
+        <DialogActions style={{ justifyContent: 'space-between', padding: '16px' }}>
+          <Button onClick={handleCopy} color="primary" variant="outlined">
+            Copy Link
+          </Button>
           <Button onClick={handleQRDialogClose} color="primary">
             {translate('ra.action.close') || 'Close'}
           </Button>
