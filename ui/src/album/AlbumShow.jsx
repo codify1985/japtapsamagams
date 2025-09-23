@@ -34,7 +34,7 @@ const AlbumShowLayout = (props) => {
   const classes = useStyles()
   useResourceRefresh('album', 'song')
   const currentUser = useGetIdentity()?.identity?.id
-  console.log('Current User in AlbumShowLayout: ', currentUser)
+  
   return (
     <>
       {record && <AlbumNavigator currentAlbum={record} />}

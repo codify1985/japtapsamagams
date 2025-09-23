@@ -99,10 +99,6 @@ export const SongListActions = (props) => {
   // Get the complete filter state from list context
   const currentFilter = listContext?.filterValues || filterValues || {}
 
-  console.debug('[SongListActions] listContext:', listContext.data, {
-    listContext,
-  })
-
   // const [loading, setLoading] = React.useState(false)
   // const [songs, setSongs] = React.useState([])
 
