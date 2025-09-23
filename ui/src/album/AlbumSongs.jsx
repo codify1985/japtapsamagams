@@ -94,7 +94,6 @@ const AlbumSongs = (props) => {
   const dispatch = useDispatch()
   const version = useVersion()
   useResourceRefresh('song', 'album')
-  
 
   const toggleableFields = useMemo(() => {
     return {
@@ -120,8 +119,12 @@ const AlbumSongs = (props) => {
       playCount: isDesktop && currentUser === 'admin' && (
         <NumberField source="playCount" sortable={false} />
       ),
-      playDate: isDesktop && currentUser === 'admin' && <DateField source="playDate" sortable={false} showTime />,
-      quality: isDesktop && currentUser === 'admin' && isDesktop && <QualityInfo source="quality" sortable={false} />,
+      playDate: isDesktop && currentUser === 'admin' && (
+        <DateField source="playDate" sortable={false} showTime />
+      ),
+      quality: isDesktop && currentUser === 'admin' && isDesktop && (
+        <QualityInfo source="quality" sortable={false} />
+      ),
       size: isDesktop && <SizeField source="size" sortable={false} />,
       // channels: isDesktop && <NumberField source="channels" sortable={false} />,
       // bpm: isDesktop && <NumberField source="bpm" sortable={false} />,
@@ -195,9 +198,12 @@ const AlbumSongs = (props) => {
               source={'starred'}
               sortable={false}
               className={classes.contextMenu}
-              showLove={config.enableFavourites && currentUser !== config.defaultUser}
+              showLove={
+                config.enableFavourites && currentUser !== config.defaultUser
+              }
               label={
-                config.enableFavourites && currentUser !== config.defaultUser && (
+                config.enableFavourites &&
+                currentUser !== config.defaultUser && (
                   <FavoriteBorderIcon
                     fontSize={'small'}
                     className={classes.columnIcon}
@@ -216,7 +222,17 @@ const AlbumSongs = (props) => {
 const SanitizedAlbumSongs = (props) => {
   removeAlbumCommentsFromSongs(props)
   const { loaded, loading, total, ...rest } = useListContext(props)
-  return <>{loaded && <AlbumSongs {...rest} actions={props.actions} currentUser={props.currentUser} />}</>
+  return (
+    <>
+      {loaded && (
+        <AlbumSongs
+          {...rest}
+          actions={props.actions}
+          currentUser={props.currentUser}
+        />
+      )}
+    </>
+  )
 }
 
 export default SanitizedAlbumSongs

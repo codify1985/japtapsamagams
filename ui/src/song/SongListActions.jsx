@@ -99,7 +99,9 @@ export const SongListActions = (props) => {
   // Get the complete filter state from list context
   const currentFilter = listContext?.filterValues || filterValues || {}
 
-  console.debug('[SongListActions] listContext:', listContext.data, { listContext });
+  console.debug('[SongListActions] listContext:', listContext.data, {
+    listContext,
+  })
 
   // const [loading, setLoading] = React.useState(false)
   // const [songs, setSongs] = React.useState([])
@@ -147,13 +149,12 @@ export const SongListActions = (props) => {
   //   listContext.perPage,
   // ])
   // TESTING:
-    // Use existing data from listContext instead of fetching separately
+  // Use existing data from listContext instead of fetching separately
   const songs = listContext?.data ? Object.values(listContext.data) : []
   const loading = listContext?.loading || false
 
   // Remove the entire useEffect that was fetching songs
   // React.useEffect(() => { ... }, [...]) // DELETE THIS ENTIRE BLOCK
-
 
   // Calculate total size of all songs for download
   const totalSize = React.useMemo(() => {
