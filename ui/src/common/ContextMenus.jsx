@@ -102,15 +102,16 @@ const ContextMenu = ({
       label: translate('resources.album.actions.addToPlaylist'),
       action: (data, ids) => dispatch(openAddToPlaylist({ selectedIds: ids })),
     },
-    ...(!hideShare && currentUser !== config.defaultUser && {
-      share: {
-        enabled: config.enableSharing,
-        needData: false,
-        label: translate('ra.action.share'),
-        action: (record) =>
-          dispatch(openShareMenu([record.id], resource, record.name)),
-      },
-    }),
+    ...(!hideShare &&
+      currentUser !== config.defaultUser && {
+        share: {
+          enabled: config.enableSharing,
+          needData: false,
+          label: translate('ra.action.share'),
+          action: (record) =>
+            dispatch(openShareMenu([record.id], resource, record.name)),
+        },
+      }),
     download: {
       enabled: config.enableDownloads && record.size,
       needData: false,
@@ -126,14 +127,15 @@ const ContextMenu = ({
         )
       },
     },
-    ...(!hideInfo && currentUser !== config.defaultUser && {
-      info: {
-        enabled: true,
-        needData: true,
-        label: translate('resources.album.actions.info'),
-        action: () => dispatch(openExtendedInfoDialog(record)),
-      },
-    }),
+    ...(!hideInfo &&
+      currentUser !== config.defaultUser && {
+        info: {
+          enabled: true,
+          needData: true,
+          label: translate('resources.album.actions.info'),
+          action: () => dispatch(openExtendedInfoDialog(record)),
+        },
+      }),
   }
 
   const handleClick = (e) => {

@@ -147,8 +147,8 @@ const SongList = (props) => {
   const isXsmall = useMediaQuery((theme) => theme.breakpoints.down('xs'))
   const isDesktop = useMediaQuery((theme) => theme.breakpoints.up('md'))
   // useResourceRefresh('playlist')
-  const { identity } = useGetIdentity();
-  const currentUser = identity?.id;
+  const { identity } = useGetIdentity()
+  const currentUser = identity?.id
 
   const handleRowClick = (id, basePath, record) => {
     dispatch(setTrack(record))
@@ -163,7 +163,9 @@ const SongList = (props) => {
       playCount: isDesktop && currentUser === 'admin' && (
         <NumberField source="playCount" sortByOrder={'DESC'} />
       ),
-      playDate: isDesktop && currentUser === 'admin' && ( <DateField source="playDate" sortByOrder={'DESC'} showTime />),
+      playDate: isDesktop && currentUser === 'admin' && (
+        <DateField source="playDate" sortByOrder={'DESC'} showTime />
+      ),
       year: isDesktop && (
         <FunctionField
           source="year"
@@ -171,7 +173,9 @@ const SongList = (props) => {
           sortByOrder={'DESC'}
         />
       ),
-      quality: isDesktop && currentUser === 'admin' && <QualityInfo source="quality" sortable={false} />,
+      quality: isDesktop && currentUser === 'admin' && (
+        <QualityInfo source="quality" sortable={false} />
+      ),
       channels: isDesktop && currentUser === 'admin' && (
         <NumberField source="channels" sortByOrder={'ASC'} />
       ),
@@ -204,13 +208,7 @@ const SongList = (props) => {
   const columns = useSelectedFields({
     resource: 'song',
     columns: toggleableFields,
-    defaultOff: [
-      'channels',
-      'playDate',
-      'albumArtist',
-      'path',
-      'createdAt',
-    ],
+    defaultOff: ['channels', 'playDate', 'albumArtist', 'path', 'createdAt'],
   })
 
   return (
@@ -242,7 +240,8 @@ const SongList = (props) => {
               className={classes.contextMenu}
               showLove={currentUser !== config.defaultUser}
               label={
-                config.enableFavourites && currentUser !== config.defaultUser && (
+                config.enableFavourites &&
+                currentUser !== config.defaultUser && (
                   <FavoriteBorderIcon
                     fontSize={'small'}
                     className={classes.contextHeader}
