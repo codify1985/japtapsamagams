@@ -123,7 +123,7 @@ const AlbumActions = ({
               qrOptions={{
                 width: 250,
                 margin: 3,
-                errorCorrectionLevel: 'M'
+                errorCorrectionLevel: 'M',
               }}
               allowExternalQrFallback={false}
               label={isNotSmall ? translate('ra.action.share') : undefined}

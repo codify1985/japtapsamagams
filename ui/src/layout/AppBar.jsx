@@ -6,16 +6,26 @@ import {
   usePermissions,
   getResources,
 } from 'react-admin'
+import { useMediaQuery } from '@material-ui/core'
 import { MdInfo, MdPerson, MdSupervisorAccount } from 'react-icons/md'
 import { useSelector } from 'react-redux'
-import { makeStyles, MenuItem, ListItemIcon, Divider } from '@material-ui/core'
+import {
+  makeStyles,
+  MenuItem,
+  ListItemIcon,
+  Divider,
+  Toolbar,
+  Box,
+} from '@material-ui/core'
 import ViewListIcon from '@material-ui/icons/ViewList'
+import { useLocation } from 'react-router-dom'
 import { Dialogs } from '../dialogs/Dialogs'
 import { AboutDialog } from '../dialogs'
 import PersonalMenu from './PersonalMenu'
 import ActivityPanel from './ActivityPanel'
 import NowPlayingPanel from './NowPlayingPanel'
 import UserMenu from './UserMenu'
+import ShareButton from '../common/ShareButton'
 import config from '../config'
 
 const useStyles = makeStyles(
@@ -139,8 +149,42 @@ const CustomUserMenu = ({ onClick, ...rest }) => {
   )
 }
 
-const AppBar = (props) => (
-  <RAAppBar {...props} container={Fragment} userMenu={<CustomUserMenu />} />
-)
+const AppBar = (props) => {
+  // const location = useLocation()
+  const translate = useTranslate()
+  const isNotSmall = useMediaQuery((theme) => theme.breakpoints.up('sm'))
+  // Check if we're on the song page
+  // const isSongPage = true;// location.pathname.startsWith('/song')
+
+  // Create custom AppBar that includes the ShareButton when needed
+  return (
+    <>
+      <RAAppBar
+        {...props}
+        container={Fragment}
+        userMenu={
+          <Box display="flex" alignItems="center" gap={1}>
+            {config.enableSharing && (
+              <ShareButton
+                record={{}}
+                entityType="song"
+                shareText="Dhan Guru Nanak!"
+                desktopOptions={['webshare', 'copy', 'qr']}
+                qrOptions={{
+                  width: 250,
+                  margin: 3,
+                  errorCorrectionLevel: 'M',
+                }}
+                allowExternalQrFallback={false}
+                label={isNotSmall ? translate('ra.action.share') : undefined}
+              />
+            )}
+            <CustomUserMenu />
+          </Box>
+        }
+      />
+    </>
+  )
+}
 
 export default AppBar
