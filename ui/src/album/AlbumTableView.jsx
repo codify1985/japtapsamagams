@@ -7,6 +7,7 @@ import {
   NumberField,
   TextField,
   FunctionField,
+  useGetIdentity,
 } from 'react-admin'
 import { useMediaQuery } from '@material-ui/core'
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
@@ -49,7 +50,7 @@ const useStyles = makeStyles({
     width: '17.5%',
   },
   contextMenu: {
-    visibility: 'hidden',
+    visibility: 'visible',
   },
   ratingField: {
     visibility: 'hidden',
@@ -90,6 +91,7 @@ const AlbumTableView = ({
   hasEdit,
   hasList,
   syncWithLocation,
+  currentUser,
   ...rest
 }) => {
   const classes = useStyles()
@@ -102,19 +104,20 @@ const AlbumTableView = ({
       songCount: isDesktop && (
         <NumberField source="songCount" sortByOrder={'DESC'} />
       ),
-      // playCount: isDesktop && (
-      //   <NumberField source="playCount" sortByOrder={'DESC'} />
-      // ),
+      // Show Play count only to admin users
+      playCount: isDesktop && currentUser === 'admin' && (
+        <NumberField source="playCount" sortByOrder={'DESC'} />
+      ),
       year: (
         <RangeField source={'year'} sortBy={'max_year'} sortByOrder={'DESC'} />
       ),
-      mood: isDesktop && (
-        <FunctionField
-          source="mood"
-          render={(r) => r.tags?.mood?.[0] || ''}
-          sortable={false}
-        />
-      ),
+      // mood: isDesktop && (
+      //   <FunctionField
+      //     source="mood"
+      //     render={(r) => r.tags?.mood?.[0] || ''}
+      //     sortable={false}
+      //   />
+      // ),
       duration: isDesktop && <DurationField source="duration" />,
       size: isDesktop && <SizeField source="size" />,
       rating: config.enableStarRating && (
@@ -125,7 +128,9 @@ const AlbumTableView = ({
           className={classes.ratingField}
         />
       ),
-      createdAt: isDesktop && <DateField source="createdAt" showTime />,
+      createdAt: isDesktop && currentUser === 'admin' && (
+        <DateField source="createdAt" showTime />
+      ),
     }
   }, [classes.ratingField, isDesktop])
 
@@ -162,7 +167,12 @@ const AlbumTableView = ({
         </>
       )}
       linkType={'show'}
-      rightIcon={(r) => <AlbumContextMenu record={r} />}
+      rightIcon={(r) => (
+        <AlbumContextMenu
+          record={r}
+          showLove={currentUser === config.defautUser ? false : true}
+        />
+      )}
       {...rest}
     />
   ) : (
@@ -172,10 +182,13 @@ const AlbumTableView = ({
       <AlbumContextMenu
         source={'starred_at'}
         sortByOrder={'DESC'}
-        sortable={config.enableFavourites}
+        showLove={currentUser !== config.defaultUser}
+        // showLove={false}
+        sortable={config.enableFavourites && currentUser !== config.defaultUser}
         className={classes.contextMenu}
         label={
-          config.enableFavourites && (
+          config.enableFavourites &&
+          currentUser !== config.defaultUser && (
             <FavoriteBorderIcon
               fontSize={'small'}
               className={classes.columnIcon}
