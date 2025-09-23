@@ -166,7 +166,7 @@ const AlbumSongs = (props) => {
   const bulkActionsLabel = isDesktop
     ? 'ra.action.bulk_actions'
     : 'ra.action.bulk_actions_mobile'
-  
+
   return (
     <>
       <ListToolbar
