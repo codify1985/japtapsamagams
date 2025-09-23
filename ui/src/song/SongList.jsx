@@ -222,7 +222,7 @@ const SongList = (props) => {
         bulkActionButtons={<SongBulkActions />}
         actions={<SongListActions />}
         filters={<SongFilter currentUser={currentUser} />}
-        perPage={isXsmall ? 50 : 15}
+        perPage={isXsmall ? 50 : 25}
       >
         {isXsmall ? (
           <SongSimpleList currentUser={currentUser} />

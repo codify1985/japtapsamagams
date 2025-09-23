@@ -59,6 +59,7 @@ const ContextMenu = ({
   record,
   color,
   className,
+  currentUser,
   songQueryParams,
   hideShare,
   hideInfo,
@@ -101,7 +102,7 @@ const ContextMenu = ({
       label: translate('resources.album.actions.addToPlaylist'),
       action: (data, ids) => dispatch(openAddToPlaylist({ selectedIds: ids })),
     },
-    ...(!hideShare && {
+    ...(!hideShare && currentUser !== config.defaultUser && {
       share: {
         enabled: config.enableSharing,
         needData: false,
@@ -125,7 +126,7 @@ const ContextMenu = ({
         )
       },
     },
-    ...(!hideInfo && {
+    ...(!hideInfo && currentUser !== config.defaultUser && {
       info: {
         enabled: true,
         needData: true,
@@ -226,6 +227,7 @@ export const AlbumContextMenu = (props) =>
     <ContextMenu
       {...props}
       resource={'album'}
+      currentUser={props.currentUser}
       songQueryParams={{
         pagination: { page: 1, perPage: -1 },
         sort: { field: 'album', order: 'ASC' },
@@ -243,11 +245,13 @@ AlbumContextMenu.propTypes = {
   discNumber: PropTypes.number,
   color: PropTypes.string,
   showLove: PropTypes.bool,
+  currentUser: PropTypes.string,
 }
 
 AlbumContextMenu.defaultProps = {
   showLove: true,
   addLabel: true,
+  currentUser: config.defaultUser,
 }
 
 export const ArtistContextMenu = (props) =>

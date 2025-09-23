@@ -170,7 +170,8 @@ const AlbumTableView = ({
       rightIcon={(r) => (
         <AlbumContextMenu
           record={r}
-          showLove={currentUser === config.defautUser ? false : true}
+          showLove={currentUser !== config.defaultUser}
+          currentUser={currentUser}
         />
       )}
       {...rest}

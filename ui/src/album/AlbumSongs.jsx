@@ -78,7 +78,7 @@ const useStyles = makeStyles(
       },
     },
     contextMenu: {
-      visibility: (props) => (props.isDesktop ? 'hidden' : 'visible'),
+      visibility: (props) => (props.isDesktop ? 'visible' : 'visible'),
     },
     ratingField: {
       visibility: 'hidden',
@@ -88,16 +88,17 @@ const useStyles = makeStyles(
 )
 
 const AlbumSongs = (props) => {
-  const { data, ids } = props
+  const { data, ids, currentUser } = props
   const isDesktop = useMediaQuery((theme) => theme.breakpoints.up('md'))
   const classes = useStyles({ isDesktop })
   const dispatch = useDispatch()
   const version = useVersion()
   useResourceRefresh('song', 'album')
+  
 
   const toggleableFields = useMemo(() => {
     return {
-      trackNumber: isDesktop && (
+      trackNumber: isDesktop && currentUser === 'admin' && (
         <TextField source="trackNumber" label="#" sortable={false} />
       ),
       title: (
@@ -116,22 +117,22 @@ const AlbumSongs = (props) => {
           sortable={false}
         />
       ),
-      playCount: isDesktop && (
+      playCount: isDesktop && currentUser === 'admin' && (
         <NumberField source="playCount" sortable={false} />
       ),
-      playDate: <DateField source="playDate" sortable={false} showTime />,
-      quality: isDesktop && <QualityInfo source="quality" sortable={false} />,
+      playDate: isDesktop && currentUser === 'admin' && <DateField source="playDate" sortable={false} showTime />,
+      quality: isDesktop && currentUser === 'admin' && isDesktop && <QualityInfo source="quality" sortable={false} />,
       size: isDesktop && <SizeField source="size" sortable={false} />,
-      channels: isDesktop && <NumberField source="channels" sortable={false} />,
-      bpm: isDesktop && <NumberField source="bpm" sortable={false} />,
-      genre: <TextField source="genre" sortable={false} />,
-      mood: isDesktop && (
-        <FunctionField
-          source="mood"
-          render={(r) => r.tags?.mood?.[0] ?? ''}
-          sortable={false}
-        />
-      ),
+      // channels: isDesktop && <NumberField source="channels" sortable={false} />,
+      // bpm: isDesktop && <NumberField source="bpm" sortable={false} />,
+      // genre: <TextField source="genre" sortable={false} />,
+      // mood: isDesktop && (
+      //   <FunctionField
+      //     source="mood"
+      //     render={(r) => r.tags?.mood?.[0] ?? ''}
+      //     sortable={false}
+      //   />
+      // ),
       rating: isDesktop && config.enableStarRating && (
         <RatingField
           resource={'song'}
@@ -162,7 +163,8 @@ const AlbumSongs = (props) => {
   const bulkActionsLabel = isDesktop
     ? 'ra.action.bulk_actions'
     : 'ra.action.bulk_actions_mobile'
-
+  console.log('AlbumSongs render', { ids, data, currentUser })
+  console.log('AlbumSongs config?.defaultUser', config?.defaultUser)
   return (
     <>
       <ListToolbar
@@ -193,8 +195,9 @@ const AlbumSongs = (props) => {
               source={'starred'}
               sortable={false}
               className={classes.contextMenu}
+              showLove={config.enableFavourites && currentUser !== config.defaultUser}
               label={
-                config.enableFavourites && (
+                config.enableFavourites && currentUser !== config.defaultUser && (
                   <FavoriteBorderIcon
                     fontSize={'small'}
                     className={classes.columnIcon}
@@ -213,7 +216,7 @@ const AlbumSongs = (props) => {
 const SanitizedAlbumSongs = (props) => {
   removeAlbumCommentsFromSongs(props)
   const { loaded, loading, total, ...rest } = useListContext(props)
-  return <>{loaded && <AlbumSongs {...rest} actions={props.actions} />}</>
+  return <>{loaded && <AlbumSongs {...rest} actions={props.actions} currentUser={props.currentUser} />}</>
 }
 
 export default SanitizedAlbumSongs

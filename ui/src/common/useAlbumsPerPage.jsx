@@ -5,7 +5,7 @@ const getPerPage = (width) => {
   if (width === 'sm') return 12
   if (width === 'md') return 12
   if (width === 'lg') return 18
-  return 36
+  return 50
 }
 
 const getPerPageOptions = (width) => {
