@@ -3,7 +3,10 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 const frontendPort = parseInt(process.env.PORT) || 4533
-const backendPort = frontendPort + 100
+// Allow overriding the backend proxy port explicitly; fallback to frontend+100
+const backendPort = process.env.BACKEND_PORT
+  ? parseInt(process.env.BACKEND_PORT)
+  : frontendPort + 100
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -19,9 +22,18 @@ export default defineConfig({
       },
     }),
   ],
+  optimizeDeps: {
+    include: ['qrcode'],
+  },
   server: {
     host: true,
     port: frontendPort,
+    // Allow specific external hosts (e.g., Cloudflare tunneled domain) during dev
+    // Set via ALLOWED_HOSTS env var as a comma-separated list
+    allowedHosts: (process.env.ALLOWED_HOSTS || '')
+      .split(',')
+      .map((h) => h.trim())
+      .filter(Boolean),
     proxy: {
       '^/(auth|api|rest|backgrounds)/.*': 'http://localhost:' + backendPort,
     },
