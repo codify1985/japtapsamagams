@@ -120,6 +120,12 @@ const AlbumActions = ({
               entityType="album"
               shareText={`Check out this album: ${record.name}`}
               desktopOptions={['webshare', 'copy', 'qr']}
+              qrOptions={{
+                width: 250,
+                margin: 3,
+                errorCorrectionLevel: 'M'
+              }}
+              allowExternalQrFallback={false}
               label={translate('ra.action.share')}
             />
           )}

@@ -19,10 +19,12 @@ import {
   Launch as LaunchIcon,
   CropFree as QrCodeIcon,
   MoreHoriz as MoreIcon,
+  GetApp as DownloadIcon,
 } from '@material-ui/icons'
 import { useTranslate, useNotify } from 'react-admin'
 import { useDispatch } from 'react-redux'
 import { openShareMenu } from '../actions'
+import { generateQRCodeLocal, downloadQRCode } from './qr'
 
 // Utility functions
 const isWebShareAvailable = () =>
@@ -31,21 +33,66 @@ const isWebShareAvailable = () =>
 const defaultShareUrl = () =>
   typeof window !== 'undefined' ? window.location.href : ''
 
-// Simple QR code generator using canvas (no external dependencies)
-const generateQRCode = (text, size = 200) => {
-  return new Promise((resolve, reject) => {
+// Local-first QR code generator with remote fallback
+const generateQRCode = async (text, options = {}) => {
+  const {
+    width = 200,
+    allowExternalFallback = false,
+    externalTimeoutMs = 4000,
+    ...qrOptions
+  } = options
+
+  try {
+    // Try local generation first
+    const result = await generateQRCodeLocal(text, {
+      width,
+      ...qrOptions
+    })
+    return result.dataUrl
+  } catch (localError) {
+    // console.warn('Local QR generation failed:', localError)
+    
+    // Only try external fallback if explicitly allowed
+    if (!allowExternalFallback) {
+      // Show fallback placeholder
+      return createQRFallbackPlaceholder(text, width)
+    }
+    
+    // Try external API as last resort
     try {
-      // For now, let's use a QR code API service as fallback
-      // This ensures the QR code actually works
+      return await generateQRCodeExternal(text, width, externalTimeoutMs)
+    } catch (externalError) {
+      // console.error('External QR generation also failed:', externalError)
+      // Final fallback to placeholder
+      return createQRFallbackPlaceholder(text, width)
+    }
+  }
+}
+
+// External QR generation (fallback only)
+const generateQRCodeExternal = (text, size = 200, timeoutMs = 4000) => {
+  return new Promise((resolve, reject) => {
+    // SSR guard
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+      reject(new Error('External QR generation not available in server environment'))
+      return
+    }
+
+    try {
       const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(text)}&format=png&margin=10`
       
-      // Create an image element to load the QR code
       const img = new Image()
       img.crossOrigin = 'anonymous'
       
+      // Set up timeout
+      const timeoutId = setTimeout(() => {
+        img.src = '' // Cancel load
+        reject(new Error('External QR API timeout'))
+      }, timeoutMs)
+      
       img.onload = () => {
+        clearTimeout(timeoutId)
         try {
-          // Create canvas and draw the loaded image
           const canvas = document.createElement('canvas')
           canvas.width = size
           canvas.height = size
@@ -60,49 +107,64 @@ const generateQRCode = (text, size = 200) => {
           
           resolve(canvas.toDataURL())
         } catch (error) {
-          // If canvas fails, fallback to the API URL directly
-          resolve(qrApiUrl)
+          reject(new Error('Canvas rendering failed'))
         }
       }
       
       img.onerror = () => {
-        // If API fails, create a simple text-based fallback
-        const canvas = document.createElement('canvas')
-        canvas.width = size
-        canvas.height = size
-        const ctx = canvas.getContext('2d')
-        
-        // Fill background
-        ctx.fillStyle = '#ffffff'
-        ctx.fillRect(0, 0, size, size)
-        
-        // Add border
-        ctx.strokeStyle = '#000000'
-        ctx.lineWidth = 2
-        ctx.strokeRect(1, 1, size - 2, size - 2)
-        
-        // Add text
-        ctx.fillStyle = '#000000'
-        ctx.font = '12px Arial'
-        ctx.textAlign = 'center'
-        ctx.fillText('QR Code not available', size / 2, size / 2 - 10)
-        ctx.fillText('Visit:', size / 2, size / 2 + 10)
-        
-        // Truncate URL if too long
-        const displayUrl = text.length > 30 ? text.substring(0, 27) + '...' : text
-        ctx.font = '10px Arial'
-        ctx.fillText(displayUrl, size / 2, size / 2 + 30)
-        
-        resolve(canvas.toDataURL())
+        clearTimeout(timeoutId)
+        reject(new Error('External QR API failed to load'))
       }
       
-      // Start loading the QR code from API
+      // Start loading
       img.src = qrApiUrl
       
     } catch (error) {
       reject(error)
     }
   })
+}
+
+// Fallback placeholder when QR generation fails
+const createQRFallbackPlaceholder = (text, size = 200) => {
+  // SSR guard
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==' // 1x1 transparent pixel
+  }
+  
+  try {
+    const canvas = document.createElement('canvas')
+    canvas.width = size
+    canvas.height = size
+    const ctx = canvas.getContext('2d')
+    
+    // Fill background
+    ctx.fillStyle = '#ffffff'
+    ctx.fillRect(0, 0, size, size)
+    
+    // Add border
+    ctx.strokeStyle = '#000000'
+    ctx.lineWidth = 2
+    ctx.strokeRect(1, 1, size - 2, size - 2)
+    
+    // Add text
+    ctx.fillStyle = '#000000'
+    ctx.font = '12px Arial'
+    ctx.textAlign = 'center'
+    ctx.fillText('QR Code not available', size / 2, size / 2 - 10)
+    ctx.fillText('Visit:', size / 2, size / 2 + 10)
+    
+    // Truncate URL if too long
+    const displayUrl = text.length > 30 ? text.substring(0, 27) + '...' : text
+    ctx.font = '10px Arial'
+    ctx.fillText(displayUrl, size / 2, size / 2 + 30)
+    
+    return canvas.toDataURL()
+  } catch (error) {
+    // console.error('Failed to create QR placeholder:', error)
+    // Return a minimal base64 image
+    return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
+  }
 }
 
 // Fallback copy function for older browsers
@@ -134,6 +196,9 @@ const ShareButton = ({
   shareUrl,
   shareText,
   desktopOptions = ['copy', 'email', 'webshare', 'socials', 'qr', 'legacy'],
+  qrOptions = {},
+  allowExternalQrFallback = false,
+  externalQrTimeoutMs = 4000,
   onShared,
   menuPlacement = 'bottom-start',
   ...buttonProps
@@ -147,6 +212,8 @@ const ShareButton = ({
   const [menuAnchor, setMenuAnchor] = useState(null)
   const [qrDialogOpen, setQrDialogOpen] = useState(false)
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState('')
+  const [qrGenerating, setQrGenerating] = useState(false)
+  const [qrError, setQrError] = useState(null)
   const buttonRef = useRef(null)
 
   // Compute derived values
@@ -180,7 +247,7 @@ const ShareButton = ({
     } catch (error) {
       // AbortError means user cancelled, don't show error
       if (error.name !== 'AbortError') {
-        console.error('Web share failed:', error)
+        // console.error('Web share failed:', error)
         // Fall back to desktop menu on error
         setMenuAnchor(buttonRef.current)
       }
@@ -205,7 +272,7 @@ const ShareButton = ({
       )
       onShared?.('copy')
     } catch (error) {
-      console.error('Copy failed:', error)
+      // console.error('Copy failed:', error)
       notify(
         translate('resources.share.copyLink.error') || 'Failed to copy link',
         { type: 'warning' },
@@ -224,7 +291,7 @@ const ShareButton = ({
       window.location.href = mailtoUrl
       onShared?.('email')
     } catch (error) {
-      console.error('Email share failed:', error)
+      // console.error('Email share failed:', error)
       notify(
         translate('resources.share.email.error') ||
           'Failed to open email client',
@@ -259,7 +326,7 @@ const ShareButton = ({
         window.open(url, '_blank', 'noopener,noreferrer')
         onShared?.(platform)
       } catch (error) {
-        console.error(`${platform} share failed:`, error)
+        // console.error(`${platform} share failed:`, error)
         notify(`Failed to open ${platform}`, { type: 'warning' })
       }
       setMenuAnchor(null)
@@ -269,20 +336,47 @@ const ShareButton = ({
 
   // Handle QR code generation and display
   const handleQRCode = useCallback(async () => {
+    setQrGenerating(true)
+    setQrError(null)
+    
     try {
-      const dataUrl = await generateQRCode(finalShareUrl)
+      const dataUrl = await generateQRCode(finalShareUrl, {
+        width: qrOptions.width || 200,
+        allowExternalFallback: allowExternalQrFallback,
+        externalTimeoutMs: externalQrTimeoutMs,
+        ...qrOptions
+      })
+      
       setQrCodeDataUrl(dataUrl)
       setQrDialogOpen(true)
       onShared?.('qr')
+      
+      // Show notification based on generation method
+      if (!allowExternalQrFallback) {
+        notify(
+          translate('resources.share.qr.localSuccess') || 'QR code generated locally',
+          { type: 'info' },
+        )
+      }
+      
     } catch (error) {
-      console.error('QR code generation failed:', error)
-      notify(
-        translate('resources.share.qr.error') || 'Failed to generate QR code',
-        { type: 'warning' },
-      )
+      // console.error('QR code generation failed:', error)
+      setQrError(error.message)
+      
+      // Still open dialog to show error state
+      setQrDialogOpen(true)
+      
+      const errorMessage = allowExternalQrFallback
+        ? translate('resources.share.qr.error') || 'Failed to generate QR code'
+        : translate('resources.share.qr.localError') || 'Local QR generation failed. Enable external fallback for backup.'
+        
+      notify(errorMessage, { type: 'warning' })
+    } finally {
+      setQrGenerating(false)
     }
+    
     setMenuAnchor(null)
-  }, [finalShareUrl, onShared, notify, translate])
+  }, [finalShareUrl, qrOptions, allowExternalQrFallback, externalQrTimeoutMs, onShared, notify, translate])
 
   // Handle legacy share menu
   const handleLegacyShare = useCallback(() => {
@@ -290,11 +384,31 @@ const ShareButton = ({
       dispatch(openShareMenu([record.id], entityType, record.name))
       onShared?.('legacy')
     } catch (error) {
-      console.error('Legacy share failed:', error)
+      // console.error('Legacy share failed:', error)
       notify('Failed to open share menu', { type: 'warning' })
     }
     setMenuAnchor(null)
   }, [dispatch, record, entityType, onShared, notify])
+
+  // Handle QR code download
+  const handleQRDownload = useCallback(() => {
+    if (!qrCodeDataUrl) return
+    
+    try {
+      const filename = `qr-${record?.name || 'navidrome'}.png`
+      downloadQRCode(qrCodeDataUrl, filename)
+      notify(
+        translate('resources.share.qr.downloadSuccess') || 'QR code downloaded',
+        { type: 'info' }
+      )
+    } catch (error) {
+      // console.error('QR download failed:', error)
+      notify(
+        translate('resources.share.qr.downloadError') || 'Failed to download QR code',
+        { type: 'warning' }
+      )
+    }
+  }, [qrCodeDataUrl, record, notify, translate])
 
   // Main button click handler
   const handleButtonClick = useCallback(
@@ -321,6 +435,8 @@ const ShareButton = ({
   const handleQRDialogClose = useCallback(() => {
     setQrDialogOpen(false)
     setQrCodeDataUrl('')
+    setQrError(null)
+    setQrGenerating(false)
   }, [])
 
   // Filter and create menu items based on available options
@@ -386,9 +502,12 @@ const ShareButton = ({
 
         case 'qr':
           items.push(
-            <MenuItem key="qr" onClick={handleQRCode}>
+            <MenuItem key="qr" onClick={handleQRCode} disabled={qrGenerating}>
               <QrCodeIcon style={{ marginRight: 8 }} />
-              {translate('resources.share.qr') || 'Show QR code'}
+              {qrGenerating 
+                ? (translate('resources.share.qr.generating') || 'Generating QR...')
+                : (translate('resources.share.qr') || 'Show QR code')
+              }
             </MenuItem>,
           )
           break
@@ -421,6 +540,7 @@ const ShareButton = ({
     handleSocialShare,
     handleQRCode,
     handleLegacyShare,
+    qrGenerating,
     translate,
   ])
 
@@ -466,7 +586,32 @@ const ShareButton = ({
           {translate('resources.share.qr.title') || 'QR Code'}
         </DialogTitle>
         <DialogContent style={{ textAlign: 'center', padding: '20px' }}>
-          {qrCodeDataUrl && (
+          {qrGenerating ? (
+            <div style={{ padding: '40px' }}>
+              <Typography variant="body2">
+                {translate('resources.share.qr.generating') || 'Generating QR code...'}
+              </Typography>
+            </div>
+          ) : qrError ? (
+            <div style={{ padding: '20px' }}>
+              <Typography variant="body2" color="error" style={{ marginBottom: '10px' }}>
+                {translate('resources.share.qr.failed') || 'QR code generation failed'}
+              </Typography>
+              <Typography variant="caption" style={{ color: 'grey' }}>
+                {qrError}
+              </Typography>
+              {!allowExternalQrFallback && (
+                <Typography variant="caption" style={{ 
+                  display: 'block', 
+                  marginTop: '10px',
+                  color: 'grey'
+                }}>
+                  {translate('resources.share.qr.fallbackHint') || 
+                   'Tip: Enable external fallback for backup QR generation'}
+                </Typography>
+              )}
+            </div>
+          ) : qrCodeDataUrl ? (
             <>
               <img
                 src={qrCodeDataUrl}
@@ -493,12 +638,26 @@ const ShareButton = ({
                 {finalShareUrl}
               </Typography>
             </>
-          )}
+          ) : null}
         </DialogContent>
         <DialogActions style={{ justifyContent: 'space-between', padding: '16px' }}>
-          <Button onClick={handleCopy} color="primary" variant="outlined">
-            Copy Link
-          </Button>
+          <div>
+            <Button onClick={handleCopy} color="primary" variant="outlined">
+              <CopyIcon style={{ marginRight: 4 }} />
+              Copy Link
+            </Button>
+            {qrCodeDataUrl && !qrError && (
+              <Button 
+                onClick={handleQRDownload} 
+                color="primary" 
+                variant="outlined"
+                style={{ marginLeft: '8px' }}
+              >
+                <DownloadIcon style={{ marginRight: 4 }} />
+                Download PNG
+              </Button>
+            )}
+          </div>
           <Button onClick={handleQRDialogClose} color="primary">
             {translate('ra.action.close') || 'Close'}
           </Button>
