@@ -36,7 +36,7 @@ const PlayAllButton = ({ resource = 'song', filters = {}, className }) => {
 
       dispatch(playTracks(tracks))
     } catch (e) {
-      //eslint-disable-next-line no-console  
+      //eslint-disable-next-line no-console
       console.error('PlayAllButton error', e)
       notify('Error while loading tracks', { type: 'warning' })
     } finally {
