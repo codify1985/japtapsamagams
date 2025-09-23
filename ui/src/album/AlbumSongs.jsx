@@ -166,8 +166,7 @@ const AlbumSongs = (props) => {
   const bulkActionsLabel = isDesktop
     ? 'ra.action.bulk_actions'
     : 'ra.action.bulk_actions_mobile'
-  console.log('AlbumSongs render', { ids, data, currentUser })
-  console.log('AlbumSongs config?.defaultUser', config?.defaultUser)
+  
   return (
     <>
       <ListToolbar
