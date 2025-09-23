@@ -13,30 +13,6 @@ import {
 import { useDispatch } from 'react-redux'
 import { playTracks } from '../actions'
 
-const fetchAllPaged = async (dataProvider, resource, sort, filter) => {
-  const perPage = 500
-  let page = 1
-  let all = []
-  let hasMore = true
-  // get first page to know total
-  // loop while there is more data
-  // stop if backend doesn't return total (fallback to length)
-  // keep order as returned by backend (no shuffle)
-  while (hasMore) {
-    const { data, total } = await dataProvider.getList(resource, {
-      pagination: { page, perPage },
-      sort,
-      filter,
-    })
-    if (!data || data.length === 0) break
-    all = all.concat(data)
-    hasMore =
-      typeof total === 'number' ? all.length < total : data.length === perPage
-    page += 1
-  }
-  return all
-}
-
 const PlayAllButton = ({ resource = 'song', filters = {}, className }) => {
   const dp = useDataProvider()
   const notify = useNotify()
@@ -44,32 +20,22 @@ const PlayAllButton = ({ resource = 'song', filters = {}, className }) => {
   const dispatch = useDispatch()
   const listCtx = useListContext()
 
-  // react-admin v3/v4 naming differs; support both
-  const currentSort = listCtx?.currentSort ||
-    listCtx?.sort || {
-      field: 'title',
-      order: 'ASC',
-    }
-
   const [loading, setLoading] = React.useState(false)
 
   const handleOnClick = async () => {
     try {
       setLoading(true)
-      const tracks = await fetchAllPaged(
-        dp,
-        resource,
-        currentSort,
-        filters || {},
-      )
+
+      // Use only the songs from the current page
+      const tracks = listCtx?.data ? Object.values(listCtx.data) : []
+
       if (!tracks.length) {
         notify('No items to play', { type: 'info' })
         return
       }
-      // play in the received (sorted) order
+
       dispatch(playTracks(tracks))
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.error('PlayAllButton error', e)
       notify('Error while loading tracks', { type: 'warning' })
     } finally {
@@ -78,19 +44,8 @@ const PlayAllButton = ({ resource = 'song', filters = {}, className }) => {
   }
 
   return (
-    <Tooltip title={translate('Play all')}>
-      {/* <span>
-        <Button
-          onClick={handleClick}
-          startIcon={<PlayArrowIcon />}
-          className={className}
-          disabled={loading}
-          size="small"
-        >
-          {translate('Play all')}
-        </Button>
-      </span> */}
-      <Button onClick={handleOnClick} label={translate('Play all')}>
+    <Tooltip title={translate('Play All')}>
+      <Button onClick={handleOnClick} label={translate('Play All')}>
         <PlayArrowIcon />
       </Button>
     </Tooltip>
@@ -100,11 +55,5 @@ const PlayAllButton = ({ resource = 'song', filters = {}, className }) => {
 PlayAllButton.propTypes = {
   filters: PropTypes.object,
 }
-
-// PlayAllButton.propTypes = {
-//   resource: PropTypes.string,
-//   filters: PropTypes.object,
-//   className: PropTypes.string,
-// }
 
 export default PlayAllButton

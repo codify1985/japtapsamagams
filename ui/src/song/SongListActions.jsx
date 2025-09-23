@@ -16,50 +16,58 @@ import { openDownloadMenu, DOWNLOAD_MENU_SONG } from '../actions'
 import { formatBytes } from '../utils'
 import config from '../config'
 import subsonic from '../subsonic'
+import { makeStyles } from '@material-ui/core/styles'
+import { BatchShareButton } from '../common/BatchShareButton'
 
 // Helper function to fetch all pages of results
-const fetchAllPaged = async (
-  dataProvider,
-  resource,
-  sort,
-  filter,
-  page = null,
-  perPage = null,
-) => {
-  // If specific page and perPage are provided, fetch only that page
-  if (page !== null && perPage !== null) {
-    const { data } = await dataProvider.getList(resource, {
-      pagination: { page, perPage },
-      sort,
-      filter,
-    })
-    return data || []
-  }
+// const fetchAllPaged = async (
+//   dataProvider,
+//   resource,
+//   sort,
+//   filter,
+//   page = null,
+//   perPage = null,
+// ) => {
+//   // If specific page and perPage are provided, fetch only that page
+//   if (page !== null && perPage !== null) {
+//     const { data } = await dataProvider.getList(resource, {
+//       pagination: { page, perPage },
+//       sort,
+//       filter,
+//     })
+//     return data || []
+//   }
 
-  const defaultPerPage = 500
-  let currentPage = 1
-  let all = []
-  let hasMore = true
-  // get first page to know total
-  // loop while there is more data
-  // stop if backend doesn't return total (fallback to length)
-  // keep order as returned by backend (no shuffle)
-  while (hasMore) {
-    const { data, total } = await dataProvider.getList(resource, {
-      pagination: { page: currentPage, perPage: defaultPerPage },
-      sort,
-      filter,
-    })
-    if (!data || data.length === 0) break
-    all = all.concat(data)
-    hasMore =
-      typeof total === 'number'
-        ? all.length < total
-        : data.length === defaultPerPage
-    currentPage += 1
-  }
-  return all
-}
+//   const defaultPerPage = 500
+//   let currentPage = 1
+//   let all = []
+//   let hasMore = true
+//   // get first page to know total
+//   // loop while there is more data
+//   // stop if backend doesn't return total (fallback to length)
+//   // keep order as returned by backend (no shuffle)
+//   while (hasMore) {
+//     const { data, total } = await dataProvider.getList(resource, {
+//       pagination: { page: currentPage, perPage: defaultPerPage },
+//       sort,
+//       filter,
+//     })
+//     if (!data || data.length === 0) break
+//     all = all.concat(data)
+//     hasMore =
+//       typeof total === 'number'
+//         ? all.length < total
+//         : data.length === defaultPerPage
+//     currentPage += 1
+//   }
+//   return all
+// }
+
+const useStyles = makeStyles((theme) => ({
+  button: {
+    color: theme.palette.type === 'dark' ? 'white' : undefined,
+  },
+}))
 
 export const SongListActions = (props) => {
   const {
@@ -78,6 +86,7 @@ export const SongListActions = (props) => {
   const translate = useTranslate()
   const dataProvider = useDataProvider()
   const notify = useNotify()
+  const classes = useStyles()
 
   // Get list context to access current list state
   const listContext = useListContext()
@@ -90,49 +99,61 @@ export const SongListActions = (props) => {
   // Get the complete filter state from list context
   const currentFilter = listContext?.filterValues || filterValues || {}
 
-  const [loading, setLoading] = React.useState(false)
-  const [songs, setSongs] = React.useState([])
+  console.debug('[SongListActions] listContext:', listContext.data, { listContext });
+
+  // const [loading, setLoading] = React.useState(false)
+  // const [songs, setSongs] = React.useState([])
 
   // Fetch current songs when filters or sort change
-  React.useEffect(() => {
-    const fetchSongs = async (page, perPage) => {
-      try {
-        setLoading(true)
-        // Use the same fetching pattern as PlayAllButton to get all filtered results
-        const allSongs = await fetchAllPaged(
-          dataProvider,
-          resource,
-          currentSort,
-          currentFilter,
-          page,
-          perPage,
-        )
-        setSongs(allSongs)
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('Failed to fetch songs:', error)
-        setSongs([])
-      } finally {
-        setLoading(false)
-      }
-    }
-    // Only fetch if there is a filter on title (i.e. artist selected)
+  // React.useEffect(() => {
+  //   const fetchSongs = async (page, perPage) => {
+  //     try {
+  //       setLoading(true)
+  //       // Use the same fetching pattern as PlayAllButton to get all filtered results
+  //       const allSongs = await fetchAllPaged(
+  //         dataProvider,
+  //         resource,
+  //         currentSort,
+  //         currentFilter,
+  //         page,
+  //         perPage,
+  //       )
+  //       setSongs(allSongs)
+  //     } catch (error) {
+  //       // eslint-disable-next-line no-console
+  //       console.error('Failed to fetch songs:', error)
+  //       setSongs([])
+  //     } finally {
+  //       setLoading(false)
+  //     }
+  //   }
+  //   // Only fetch if there is a filter on title (i.e. artist selected)
 
-    //find out why fetchSongs is being called twice on initial load
-    if (currentFilter.title || currentFilter.starred) {
-      fetchSongs()
-    } else {
-      fetchSongs(listContext.page, listContext.perPage)
-      //setSongs([])
-    }
-  }, [
-    dataProvider,
-    resource,
-    currentFilter,
-    currentSort,
-    listContext.page,
-    listContext.perPage,
-  ])
+  //   //find out why fetchSongs is being called twice on initial load
+  //   if (currentFilter.title || currentFilter.starred) {
+  //     console.debug('[SongListActions] 1 Fetching songs with filter:', currentFilter);
+  //     fetchSongs()
+  //   } else {
+  //     console.debug('[SongListActions] 2 Fetching songs with filter:', currentFilter);
+  //     fetchSongs(listContext.page, listContext.perPage)
+  //     //setSongs([])
+  //   }
+  // }, [
+  //   dataProvider,
+  //   resource,
+  //   currentFilter,
+  //   currentSort,
+  //   listContext.page,
+  //   listContext.perPage,
+  // ])
+  // TESTING:
+    // Use existing data from listContext instead of fetching separately
+  const songs = listContext?.data ? Object.values(listContext.data) : []
+  const loading = listContext?.loading || false
+
+  // Remove the entire useEffect that was fetching songs
+  // React.useEffect(() => { ... }, [...]) // DELETE THIS ENTIRE BLOCK
+
 
   // Calculate total size of all songs for download
   const totalSize = React.useMemo(() => {
@@ -187,6 +208,10 @@ export const SongListActions = (props) => {
           <CloudDownloadOutlinedIcon />
         </Button>
       )}
+      {/* TODO : ADD THIS BACK  */}
+      {/* {config.enableSharing && (
+         <BatchShareButton {...props}  />
+      )} */}
       {filters &&
         cloneElement(filters, {
           resource,

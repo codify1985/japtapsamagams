@@ -5,6 +5,7 @@ import {
   useShowContext,
   useShowController,
   Title as RaTitle,
+  useGetIdentity,
 } from 'react-admin'
 import { makeStyles } from '@material-ui/core/styles'
 import AlbumSongs from './AlbumSongs'
@@ -32,7 +33,8 @@ const AlbumShowLayout = (props) => {
   const { record } = context
   const classes = useStyles()
   useResourceRefresh('album', 'song')
-
+  const currentUser = useGetIdentity()?.identity?.id;
+  console.log("Current User in AlbumShowLayout: ", currentUser);
   return (
     <>
       {record && <AlbumNavigator currentAlbum={record} />}
@@ -52,6 +54,7 @@ const AlbumShowLayout = (props) => {
             resource={'song'}
             exporter={false}
             album={record}
+            currentUser={currentUser}
             actions={
               <AlbumActions className={classes.albumActions} record={record} />
             }

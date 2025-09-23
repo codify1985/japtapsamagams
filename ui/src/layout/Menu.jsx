@@ -70,10 +70,10 @@ const Menu = ({ dense = false }) => {
   // Added new Default Library Song Lists here
   const songLists = {
     all: {
-      params: 'sort=random&order=ASC&page=1&perPage=36&filter={}',
+      params: `sort=random&order=ASC&page=1&perPage=${config.defaultPerPage}&filter={}`,
     },
     recentKirtan: {
-      params: 'sort=createdAt&order=DESC&page=1&perPage=36&filter={}',
+      params: `sort=createdAt&order=DESC&page=1&perPage=${config.defaultPerPage}&filter={}`,
     },
     ...(config.enableFavourites &&
       currentUser !== config.defaultUser && {
@@ -117,7 +117,7 @@ const Menu = ({ dense = false }) => {
     }
     const albumListAddress =
       type === 'search'
-        ? `/song/search?${albumLists[type]?.params}`
+        ? `/song/search?${albumLists[type]?.params}&perPage=${config.defaultPerPage}`
         : `/album/${type}`
 
     const name = translate(`resources.album.lists.${type || 'default'}`, {
