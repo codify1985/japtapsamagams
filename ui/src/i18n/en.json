@@ -265,7 +265,20 @@
         "createdAt": "Created at"
       },
       "notifications": {},
-      "actions": {}
+      "actions": {},
+      "copyLink": "Copy link",
+      "copyLink.success": "Link copied to clipboard",
+      "copyLink.error": "Failed to copy link",
+      "email": "Share via email",
+      "email.error": "Failed to open email client",
+      "webShare": "System share",
+      "socials": "Share to…",
+      "qr": "Show QR code",
+      "qr.title": "QR Code",
+      "qr.description": "Scan this QR code to share",
+      "qr.error": "Failed to generate QR code",
+      "more": "More options",
+      "shared": "Shared successfully"
     },
     "missing": {
       "name": "Missing File |||| Missing Files",
