@@ -17,7 +17,7 @@ const defaultConfig = {
   gaTrackingId: '',
   devActivityPanel: true,
   enableStarRating: false,
-  defaultTheme: 'Japtap Midnight',
+  defaultTheme: 'Japtap Apple',
   defaultLanguage: '',
   defaultUIVolume: 100,
   enableUserEditing: true,

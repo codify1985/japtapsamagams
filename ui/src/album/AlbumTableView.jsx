@@ -25,6 +25,7 @@ import {
 } from '../common'
 import config from '../config'
 import { DraggableTypes } from '../consts'
+import subsonic from '../subsonic'
 import clsx from 'clsx'
 
 const useStyles = makeStyles({
@@ -140,6 +141,13 @@ const AlbumTableView = ({
     defaultOff: ['createdAt', 'size', 'mood'],
   })
 
+  // const imageUrl = subsonic.getCoverArtUrl(record, 300);
+
+   const shouldShowCover = (record) => {
+    // Show covers for albums and playlists, but not for artists
+    return record.albumArtist || record.sync !== undefined
+  }
+
   return isXsmall ? (
     <SimpleList
       primaryText={(r) => r.name}
@@ -174,6 +182,13 @@ const AlbumTableView = ({
           currentUser={currentUser}
         />
       )}
+      showCover={true}
+        coverSrc={(r) => {
+          if (!shouldShowCover(r)) {
+            return undefined  // This will fallback to Avatar with initials
+          }
+          return subsonic.getCoverArtUrl(r, 48)
+      }}
       {...rest}
     />
   ) : (
