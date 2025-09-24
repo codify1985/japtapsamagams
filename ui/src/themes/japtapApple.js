@@ -61,7 +61,8 @@ const japtapApple = createTheme({
 
   // Apple's typography system
   typography: {
-    fontFamily: '"SF Pro Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif',
+    fontFamily:
+      '"SF Pro Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif',
     h1: {
       fontFamily: 'SF Pro Display, Inter, system-ui, sans-serif',
       fontWeight: 700,

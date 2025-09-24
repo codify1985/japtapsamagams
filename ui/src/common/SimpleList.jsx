@@ -20,9 +20,9 @@ const useStyles = makeStyles(
       textDecoration: 'none',
       color: 'inherit',
     },
-    tertiary: { 
-      float: 'right', 
-      opacity: 0.541176 
+    tertiary: {
+      float: 'right',
+      opacity: 0.541176,
     },
     list: {
       padding: 0,
@@ -35,7 +35,8 @@ const useStyles = makeStyles(
       transition: 'all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1)',
       '&:hover': {
         transform: 'translateY(-2px)',
-        boxShadow: '0 8px 25px rgba(0, 0, 0, 0.12), 0 4px 10px rgba(0, 0, 0, 0.08)',
+        boxShadow:
+          '0 8px 25px rgba(0, 0, 0, 0.12), 0 4px 10px rgba(0, 0, 0, 0.08)',
       },
     },
     listItem: {
@@ -89,7 +90,9 @@ const CoverMedia = ({ record, coverSrc, classes }) => {
     setImageError(true)
   }, [])
 
-  const imageUrl = coverSrc ? coverSrc(record) : subsonic.getCoverArtUrl(record, 48)
+  const imageUrl = coverSrc
+    ? coverSrc(record)
+    : subsonic.getCoverArtUrl(record, 48)
 
   // Generate initials for fallback
   const getInitials = (record) => {
@@ -175,10 +178,13 @@ export const SimpleList = ({
   ...rest
 }) => {
   const classes = useStyles({ classes: classesOverride })
-  
+
   return (
     (loading || total > 0) && (
-      <List className={`${classes.list} ${className}`} {...sanitizeListRestProps(rest)}>
+      <List
+        className={`${classes.list} ${className}`}
+        {...sanitizeListRestProps(rest)}
+      >
         {ids.map((id) => {
           const record = data[id]
           return (
@@ -191,7 +197,11 @@ export const SimpleList = ({
               >
                 <ListItem button={!!linkType} className={classes.listItem}>
                   {showCover ? (
-                    <CoverMedia record={record} coverSrc={coverSrc} classes={classes} />
+                    <CoverMedia
+                      record={record}
+                      coverSrc={coverSrc}
+                      classes={classes}
+                    />
                   ) : (
                     <>
                       {leftIcon && (
@@ -219,7 +229,9 @@ export const SimpleList = ({
                   />
                   {(rightAvatar || rightIcon) && (
                     <ListItemSecondaryAction>
-                      {rightAvatar && <Avatar>{rightAvatar(record, id)}</Avatar>}
+                      {rightAvatar && (
+                        <Avatar>{rightAvatar(record, id)}</Avatar>
+                      )}
                       {rightIcon && (
                         <ListItemIcon>{rightIcon(record, id)}</ListItemIcon>
                       )}
