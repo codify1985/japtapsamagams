@@ -238,8 +238,8 @@ const AlbumDetails = (props) => {
   }
 
   useEffect(() => {
-   if (albumInfo && record.updatedAt) {
-     return; // Skip API call if we already have the info
+    if (albumInfo && record.updatedAt) {
+      return // Skip API call if we already have the info
     }
 
     subsonic

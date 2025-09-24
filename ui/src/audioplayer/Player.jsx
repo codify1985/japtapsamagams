@@ -49,12 +49,12 @@ const Player = () => {
     )
 
   const { authenticated } = useAuthState()
-  
+
   // Safety guards - prevent rendering if state is not properly initialized
   if (!playerState || !playerState.queue || !Array.isArray(playerState.queue)) {
     return null
   }
-  
+
   const visible = authenticated && playerState.queue.length > 0
   const isRadio = playerState.current?.isRadio || false
   const classes = useStyle({
@@ -163,12 +163,12 @@ const Player = () => {
     if (!playerState.current || !playerState.current.uuid) {
       return null
     }
-    
+
     const idx = playerState.queue.findIndex(
       (item) => item.uuid === playerState.current.uuid,
     )
-    return idx !== -1 && idx < playerState.queue.length - 1 
-      ? playerState.queue[idx + 1] 
+    return idx !== -1 && idx < playerState.queue.length - 1
+      ? playerState.queue[idx + 1]
       : null
   }, [playerState])
 
@@ -184,8 +184,11 @@ const Player = () => {
       }
 
       const progress = (info.currentTime / info.duration) * 100
-      if (isNaN(info.duration) || isNaN(info.currentTime) || 
-          (progress < 50 && info.currentTime < 240)) {
+      if (
+        isNaN(info.duration) ||
+        isNaN(info.currentTime) ||
+        (progress < 50 && info.currentTime < 240)
+      ) {
         return
       }
 
@@ -246,22 +249,23 @@ const Player = () => {
       if (startTime === null) {
         setStartTime(Date.now())
       }
-      
+
       if (info.duration && info.song) {
         const song = info.song
         document.title = `${song.title || 'Unknown'} - ${song.artist || 'Unknown'} - Jap Tap Samagams`
-        
+
         if (!info.isRadio && info.trackId) {
           try {
-            const pos = startTime === null ? null : Math.floor(info.currentTime || 0)
+            const pos =
+              startTime === null ? null : Math.floor(info.currentTime || 0)
             subsonic.nowPlaying(info.trackId, pos)
           } catch (error) {
             console.warn('Failed to update now playing:', error)
           }
         }
-        
+
         setPreload(false)
-        
+
         if (config.gaTrackingId) {
           try {
             ReactGA.event({
@@ -273,7 +277,7 @@ const Player = () => {
             console.warn('Failed to track GA event:', error)
           }
         }
-        
+
         if (showNotifications) {
           try {
             sendNotification(
@@ -312,11 +316,11 @@ const Player = () => {
     (currentPlayId, audioLists, info) => {
       setScrobbled(false)
       setStartTime(null)
-      
+
       if (info && typeof info === 'object') {
         dispatch(currentPlaying(info))
       }
-      
+
       if (info && info.trackId) {
         dataProvider
           .getOne('keepalive', { id: info.trackId })
