@@ -49,6 +49,12 @@ const Player = () => {
     )
 
   const { authenticated } = useAuthState()
+  
+  // Safety guards - prevent rendering if state is not properly initialized
+  if (!playerState || !playerState.queue || !Array.isArray(playerState.queue)) {
+    return null
+  }
+  
   const visible = authenticated && playerState.queue.length > 0
   const isRadio = playerState.current?.isRadio || false
   const classes = useStyle({
@@ -153,20 +159,33 @@ const Player = () => {
   )
 
   const nextSong = useCallback(() => {
+    // Guard against undefined current state
+    if (!playerState.current || !playerState.current.uuid) {
+      return null
+    }
+    
     const idx = playerState.queue.findIndex(
       (item) => item.uuid === playerState.current.uuid,
     )
-    return idx !== null ? playerState.queue[idx + 1] : null
+    return idx !== -1 && idx < playerState.queue.length - 1 
+      ? playerState.queue[idx + 1] 
+      : null
   }, [playerState])
 
   const onAudioProgress = useCallback(
     (info) => {
+      // Early safety checks
+      if (!info || typeof info !== 'object') {
+        return
+      }
+
       if (info.ended) {
         document.title = 'Jap Tap Samagams'
       }
 
       const progress = (info.currentTime / info.duration) * 100
-      if (isNaN(info.duration) || (progress < 50 && info.currentTime < 240)) {
+      if (isNaN(info.duration) || isNaN(info.currentTime) || 
+          (progress < 50 && info.currentTime < 240)) {
         return
       }
 
@@ -177,16 +196,24 @@ const Player = () => {
       if (!preloaded) {
         const next = nextSong()
         if (next != null) {
-          const audio = new Audio()
-          audio.src = next.musicSrc
+          try {
+            const audio = new Audio()
+            audio.src = next.musicSrc
+          } catch (error) {
+            console.warn('Failed to preload next song:', error)
+          }
         }
         setPreload(true)
         return
       }
 
-      if (!scrobbled) {
-        info.trackId && subsonic.scrobble(info.trackId, startTime)
-        setScrobbled(true)
+      if (!scrobbled && info.trackId && startTime) {
+        try {
+          subsonic.scrobble(info.trackId, startTime)
+          setScrobbled(true)
+        } catch (error) {
+          console.warn('Failed to scrobble:', error)
+        }
       }
     },
     [startTime, scrobbled, nextSong, preloaded],
@@ -200,37 +227,63 @@ const Player = () => {
 
   const onAudioPlay = useCallback(
     (info) => {
+      // Safety check
+      if (!info || typeof info !== 'object') {
+        return
+      }
+
       // Do this to start the context; on chrome-based browsers, the context
       // will start paused since it is created prior to user interaction
       if (context && context.state !== 'running') {
-        context.resume()
+        try {
+          context.resume()
+        } catch (error) {
+          console.warn('Failed to resume audio context:', error)
+        }
       }
 
       dispatch(currentPlaying(info))
       if (startTime === null) {
         setStartTime(Date.now())
       }
-      if (info.duration) {
+      
+      if (info.duration && info.song) {
         const song = info.song
-        document.title = `${song.title} - ${song.artist} - Jap Tap Samagams`
-        if (!info.isRadio) {
-          const pos = startTime === null ? null : Math.floor(info.currentTime)
-          subsonic.nowPlaying(info.trackId, pos)
+        document.title = `${song.title || 'Unknown'} - ${song.artist || 'Unknown'} - Jap Tap Samagams`
+        
+        if (!info.isRadio && info.trackId) {
+          try {
+            const pos = startTime === null ? null : Math.floor(info.currentTime || 0)
+            subsonic.nowPlaying(info.trackId, pos)
+          } catch (error) {
+            console.warn('Failed to update now playing:', error)
+          }
         }
+        
         setPreload(false)
+        
         if (config.gaTrackingId) {
-          ReactGA.event({
-            category: 'Player',
-            action: 'Play song',
-            label: `${song.title} - ${song.artist}`,
-          })
+          try {
+            ReactGA.event({
+              category: 'Player',
+              action: 'Play song',
+              label: `${song.title || 'Unknown'} - ${song.artist || 'Unknown'}`,
+            })
+          } catch (error) {
+            console.warn('Failed to track GA event:', error)
+          }
         }
+        
         if (showNotifications) {
-          sendNotification(
-            song.title,
-            `${song.artist} - ${song.album}`,
-            info.cover,
-          )
+          try {
+            sendNotification(
+              song.title || 'Unknown Track',
+              `${song.artist || 'Unknown Artist'} - ${song.album || 'Unknown Album'}`,
+              info.cover,
+            )
+          } catch (error) {
+            console.warn('Failed to send notification:', error)
+          }
         }
       }
     },
@@ -247,7 +300,11 @@ const Player = () => {
   }, [scrobbled, startTime])
 
   const onAudioPause = useCallback(
-    (info) => dispatch(currentPlaying(info)),
+    (info) => {
+      if (info && typeof info === 'object') {
+        dispatch(currentPlaying(info))
+      }
+    },
     [dispatch],
   )
 
@@ -255,11 +312,16 @@ const Player = () => {
     (currentPlayId, audioLists, info) => {
       setScrobbled(false)
       setStartTime(null)
-      dispatch(currentPlaying(info))
-      dataProvider
-        .getOne('keepalive', { id: info.trackId })
-        // eslint-disable-next-line no-console
-        .catch((e) => console.log('Keepalive error:', e))
+      
+      if (info && typeof info === 'object') {
+        dispatch(currentPlaying(info))
+      }
+      
+      if (info && info.trackId) {
+        dataProvider
+          .getOne('keepalive', { id: info.trackId })
+          .catch((e) => console.log('Keepalive error:', e))
+      }
     },
     [dispatch, dataProvider],
   )
