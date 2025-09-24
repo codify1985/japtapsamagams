@@ -249,36 +249,39 @@
       }
     },
     "share": {
-      "name": "Share |||| Shares",
-      "fields": {
-        "username": "Shared By",
-        "url": "URL",
-        "description": "Description",
-        "downloadable": "Allow Downloads?",
-        "contents": "Contents",
-        "expiresAt": "Expires",
-        "lastVisitedAt": "Last Visited",
-        "visitCount": "Visits",
-        "format": "Format",
-        "maxBitRate": "Max. Bit Rate",
-        "updatedAt": "Updated at",
-        "createdAt": "Created at"
+      "legacyError": "Failed to open share menu",
+      "shared": "Shared successfully",
+      "platformOpenError": "Failed to open %{platform}",
+      "webShareNotAvailable": "System share not available",
+      "copyLink": {
+        "label": "Copy link",
+        "success": "URL copied to clipboard",
+        "error": "Could not copy link"
       },
-      "notifications": {},
-      "actions": {},
-      "copyLink": "Copy link",
-      "copyLink.success": "Link copied to clipboard",
-      "copyLink.error": "Failed to copy link",
-      "email": "Share via email",
-      "email.error": "Failed to open email client",
+      "email": {
+        "label": "Share via email",
+        "error": "Email client could not be opened"
+      },
       "webShare": "System share",
-      "socials": "Share to…",
-      "qr": "Show QR code",
-      "qr.title": "QR Code",
-      "qr.description": "Scan this QR code to share",
-      "qr.error": "Failed to generate QR code",
       "more": "More options",
-      "shared": "Shared successfully"
+      "socials": {
+        "twitter": "Share on X/Twitter",
+        "facebook": "Share on Facebook",
+        "linkedin": "Share on LinkedIn"
+      },
+      "qr": {
+        "label": "Show QR code",
+        "title": "QR Code",
+        "description": "Scan this QR code to share",
+        "generating": "Generating QR code...",
+        "failed": "QR code generation failed",
+        "fallbackHint": "Tip: Enable external fallback for backup QR generation",
+        "localSuccess": "QR code generated",
+        "localError": "Local QR generation failed. Enable external fallback for backup.",
+        "download": "Download PNG",
+        "downloadSuccess": "QR code downloaded",
+        "downloadError": "Failed to download QR code"
+      }
     },
     "missing": {
       "name": "Missing File |||| Missing Files",
@@ -410,7 +413,8 @@
       "unselect": "Unselect",
       "skip": "Skip",
       "share": "Share",
-      "download": "Download"
+      "download": "Download",
+      "play_all": "Play All"
     },
     "boolean": {
       "true": "Yes",
@@ -461,7 +465,9 @@
       "no": "No",
       "not_found": "Either you typed a wrong URL, or you followed a bad link.",
       "yes": "Yes",
-      "unsaved_changes": "Some of your changes weren't saved. Are you sure you want to ignore them?"
+      "unsaved_changes": "Some of your changes weren't saved. Are you sure you want to ignore them?",
+      "noItemsToPlay": "No items to play",
+      "playAllLoadError": "Error while loading tracks"
     },
     "navigation": {
       "no_results": "No results found",
