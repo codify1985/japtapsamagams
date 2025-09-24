@@ -81,9 +81,9 @@ const IconBasedList = ({ data, ids, basePath }) => (
     primaryText={(record) => record.name}
     secondaryText={(record) => record.description}
     linkType="edit"
-    showCover={false}  // Explicitly disabled
-    leftIcon={(record) => <span>🎵</span>}  // Custom icon
-    rightIcon={(record) => <span>⭐</span>}  // Rating or other info
+    showCover={false} // Explicitly disabled
+    leftIcon={(record) => <span>🎵</span>} // Custom icon
+    rightIcon={(record) => <span>⭐</span>} // Rating or other info
   />
 )
 
@@ -106,7 +106,7 @@ const SmartCoverList = ({ data, ids, basePath }) => {
       showCover={true}
       coverSrc={(record) => {
         if (!shouldShowCover(record)) {
-          return undefined  // This will fallback to Avatar with initials
+          return undefined // This will fallback to Avatar with initials
         }
         return subsonic.getCoverArtUrl(record, 48)
       }}

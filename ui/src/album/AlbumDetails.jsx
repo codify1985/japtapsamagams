@@ -238,6 +238,11 @@ const AlbumDetails = (props) => {
   }
 
   useEffect(() => {
+    console.log('AlbumDetails useEffect', record, albumInfo)
+    if (albumInfo && record.updatedAt) {
+      return // Skip API call if we already have the info
+    }
+
     subsonic
       .getAlbumInfo(record.id)
       .then((resp) => resp.json['subsonic-response'])
@@ -250,7 +255,7 @@ const AlbumDetails = (props) => {
         // eslint-disable-next-line no-console
         console.error('error on album page', e)
       })
-  }, [record])
+  }, [JSON.stringify(record), record.updatedAt])
 
   // Reset image state when album changes
   useEffect(() => {

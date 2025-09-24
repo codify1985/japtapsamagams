@@ -143,7 +143,7 @@ const AlbumTableView = ({
 
   // const imageUrl = subsonic.getCoverArtUrl(record, 300);
 
-   const shouldShowCover = (record) => {
+  const shouldShowCover = (record) => {
     // Show covers for albums and playlists, but not for artists
     return record.albumArtist || record.sync !== undefined
   }
@@ -183,11 +183,11 @@ const AlbumTableView = ({
         />
       )}
       showCover={true}
-        coverSrc={(r) => {
-          if (!shouldShowCover(r)) {
-            return undefined  // This will fallback to Avatar with initials
-          }
-          return subsonic.getCoverArtUrl(r, 48)
+      coverSrc={(r) => {
+        if (!shouldShowCover(r)) {
+          return undefined // This will fallback to Avatar with initials
+        }
+        return subsonic.getCoverArtUrl(r, 48)
       }}
       {...rest}
     />
