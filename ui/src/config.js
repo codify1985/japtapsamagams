@@ -54,6 +54,13 @@ try {
   config = defaultConfig
 }
 
+// Helper function that can handle multiple user sources
+export const isFavouritesEnabledForCurrentUser = (currentUser = null) => {
+  // Allow passing currentUser as parameter, or get from localStorage
+  const user = currentUser || localStorage.getItem('username')
+  return config.enableFavourites && user && user !== config.defaultUser
+}
+
 export let shareInfo
 
 try {
