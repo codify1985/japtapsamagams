@@ -14,6 +14,7 @@ import {
   NullableBooleanInput,
   usePermissions,
   useListContext,
+  useGetIdentity,
 } from 'react-admin'
 import { useMediaQuery, withWidth } from '@material-ui/core'
 import FavoriteIcon from '@material-ui/icons/Favorite'
@@ -30,7 +31,7 @@ import {
   useSelectedFields,
   useResourceRefresh,
 } from '../common'
-import config from '../config'
+import config, { isFavouritesEnabledForCurrentUser } from '../config'
 import ArtistListActions from './ArtistListActions'
 import ArtistSimpleList from './ArtistSimpleList'
 import { DraggableTypes } from '../consts'
@@ -67,6 +68,11 @@ const useStyles = makeStyles((theme) => ({
     fontVariantNumeric: 'tabular-nums',
   },
   artistListContainer: {
+    // // test this with multiple themes
+    //  '& .MuiToolbar-gutters': {
+    //   paddingLeft: '0 !important',
+    //   paddingRight: '0 !important',
+    // },
     '& [class*="RaListToolbar-toolbar"]': {
       paddingLeft: '0 !important',
       paddingRight: '0 !important',
@@ -103,8 +109,8 @@ const ArtistFilter = (props) => {
   return (
     <Filter {...props} variant={'outlined'}>
       <SearchInput id="search" source="name" alwaysOn />
-      <SelectInput source="role" choices={roles} alwaysOn disabled hidden />
-      {config.enableFavourites && (
+      {/* <SelectInput source="role" choices={roles} alwaysOn disabled hidden /> */}
+      {isFavouritesEnabledForCurrentUser(props.currentUser) && (
         <QuickFilter
           source="starred"
           label={<FavoriteIcon fontSize={'small'} />}
@@ -145,7 +151,14 @@ const ArtistDatagrid = (props) => (
   <Datagrid {...props} body={<ArtistDatagridBody />} />
 )
 
-const ArtistListView = ({ hasShow, hasEdit, hasList, width, ...rest }) => {
+const ArtistListView = ({
+  hasShow,
+  hasEdit,
+  hasList,
+  width,
+  currentUser,
+  ...rest
+}) => {
   const { filterValues } = rest
   const { data } = useListContext() // Get data from list context
   const classes = useStyles()
@@ -154,6 +167,7 @@ const ArtistListView = ({ hasShow, hasEdit, hasList, width, ...rest }) => {
   const isXsmall = useMediaQuery((theme) => theme.breakpoints.down('xs'))
   useResourceRefresh('artist')
   const { permissions } = usePermissions()
+
   const isAdmin = permissions === 'admin'
 
   // Create a handler that can find the record by ID
@@ -216,11 +230,11 @@ const ArtistListView = ({ hasShow, hasEdit, hasList, width, ...rest }) => {
   return isXsmall ? (
     <ArtistSimpleList
       linkType={(id) => history.push(getMobileArtistLink(id))}
+      currentUser={currentUser}
       // linkType={(id) => {
       //   console.log('link handleArtistLinkWithRecord', handleArtistLinkWithRecord);
       //   history.push(handleArtistLinkWithRecord)}}
       //   //linkType={(id) => history.push(handleArtistLink(id))}
-
       {...rest}
     />
   ) : (
@@ -257,10 +271,10 @@ const ArtistListView = ({ hasShow, hasEdit, hasList, width, ...rest }) => {
       <ArtistContextMenu
         source={'starred_at'}
         sortByOrder={'DESC'}
-        sortable={config.enableFavourites}
+        sortable={isFavouritesEnabledForCurrentUser(currentUser)}
         className={classes.contextMenu}
         label={
-          config.enableFavourites && (
+          isFavouritesEnabledForCurrentUser(currentUser) && (
             <FavoriteBorderIcon
               fontSize={'small'}
               className={classes.contextHeader}
@@ -274,6 +288,10 @@ const ArtistListView = ({ hasShow, hasEdit, hasList, width, ...rest }) => {
 
 const ArtistList = (props) => {
   const classes = useStyles()
+  const currentUser =
+    localStorage.getItem('username') || useGetIdentity()?.identity?.id
+  console.log('ArtistList: currentUser', currentUser)
+
   return (
     <div className={classes.artistListContainer}>
       <List
@@ -281,13 +299,13 @@ const ArtistList = (props) => {
         sort={{ field: 'name', order: 'ASC' }}
         exporter={false}
         bulkActionButtons={false}
-        filters={<ArtistFilter />}
+        filters={<ArtistFilter currentUser={currentUser} />}
         filterDefaultValues={{ role: 'artist' }}
         // default selected value to artist
         actions={<ArtistListActions />}
         perPage={25}
       >
-        <ArtistListView {...props} />
+        <ArtistListView {...props} currentUser={currentUser} />
       </List>
     </div>
   )

@@ -18,6 +18,7 @@ const useStyles = makeStyles(
     title: {
       paddingRight: '10px',
       width: '80%',
+      marginLeft: '1rem',
     },
     rightIcon: {
       top: '26px',
@@ -36,6 +37,7 @@ const ArtistSimpleList = ({
   loading,
   selectedIds,
   total,
+  currentUser,
   ...rest
 }) => {
   const classes = useStyles({ classes: classesOverride })
@@ -62,11 +64,12 @@ const ArtistSimpleList = ({
                       </>
                     }
                   />
-                  <ListItemSecondaryAction className={classes.rightIcon}>
+                  {/* Add it later if needed */}
+                  {/* <ListItemSecondaryAction className={classes.rightIcon}>
                     <ListItemIcon>
                       <ArtistContextMenu record={data[id]} />
                     </ListItemIcon>
-                  </ListItemSecondaryAction>
+                  </ListItemSecondaryAction> */}
                 </ListItem>
               </span>
             ),
@@ -83,6 +86,7 @@ ArtistSimpleList.propTypes = {
   hasBulkActions: PropTypes.bool.isRequired,
   ids: PropTypes.array,
   selectedIds: PropTypes.arrayOf(PropTypes.any).isRequired,
+  currentUser: PropTypes.string,
 }
 
 ArtistSimpleList.defaultProps = {

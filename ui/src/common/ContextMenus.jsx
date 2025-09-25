@@ -59,10 +59,10 @@ const ContextMenu = ({
   record,
   color,
   className,
-  currentUser,
   songQueryParams,
   hideShare,
   hideInfo,
+  hideDownload = false,
 }) => {
   const classes = useStyles({ color })
   const dataProvider = useDataProvider()
@@ -70,6 +70,8 @@ const ContextMenu = ({
   const translate = useTranslate()
   const notify = useNotify()
   const [anchorEl, setAnchorEl] = useState(null)
+  const currentUser =
+    localStorage.getItem('username') || useGetIdentity()?.identity?.id
 
   const options = {
     play: {
@@ -96,12 +98,15 @@ const ContextMenu = ({
       label: translate('resources.album.actions.shuffle'),
       action: (data, ids) => dispatch(shuffleTracks(data, ids)),
     },
-    addToPlaylist: {
-      enabled: true,
-      needData: true,
-      label: translate('resources.album.actions.addToPlaylist'),
-      action: (data, ids) => dispatch(openAddToPlaylist({ selectedIds: ids })),
-    },
+    ...(currentUser !== config.defaultUser && {
+      addToPlaylist: {
+        enabled: true,
+        needData: true,
+        label: translate('resources.album.actions.addToPlaylist'),
+        action: (data, ids) =>
+          dispatch(openAddToPlaylist({ selectedIds: ids })),
+      },
+    }),
     ...(!hideShare &&
       currentUser !== config.defaultUser && {
         share: {
@@ -112,21 +117,23 @@ const ContextMenu = ({
             dispatch(openShareMenu([record.id], resource, record.name)),
         },
       }),
-    download: {
-      enabled: config.enableDownloads && record.size,
-      needData: false,
-      label: `${translate('ra.action.download')} (${formatBytes(record.size)})`,
-      action: () => {
-        dispatch(
-          openDownloadMenu(
-            record,
-            record.duration !== undefined
-              ? DOWNLOAD_MENU_ALBUM
-              : DOWNLOAD_MENU_ARTIST,
-          ),
-        )
+    ...(!hideDownload && {
+      download: {
+        enabled: config.enableDownloads && record.size,
+        needData: false,
+        label: `${translate('ra.action.download')} (${formatBytes(record.size)})`,
+        action: () => {
+          dispatch(
+            openDownloadMenu(
+              record,
+              record.duration !== undefined
+                ? DOWNLOAD_MENU_ALBUM
+                : DOWNLOAD_MENU_ARTIST,
+            ),
+          )
+        },
       },
-    },
+    }),
     ...(!hideInfo &&
       currentUser !== config.defaultUser && {
         info: {
@@ -192,7 +199,12 @@ const ContextMenu = ({
       <LoveButton
         record={record}
         resource={resource}
-        visible={config.enableFavourites && showLove && present}
+        visible={
+          config.enableFavourites &&
+          showLove &&
+          present &&
+          currentUser !== config.defaultUser
+        }
         color={color}
       />
       <MoreButton
@@ -261,6 +273,7 @@ export const ArtistContextMenu = (props) =>
     <ContextMenu
       {...props}
       hideInfo={true}
+      hideDownload={true}
       resource={'artist'}
       songQueryParams={{
         pagination: { page: 1, perPage: 200 },

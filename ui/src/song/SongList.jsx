@@ -65,11 +65,33 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
     height: '24px',
   },
+  filterForm: {
+    '& .RaFilter-form': {
+      display: 'flex !important',
+      alignItems: 'center !important',
+      gap: '8px',
+      '& > *': {
+        marginBottom: '0 !important',
+        marginTop: '0 !important',
+      },
+    },
+  },
   songListContainer: {
     '& [class*="RaListToolbar-toolbar"]': {
       paddingLeft: '0 !important',
       paddingRight: '0 !important',
     },
+    //testing below css
+    //  '& .RaFilter-form': {
+    //   display: 'flex',
+    //   alignItems: 'center',
+    //   gap: '8px',
+    //   '& .MuiFormControl-root': {
+    //     marginBottom: '0 !important',
+    //     marginTop: '0 !important',
+    //   },
+    // },
+    // testing above css
     [theme.breakpoints.down('sm')]: {
       // stack and add padding so the first row clears the sticky toolbar
       margin: '0.75rem',
@@ -83,7 +105,7 @@ const SongFilter = (props) => {
   const { permissions } = usePermissions()
   const isAdmin = permissions === 'admin'
   return (
-    <Filter {...props} variant={'outlined'}>
+    <Filter {...props} variant={'outlined'} className={classes.filterForm}>
       <SearchInput source="title" alwaysOn />
       {/* <ReferenceArrayInput
         label={translate('resources.song.fields.genre')}
