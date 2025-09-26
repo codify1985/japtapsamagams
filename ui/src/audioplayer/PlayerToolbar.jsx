@@ -9,10 +9,8 @@ import { LoveButton, useToggleLove } from '../common'
 import { openSaveQueueDialog } from '../actions'
 import { keyMap } from '../hotkeys'
 import { makeStyles } from '@material-ui/core/styles'
-import {
-  useGetIdentity,
-} from 'react-admin'
-import config, { isFavouritesEnabledForCurrentUser } from '../config';
+import { useGetIdentity } from 'react-admin'
+import config, { isFavouritesEnabledForCurrentUser } from '../config'
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -80,7 +78,7 @@ const PlayerToolbar = ({ id, isRadio }) => {
 
   const buttonClass = isDesktop ? classes.button : classes.mobileButton
   const listItemClass = isDesktop ? classes.toolbar : classes.mobileListItem
-  const currentUser = useGetIdentity()?.identity?.id;
+  const currentUser = useGetIdentity()?.identity?.id
 
   const saveQueueButton = (
     <IconButton
@@ -103,10 +101,10 @@ const PlayerToolbar = ({ id, isRadio }) => {
       className={buttonClass}
     />
   )
-  const isFavouritesEnabled = isFavouritesEnabledForCurrentUser(currentUser);;
+  const isFavouritesEnabled = isFavouritesEnabledForCurrentUser(currentUser)
 
   // ...existing code...
-return (
+  return (
     <>
       <GlobalHotKeys keyMap={keyMap} handlers={handlers} allowChanges />
       {isDesktop ? (
@@ -124,7 +122,7 @@ return (
       )}
     </>
   )
-// ...existing code...
+  // ...existing code...
 }
 
 export default PlayerToolbar
