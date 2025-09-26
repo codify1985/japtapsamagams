@@ -1,3 +1,17 @@
+/*
+ * CHANGES MADE TO UNIFY MOBILE/DESKTOP PLAYER:
+ *
+ * 1. Mobile/Desktop Switch Locations Removed:
+ *    - toggleMode: !isDesktop (line 111) - forced desktop player on all viewports
+ *    - isMobilePlayer volume logic (lines 145, 290-293) - removed mobile-specific volume handling
+ *    - useMediaQuery('(min-width:810px)') detection - kept for CSS but removed from toggleMode
+ *
+ * 2. What was changed:
+ *    - Always use desktop player component (toggleMode: false)
+ *    - Unified volume handling across all devices
+ *    - CSS Grid layout implemented for responsive design instead of component switching
+ */
+
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useMediaQuery } from '@material-ui/core'
@@ -12,6 +26,7 @@ import ReactGA from 'react-ga'
 import { GlobalHotKeys } from 'react-hotkeys'
 import ReactJkMusicPlayer from 'navidrome-music-player'
 import 'navidrome-music-player/assets/index.css'
+import './mobile-progress-override.css' // Critical override for mobile progress bar visibility
 import useCurrentTheme from '../themes/useCurrentTheme'
 import config from '../config'
 import useStyle from './styles'
@@ -42,11 +57,7 @@ const Player = () => {
   const [scrobbled, setScrobbled] = useState(false)
   const [preloaded, setPreload] = useState(false)
   const [audioInstance, setAudioInstance] = useState(null)
-  const isDesktop = useMediaQuery('(min-width:810px)')
-  const isMobilePlayer =
-    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent,
-    )
+  const isDesktop = useMediaQuery('(min-width:768px)') // Changed to 768px for consistency with requirements
 
   const { authenticated } = useAuthState()
 
@@ -106,15 +117,16 @@ const Player = () => {
       theme: playerTheme,
       bounds: 'body',
       playMode: playerState.mode,
-      mode: 'full',
+      mode: 'full', // Force full desktop mode
       loadAudioErrorPlayNext: false,
       autoPlayInitLoadPlayList: true,
       clearPriorAudioLists: false,
       showDestroy: true,
       showDownload: false,
-      showLyric: true,
+      showLyric: false,
       showReload: false,
-      toggleMode: !isDesktop,
+      toggleMode: false, // Always use desktop player component - never allow mobile toggle
+      responsive: false, // Disable responsive behavior that switches to mobile
       glassBg: false,
       showThemeSwitch: false,
       showMediaSession: true,
@@ -134,7 +146,7 @@ const Player = () => {
       ),
       locale: locale(translate),
     }),
-    [gainInfo, isDesktop, playerTheme, translate, playerState.mode],
+    [gainInfo, playerTheme, translate, playerState.mode], // Removed isDesktop dependency
   )
 
   const options = useMemo(() => {
@@ -148,10 +160,10 @@ const Player = () => {
       extendsContent: (
         <PlayerToolbar id={current.trackId} isRadio={current.isRadio} />
       ),
-      defaultVolume: isMobilePlayer ? 1 : playerState.volume,
+      defaultVolume: playerState.volume, // Unified volume handling across all devices
       showMediaSession: !current.isRadio,
     }
-  }, [playerState, defaultOptions, isMobilePlayer])
+  }, [playerState, defaultOptions]) // Removed isMobilePlayer dependency
 
   const onAudioListsChange = useCallback(
     (_, audioLists, audioInfo) => dispatch(syncQueue(audioInfo, audioLists)),
@@ -352,11 +364,79 @@ const Player = () => {
     [audioInstance, playerState],
   )
 
+  // Removed mobile-specific volume forcing logic
+
+  // Force show progress bar AND controls on mobile using DOM manipulation as backup
   useEffect(() => {
-    if (isMobilePlayer && audioInstance) {
-      audioInstance.volume = 1
+    const forcePlayerElementsVisible = () => {
+      // Force progress bar visible
+      const progressBars = document.querySelectorAll('.progress-bar-content')
+      progressBars.forEach((bar) => {
+        if (bar) {
+          bar.style.setProperty('display', 'flex', 'important')
+          bar.style.setProperty('visibility', 'visible', 'important')
+          bar.style.setProperty('opacity', '1', 'important')
+          bar.style.setProperty('order', '-1', 'important')
+        }
+      })
+
+      // Force player controls visible
+      const playerContents = document.querySelectorAll('.player-content')
+      playerContents.forEach((content) => {
+        if (content) {
+          content.style.setProperty('display', 'flex', 'important')
+          content.style.setProperty('visibility', 'visible', 'important')
+          content.style.setProperty('opacity', '1', 'important')
+          content.style.setProperty('order', '1', 'important')
+          content.style.setProperty('justify-content', 'center', 'important')
+          content.style.setProperty('align-items', 'center', 'important')
+        }
+      })
+
+      // Force individual control buttons visible
+      const controlButtons = document.querySelectorAll(
+        '.play-btn, .prev-audio, .next-audio, .player-content .group',
+      )
+      controlButtons.forEach((button) => {
+        if (button) {
+          button.style.setProperty('display', 'inline-flex', 'important')
+          button.style.setProperty('visibility', 'visible', 'important')
+          button.style.setProperty('opacity', '1', 'important')
+        }
+      })
+
+      // Force panel content to be column layout on mobile
+      if (window.innerWidth <= 767) {
+        const panelContents = document.querySelectorAll(
+          '.music-player-panel .panel-content',
+        )
+        panelContents.forEach((panel) => {
+          if (panel) {
+            panel.style.setProperty('flex-direction', 'column', 'important')
+            panel.style.setProperty('align-items', 'stretch', 'important')
+            panel.style.setProperty('gap', '8px', 'important')
+            panel.style.setProperty('height', 'auto', 'important')
+          }
+        })
+      }
     }
-  }, [isMobilePlayer, audioInstance])
+
+    // Run immediately
+    forcePlayerElementsVisible()
+
+    // Also run when DOM changes (in case library modifies it)
+    const observer = new MutationObserver(forcePlayerElementsVisible)
+    observer.observe(document.body, { childList: true, subtree: true })
+
+    // Run on window resize to handle orientation changes
+    const handleResize = () => forcePlayerElementsVisible()
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
 
   return (
     <ThemeProvider theme={createMuiTheme(theme)}>
