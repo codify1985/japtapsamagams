@@ -129,46 +129,6 @@ const YearDropdown = ({
       format={(v) => (v == null ? 'all' : v)}
       // Modified parse function: when 'all' is selected, return undefined to remove filter
       parse={(v) => (v === 'all' || v === '' ? undefined : Number(v))}
-      // parse={(v) => {
-      //   console.log('YearDropdown parse v=', v, typeof v);
-      //   if (v === 'all' || v === '') {
-      //     // When "All" is selected, change sort to max_year DESC
-      //     console.log('LIST CONTEXT', listContext);
-      //     if (listContext?.setSort) {
-      //       listContext.setSort({ field: 'max_year', order: 'DESC' });
-      //     }
-      //     return undefined; // Remove year filter
-      //   } else {
-      //     // When a specific year is selected, change sort back to createdAt DESC
-      //     // if (listContext?.setSort) {
-      //     //   listContext.setSort({ field: 'createdAt', order: 'DESC' });
-      //     // }
-      //     return Number(v);
-      //   }
-      // }}
-      //option 3
-      // parse={(v) => {
-      //   console.log('YearDropdown parse v=', v, typeof v);
-
-      //   if (v === 'all' || v === '') {
-      //     // When "All" is selected, redirect with max_year sort
-      //     const searchParams = new URLSearchParams(location.search);
-      //     searchParams.set('sort', 'max_year');
-      //     searchParams.set('order', 'DESC');
-      //     searchParams.delete('filter'); // Remove year filter
-
-      //     history.push(`${location.pathname}?${searchParams.toString()}`);
-      //     return undefined;
-      //   } else {
-      //     // When a specific year is selected, redirect with createdAt sort
-      //     const searchParams = new URLSearchParams(location.search);
-      //     searchParams.set('sort', 'createdAt');
-      //     searchParams.set('order', 'DESC');
-
-      //     history.push(`${location.pathname}?${searchParams.toString()}`);
-      //     return Number(v);
-      //   }
-      // }}
       {...rest}
     />
   )

@@ -27,6 +27,7 @@ import {
   RatingField,
   useResourceRefresh,
   ArtistLinkField,
+  ArtistLinkFieldRedirect,
   PathField,
 } from '../common'
 import { useDispatch } from 'react-redux'
@@ -179,7 +180,8 @@ const SongList = (props) => {
   const toggleableFields = useMemo(() => {
     return {
       album: isDesktop && <AlbumLinkField source="album" sortByOrder={'ASC'} />,
-      artist: <ArtistLinkField source="artist" />,
+      // artist: <ArtistLinkField source="artist" />,
+      artist: <ArtistLinkFieldRedirect source="artist" />,
       // albumArtist: <ArtistLinkField source="albumArtist" />,
       // trackNumber: isDesktop && <NumberField source="trackNumber" />,
       playCount: isDesktop && currentUser === 'admin' && (
@@ -239,7 +241,7 @@ const SongList = (props) => {
         {...props}
         sort={{ field: 'title', order: 'ASC' }}
         exporter={false}
-        bulkActionButtons={<SongBulkActions />}
+        bulkActionButtons={<SongBulkActions currentUser={currentUser} />}
         actions={<SongListActions />}
         filters={<SongFilter currentUser={currentUser} />}
         perPage={isXsmall ? 50 : 25}
@@ -255,10 +257,13 @@ const SongList = (props) => {
           >
             <SongTitleField source="title" showTrackNumbers={false} />
             {columns}
+            {/* TODO - UPDATE BELOW CODE WITH COMMON METHOD FROM CONFIG */}
             <SongContextMenu
               source={'starred_at'}
               sortByOrder={'DESC'}
-              sortable={config.enableFavourites}
+              sortable={
+                config.enableFavourites && currentUser !== config.defaultUser
+              }
               className={classes.contextMenu}
               showLove={currentUser !== config.defaultUser}
               label={

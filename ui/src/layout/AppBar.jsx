@@ -137,12 +137,12 @@ const CustomUserMenu = ({ onClick, ...rest }) => {
       <UserMenu {...rest}>
         <PersonalMenu sidebarIsOpen={true} onClick={onClick} />
         <Divider />
-        {renderUserMenuItemLink()}
-        {resources
+        {/* {renderUserMenuItemLink()} */}
+        {/* {resources
           .filter(settingsResources)
-          .map((r) => renderSettingsMenuItemLink(r))}
+          .map((r) => renderSettingsMenuItemLink(r))} */}
         <Divider />
-        <AboutMenuItem />
+        {/* <AboutMenuItem /> */}
       </UserMenu>
       <Dialogs />
     </>

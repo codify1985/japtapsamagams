@@ -21,7 +21,7 @@ import { setTrack } from '../actions'
 import { songFromRadio } from './helper'
 import { useDispatch } from 'react-redux'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   row: {
     '&:hover': {
       '& $contextMenu': {
@@ -32,7 +32,14 @@ const useStyles = makeStyles({
   contextMenu: {
     visibility: 'hidden',
   },
-})
+  radioListContainer: {
+    marginTop: '1em',
+    [theme.breakpoints.down('sm')]: {
+      // stack and add padding so the first row clears the sticky toolbar
+      margin: '0.75rem',
+    },
+  },
+}))
 
 const RadioFilter = (props) => (
   <Filter {...props} variant={'outlined'}>
@@ -105,39 +112,41 @@ const RadioList = ({ permissions, ...props }) => {
   }
 
   return (
-    <List
-      {...props}
-      exporter={false}
-      sort={{ field: 'name', order: 'ASC' }}
-      bulkActionButtons={isAdmin ? undefined : false}
-      hasCreate={isAdmin}
-      actions={<RadioListActions isAdmin={isAdmin} />}
-      filters={<RadioFilter />}
-      perPage={isXsmall ? 25 : 10}
-    >
-      {isXsmall ? (
-        <SimpleList
-          leftIcon={(r) => (
-            <StreamField
-              record={r}
-              source={'streamUrl'}
-              hideUrl
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-              }}
-            />
-          )}
-          primaryText={(r) => r.name}
-          secondaryText={(r) => r.homePageUrl}
-        />
-      ) : (
-        <Datagrid rowClick={handleRowClick} classes={{ row: classes.row }}>
-          {columns}
-          {isAdmin && <EditButton />}
-        </Datagrid>
-      )}
-    </List>
+    <div className={classes.radioListContainer}>
+      <List
+        {...props}
+        exporter={false}
+        sort={{ field: 'name', order: 'ASC' }}
+        bulkActionButtons={isAdmin ? undefined : false}
+        hasCreate={isAdmin}
+        actions={<RadioListActions isAdmin={isAdmin} />}
+        filters={<RadioFilter />}
+        perPage={isXsmall ? 25 : 10}
+      >
+        {isXsmall ? (
+          <SimpleList
+            leftIcon={(r) => (
+              <StreamField
+                record={r}
+                source={'streamUrl'}
+                hideUrl
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                }}
+              />
+            )}
+            primaryText={(r) => r.name}
+            secondaryText={(r) => r.homePageUrl}
+          />
+        ) : (
+          <Datagrid rowClick={handleRowClick} classes={{ row: classes.row }}>
+            {columns}
+            {isAdmin && <EditButton />}
+          </Datagrid>
+        )}
+      </List>
+    </div>
   )
 }
 
