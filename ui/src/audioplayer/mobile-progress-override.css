@@ -1,0 +1,168 @@
+/* 
+ * CRITICAL OVERRIDE: Force progress bar to show on mobile AND ensure controls are visible
+ * This file overrides the navidrome-music-player library's CSS that hides progress bar on mobile
+ * Library rule: @media screen and (max-width:767px){.react-jinke-music-player-main .music-player-panel .panel-content .progress-bar-content{display:none!important}}
+ */
+
+/* Use maximum CSS specificity to override library's !important rule */
+@media screen and (max-width: 767px) {
+  /* Force panel content to be column layout */
+  .react-jinke-music-player-main .music-player-panel {
+    height: auto !important;
+    min-height: 120px !important;
+  }
+
+  .react-jinke-music-player-main .music-player-panel .panel-content {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    height: auto !important;
+    padding: 8px 12px !important;
+  }
+
+  /* PROGRESS BAR - Force visible on top row */
+  .react-jinke-music-player-main.react-jinke-music-player-main
+    .music-player-panel
+    .panel-content
+    .progress-bar-content,
+  .react-jinke-music-player-main
+    .music-player-panel
+    .panel-content
+    .progress-bar-content.progress-bar-content,
+  .music-player-panel .panel-content .progress-bar-content,
+  .progress-bar-content {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    overflow: visible !important;
+    position: relative !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    order: -1 !important;
+    padding: 0 !important;
+    margin-bottom: 8px !important;
+    flex: none !important;
+  }
+
+  /* PLAYER CONTROLS - Force visible on bottom row */
+  .react-jinke-music-player-main
+    .music-player-panel
+    .panel-content
+    .player-content,
+  .music-player-panel .panel-content .player-content,
+  .player-content {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    order: 1 !important;
+    flex-basis: auto !important;
+    padding-left: 0 !important;
+    width: 100% !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex: none !important;
+    height: auto !important;
+    min-height: 40px !important;
+  }
+
+  /* Ensure all control buttons are visible */
+  .react-jinke-music-player-main
+    .music-player-panel
+    .panel-content
+    .player-content
+    > .group,
+  .player-content > .group {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    margin: 0 6px !important;
+  }
+
+  /* Force play/pause button to be visible */
+  .react-jinke-music-player-main
+    .music-player-panel
+    .panel-content
+    .player-content
+    .play-btn,
+  .player-content .play-btn {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Force next/prev buttons to be visible */
+  .react-jinke-music-player-main
+    .music-player-panel
+    .panel-content
+    .player-content
+    .prev-audio,
+  .react-jinke-music-player-main
+    .music-player-panel
+    .panel-content
+    .player-content
+    .next-audio,
+  .player-content .prev-audio,
+  .player-content .next-audio {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Ensure child elements of progress bar are visible */
+  .react-jinke-music-player-main
+    .music-player-panel
+    .panel-content
+    .progress-bar-content
+    .audio-main,
+  .progress-bar-content .audio-main {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+    margin-top: 6px !important;
+  }
+
+  .react-jinke-music-player-main
+    .music-player-panel
+    .panel-content
+    .progress-bar-content
+    .progress-bar,
+  .progress-bar-content .progress-bar {
+    display: block !important;
+    width: 100% !important;
+    margin: 2px 20px 0 !important;
+  }
+
+  .react-jinke-music-player-main
+    .music-player-panel
+    .panel-content
+    .progress-bar-content
+    .current-time,
+  .react-jinke-music-player-main
+    .music-player-panel
+    .panel-content
+    .progress-bar-content
+    .duration,
+  .progress-bar-content .current-time,
+  .progress-bar-content .duration {
+    display: block !important;
+    font-size: 12px !important;
+  }
+
+  /* Hide album cover on very small screens to make room for controls */
+  .react-jinke-music-player-main
+    .music-player-panel
+    .panel-content
+    .img-content {
+    display: none !important;
+  }
+
+  /* Ensure audio title is hidden on mobile to save space */
+  .react-jinke-music-player-main
+    .music-player-panel
+    .panel-content
+    .progress-bar-content
+    .audio-title {
+    display: none !important;
+  }
+}
