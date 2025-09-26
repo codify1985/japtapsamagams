@@ -56,6 +56,16 @@ const useStyles = makeStyles({
   ratingField: {
     visibility: 'hidden',
   },
+  rightIconWrapper: {
+    // / marginLeft: '8px !important',
+    // // fontSize: '1.5rem',
+    // '& .MuiIconButton-root': {
+    //   fontSize: '1.5rem',
+    // },
+    // '& .MuiIconButton-sizeSmall': {
+    //   padding: '0px !important',
+    // },
+  },
 })
 
 const AlbumDatagridRow = (props) => {
@@ -168,19 +178,21 @@ const AlbumTableView = ({
           )}
         </>
       )}
-      tertiaryText={(r) => (
-        <>
-          <RangeField record={r} source={'year'} sortBy={'max_year'} />
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        </>
-      )}
+      // tertiaryText={(r) => (
+      //   <>
+      //     <RangeField record={r} source={'year'} sortBy={'max_year'} />
+      //     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      //   </>
+      // )}
       linkType={'show'}
       rightIcon={(r) => (
-        <AlbumContextMenu
-          record={r}
-          showLove={currentUser !== config.defaultUser}
-          currentUser={currentUser}
-        />
+        <div className={classes.rightIconWrapper}>
+          <AlbumContextMenu
+            record={r}
+            showLove={currentUser !== config.defaultUser}
+            currentUser={currentUser}
+          />
+        </div>
       )}
       showCover={true}
       coverSrc={(r) => {

@@ -182,7 +182,7 @@ const AlbumSongs = (props) => {
           key={version}
         >
           <BulkActionsToolbar {...props} label={bulkActionsLabel}>
-            <SongBulkActions />
+            <SongBulkActions currentUser={currentUser} />
           </BulkActionsToolbar>
           <SongDatagrid
             rowClick={(id) => dispatch(playTracks(data, ids, id))}

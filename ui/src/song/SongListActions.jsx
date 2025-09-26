@@ -170,7 +170,7 @@ export const SongListActions = (props) => {
     } else {
       // Multiple songs - use the new batch download endpoint
       const songIds = songs.map((song) => song.id)
-      notify(`Downloading ${songs.length} songs...`, { type: 'info' })
+      notify(`Downloading ${songs.length} kirtans...`, { type: 'info' })
 
       // Use the new downloadSongs function which calls the backend ZIP endpoint
       subsonic.downloadSongs(songIds, 'raw', '0')

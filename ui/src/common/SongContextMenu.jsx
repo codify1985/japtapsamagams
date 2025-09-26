@@ -6,6 +6,7 @@ import {
   usePermissions,
   useTranslate,
   useDataProvider,
+  useGetIdentity,
 } from 'react-admin'
 import { IconButton, Menu, MenuItem } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
@@ -23,7 +24,7 @@ import {
   openShareMenu,
 } from '../actions'
 import { LoveButton } from './LoveButton'
-import config from '../config'
+import config, { isFavouritesEnabledForCurrentUser } from '../config'
 import { formatBytes } from '../utils'
 import { useRedirect } from 'react-admin'
 
@@ -69,6 +70,9 @@ export const SongContextMenu = ({
   const [playlistsLoaded, setPlaylistsLoaded] = useState(false)
   const { permissions } = usePermissions()
   const redirect = useRedirect()
+  const currentUser =
+    localStorage.getItem('username') || useGetIdentity()?.identity?.id
+  const isCurrentUserDefault = isFavouritesEnabledForCurrentUser(currentUser)
 
   const options = {
     playNow: {
@@ -86,69 +90,76 @@ export const SongContextMenu = ({
       label: translate('resources.song.actions.addToQueue'),
       action: (record) => dispatch(addTracks({ [record.id]: record })),
     },
-    addToPlaylist: {
-      enabled: true,
-      label: translate('resources.song.actions.addToPlaylist'),
-      action: (record) =>
-        dispatch(
-          openAddToPlaylist({
-            selectedIds: [record.mediaFileId || record.id],
-            onSuccess: (id) => onAddToPlaylist(id),
-          }),
-        ),
-    },
-    showInPlaylist: {
-      enabled: true,
-      label:
-        translate('resources.song.actions.showInPlaylist') +
-        (playlists.length > 0 ? ' ►' : ''),
-      action: (record, e) => {
-        setPlaylistAnchorEl(e.currentTarget)
-      },
-    },
-    share: {
-      enabled: config.enableSharing,
-      label: translate('ra.action.share'),
-      action: (record) =>
-        dispatch(
-          openShareMenu(
-            [record.mediaFileId || record.id],
-            'song',
-            record.title,
+    ...(isCurrentUserDefault && {
+      addToPlaylist: {
+        enabled: true,
+        label: translate('resources.song.actions.addToPlaylist'),
+        action: (record) =>
+          dispatch(
+            openAddToPlaylist({
+              selectedIds: [record.mediaFileId || record.id],
+              onSuccess: (id) => onAddToPlaylist(id),
+            }),
           ),
-        ),
-    },
+      },
+    }),
+    ...(isCurrentUserDefault && {
+      showInPlaylist: {
+        enabled: true,
+        label:
+          translate('resources.song.actions.showInPlaylist') +
+          (playlists.length > 0 ? ' ►' : ''),
+        action: (record, e) => {
+          setPlaylistAnchorEl(e.currentTarget)
+        },
+      },
+    }),
+    ...(isCurrentUserDefault && {
+      share: {
+        enabled: config.enableSharing,
+        label: translate('ra.action.share'),
+        action: (record) =>
+          dispatch(
+            openShareMenu(
+              [record.mediaFileId || record.id],
+              'song',
+              record.title,
+            ),
+          ),
+      },
+    }),
     download: {
       enabled: config.enableDownloads,
       label: `${translate('ra.action.download')} (${formatBytes(record.size)})`,
       action: (record) =>
         dispatch(openDownloadMenu(record, DOWNLOAD_MENU_SONG)),
     },
-    info: {
-      enabled: true,
-      label: translate('resources.song.actions.info'),
-      action: async (record) => {
-        let fullRecord = record
-        if (permissions === 'admin' && !record.missing) {
-          try {
-            let id = record.mediaFileId ?? record.id
-            const data = await dataProvider.inspect(id)
-            fullRecord = { ...record, rawTags: data.data.rawTags }
-          } catch (error) {
-            notify(
-              translate('ra.notification.http_error') + ': ' + error.message,
-              {
-                type: 'warning',
-                multiLine: true,
-                duration: 0,
-              },
-            )
+    ...(isCurrentUserDefault && {
+      info: {
+        enabled: true,
+        label: translate('resources.song.actions.info'),
+        action: async (record) => {
+          let fullRecord = record
+          if (permissions === 'admin' && !record.missing) {
+            try {
+              let id = record.mediaFileId ?? record.id
+              const data = await dataProvider.inspect(id)
+              fullRecord = { ...record, rawTags: data.data.rawTags }
+            } catch (error) {
+              notify(
+                translate('ra.notification.http_error') + ': ' + error.message,
+                {
+                  type: 'warning',
+                  multiLine: true,
+                  duration: 0,
+                },
+              )
+            }
           }
-        }
-
-        dispatch(openExtendedInfoDialog(fullRecord))
+          dispatch(openExtendedInfoDialog(fullRecord))
+        },
       },
-    },
+    }),
   }
 
   const handleClick = (e) => {

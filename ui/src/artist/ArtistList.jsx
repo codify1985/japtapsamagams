@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
     opacity: 0.3,
   },
   contextMenu: {
-    visibility: 'hidden',
+    visibility: 'visible',
   },
   ratingField: {
     visibility: 'hidden',
@@ -225,6 +225,7 @@ const ArtistListView = ({
   const columns = useSelectedFields({
     resource: 'artist',
     columns: toggleableFields,
+    defaultOff: ['playCount'],
   })
 
   return isXsmall ? (

@@ -7,6 +7,7 @@ import {
   TopToolbar,
   useRecordContext,
   useTranslate,
+  useGetIdentity,
 } from 'react-admin'
 import { useMediaQuery, makeStyles } from '@material-ui/core'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
@@ -24,7 +25,7 @@ import {
   DOWNLOAD_MENU_ALBUM,
 } from '../actions'
 import { formatBytes } from '../utils'
-import config from '../config'
+import config, { isFavouritesEnabledForCurrentUser } from '../config'
 import { ToggleFieldsMenu } from '../common'
 import ShareButton from '../common/ShareButton'
 
@@ -54,6 +55,8 @@ const AlbumActions = ({
   const classes = useStyles()
   const isDesktop = useMediaQuery((theme) => theme.breakpoints.up('md'))
   const isNotSmall = useMediaQuery((theme) => theme.breakpoints.up('sm'))
+  const currentUser =
+    localStorage.getItem('username') || useGetIdentity()?.identity?.id
 
   const handlePlay = React.useCallback(() => {
     dispatch(playTracks(data, ids))
@@ -79,6 +82,8 @@ const AlbumActions = ({
   const handleDownload = React.useCallback(() => {
     dispatch(openDownloadMenu(record, DOWNLOAD_MENU_ALBUM))
   }, [dispatch, record])
+
+  const isFavouritesEnabled = isFavouritesEnabledForCurrentUser(currentUser)
 
   return (
     <TopToolbar className={className} {...sanitizeListRestProps(rest)}>
@@ -108,12 +113,14 @@ const AlbumActions = ({
           >
             <RiPlayListAddFill />
           </AlbumButton>
-          <AlbumButton
-            onClick={handleAddToPlaylist}
-            label={translate('resources.album.actions.addToPlaylist')}
-          >
-            <PlaylistAddIcon />
-          </AlbumButton>
+          {isFavouritesEnabled && (
+            <AlbumButton
+              onClick={handleAddToPlaylist}
+              label={translate('resources.album.actions.addToPlaylist')}
+            >
+              <PlaylistAddIcon />
+            </AlbumButton>
+          )}
           {config.enableSharing && (
             <ShareButton
               record={record}

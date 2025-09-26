@@ -47,7 +47,9 @@ export const SongBulkActions = (props) => {
       {/* {config.enableSharing && (
         <BatchShareButton {...props} className={classes.button} />
       )} */}
-      <AddToPlaylistButton {...props} className={classes.button} />
+      {props.currentUser !== config.defaultUser && (
+        <AddToPlaylistButton {...props} className={classes.button} />
+      )}
     </Fragment>
   )
 }
