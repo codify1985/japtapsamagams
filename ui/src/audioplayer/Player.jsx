@@ -58,8 +58,13 @@ const Player = () => {
   const [preloaded, setPreload] = useState(false)
   const [audioInstance, setAudioInstance] = useState(null)
   const isDesktop = useMediaQuery('(min-width:768px)') // Changed to 768px for consistency with requirements
-
+  const gainInfo = useSelector((state) => state.replayGain)
   const { authenticated } = useAuthState()
+  const showNotifications = useSelector(
+    (state) => state.settings.notifications || false,
+  )
+  const [context, setContext] = useState(null)
+  const [gainNode, setGainNode] = useState(null)
 
   // Safety guards - prevent rendering if state is not properly initialized
   if (!playerState || !playerState.queue || !Array.isArray(playerState.queue)) {
@@ -73,12 +78,6 @@ const Player = () => {
     visible,
     enableCoverAnimation: config.enableCoverAnimation,
   })
-  const showNotifications = useSelector(
-    (state) => state.settings.notifications || false,
-  )
-  const gainInfo = useSelector((state) => state.replayGain)
-  const [context, setContext] = useState(null)
-  const [gainNode, setGainNode] = useState(null)
 
   useEffect(() => {
     if (
