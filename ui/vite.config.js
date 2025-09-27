@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+import path from 'path'
 
 const frontendPort = parseInt(process.env.PORT) || 4533
 // Allow overriding the backend proxy port explicitly; fallback to frontend+100
@@ -22,6 +23,11 @@ export default defineConfig({
       },
     }),
   ],
+  resolve: {
+    alias: {
+      react: path.resolve('./node_modules/react'),
+    },
+  },
   optimizeDeps: {
     include: ['qrcode'],
   },
@@ -34,9 +40,19 @@ export default defineConfig({
       .split(',')
       .map((h) => h.trim())
       .filter(Boolean),
+    /// TODO: Review these 3 settings for security implications
+    // TRY REMOVING THIS AND TEST  
+    hmr: {
+      protocol: 'wss',     // behind Tunnel/Cloudflare
+      clientPort: 443,
+      timeout: 60000,      // tolerate phone sleep
+      overlay: true
+    }, 
     proxy: {
       '^/(auth|api|rest|backgrounds)/.*': 'http://localhost:' + backendPort,
     },
+
+    
   },
   base: './',
   build: {
