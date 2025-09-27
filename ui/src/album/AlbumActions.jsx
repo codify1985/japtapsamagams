@@ -55,8 +55,9 @@ const AlbumActions = ({
   const classes = useStyles()
   const isDesktop = useMediaQuery((theme) => theme.breakpoints.up('md'))
   const isNotSmall = useMediaQuery((theme) => theme.breakpoints.up('sm'))
-  const currentUser =
-    localStorage.getItem('username') || useGetIdentity()?.identity?.id
+  const { identity } = useGetIdentity()
+
+  const currentUser = localStorage.getItem('username') || identity?.id
 
   const handlePlay = React.useCallback(() => {
     dispatch(playTracks(data, ids))

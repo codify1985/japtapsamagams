@@ -94,9 +94,10 @@ const Player = () => {
       }
 
       if (info && info.trackId) {
-        dataProvider
-          .getOne('keepalive', { id: info.trackId })
-          .catch((e) => console.log('Keepalive error:', e))
+        dataProvider.getOne('keepalive', { id: info.trackId }).catch((e) => {
+          // eslint-disable-next-line no-console
+          console.log('Keepalive error:', e)
+        })
       }
     },
     [dispatch, dataProvider],
