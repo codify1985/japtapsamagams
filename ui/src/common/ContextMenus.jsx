@@ -7,7 +7,12 @@ import MenuItem from '@material-ui/core/MenuItem'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import { MdQuestionMark } from 'react-icons/md'
 import { makeStyles } from '@material-ui/core/styles'
-import { useDataProvider, useNotify, useTranslate } from 'react-admin'
+import {
+  useDataProvider,
+  useNotify,
+  useTranslate,
+  useGetIdentity,
+} from 'react-admin'
 import clsx from 'clsx'
 import {
   playNext,
@@ -70,8 +75,8 @@ const ContextMenu = ({
   const translate = useTranslate()
   const notify = useNotify()
   const [anchorEl, setAnchorEl] = useState(null)
-  const currentUser =
-    localStorage.getItem('username') || useGetIdentity()?.identity?.id
+  const { identity } = useGetIdentity()
+  const currentUser = localStorage.getItem('username') || identity?.id
 
   const options = {
     play: {

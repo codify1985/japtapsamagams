@@ -70,8 +70,9 @@ export const SongContextMenu = ({
   const [playlistsLoaded, setPlaylistsLoaded] = useState(false)
   const { permissions } = usePermissions()
   const redirect = useRedirect()
-  const currentUser =
-    localStorage.getItem('username') || useGetIdentity()?.identity?.id
+  const { identity } = useGetIdentity()
+
+  const currentUser = localStorage.getItem('username') || identity?.id
   const isCurrentUserDefault = isFavouritesEnabledForCurrentUser(currentUser)
 
   const options = {

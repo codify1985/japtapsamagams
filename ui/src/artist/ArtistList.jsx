@@ -289,9 +289,8 @@ const ArtistListView = ({
 
 const ArtistList = (props) => {
   const classes = useStyles()
-  const currentUser =
-    localStorage.getItem('username') || useGetIdentity()?.identity?.id
-  console.log('ArtistList: currentUser', currentUser)
+  const { identity } = useGetIdentity()
+  const currentUser = localStorage.getItem('username') || identity?.id
 
   return (
     <div className={classes.artistListContainer}>
