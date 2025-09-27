@@ -115,11 +115,6 @@ const Player = () => {
     })
   }, [dispatch])
 
-  // Safety guards - prevent rendering if state is not properly initialized
-  if (!playerState || !playerState.queue || !Array.isArray(playerState.queue)) {
-    return null
-  }
-
   const visible = authenticated && playerState.queue.length > 0
   const isRadio = playerState.current?.isRadio || false
   const classes = useStyle({
@@ -303,6 +298,7 @@ const Player = () => {
         try {
           context.resume()
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.warn('Failed to resume audio context:', error)
         }
       }
@@ -322,6 +318,7 @@ const Player = () => {
               startTime === null ? null : Math.floor(info.currentTime || 0)
             subsonic.nowPlaying(info.trackId, pos)
           } catch (error) {
+            // eslint-disable-next-line no-console
             console.warn('Failed to update now playing:', error)
           }
         }
@@ -349,6 +346,7 @@ const Player = () => {
               info.cover,
             )
           } catch (error) {
+            // eslint-disable-next-line no-console
             console.warn('Failed to send notification:', error)
           }
         }
@@ -439,6 +437,11 @@ const Player = () => {
       window.removeEventListener('resize', handleResize)
     }
   }, [])
+
+  // Safety guards - prevent rendering if state is not properly initialized
+  if (!playerState || !playerState.queue || !Array.isArray(playerState.queue)) {
+    return null
+  }
 
   return (
     <ThemeProvider theme={createMuiTheme(theme)}>
