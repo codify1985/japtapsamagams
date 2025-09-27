@@ -66,6 +66,55 @@ const Player = () => {
   const [context, setContext] = useState(null)
   const [gainNode, setGainNode] = useState(null)
 
+  const onAudioPlayTrackChange = useCallback(() => {
+    if (scrobbled) {
+      setScrobbled(false)
+    }
+    if (startTime !== null) {
+      setStartTime(null)
+    }
+  }, [scrobbled, startTime])
+
+  const onAudioPause = useCallback(
+    (info) => {
+      if (info && typeof info === 'object') {
+        dispatch(currentPlaying(info))
+      }
+    },
+    [dispatch],
+  )
+
+  const onAudioEnded = useCallback(
+    (currentPlayId, audioLists, info) => {
+      setScrobbled(false)
+      setStartTime(null)
+
+      if (info && typeof info === 'object') {
+        dispatch(currentPlaying(info))
+      }
+
+      if (info && info.trackId) {
+        dataProvider
+          .getOne('keepalive', { id: info.trackId })
+          .catch((e) => console.log('Keepalive error:', e))
+      }
+    },
+    [dispatch, dataProvider],
+  )
+
+  const onCoverClick = useCallback((mode, audioLists, audioInfo) => {
+    if (mode === 'full' && audioInfo?.song?.albumId) {
+      window.location.href = `#/album/${audioInfo.song.albumId}/show`
+    }
+  }, [])
+
+  const onBeforeDestroy = useCallback(() => {
+    return new Promise((resolve, reject) => {
+      dispatch(clearQueue())
+      reject()
+    })
+  }, [dispatch])
+
   // Safety guards - prevent rendering if state is not properly initialized
   if (!playerState || !playerState.queue || !Array.isArray(playerState.queue)) {
     return null
@@ -214,6 +263,7 @@ const Player = () => {
             const audio = new Audio()
             audio.src = next.musicSrc
           } catch (error) {
+            // eslint-disable-next-line no-console
             console.warn('Failed to preload next song:', error)
           }
         }
@@ -226,6 +276,7 @@ const Player = () => {
           subsonic.scrobble(info.trackId, startTime)
           setScrobbled(true)
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.warn('Failed to scrobble:', error)
         }
       }
@@ -285,6 +336,7 @@ const Player = () => {
               label: `${song.title || 'Unknown'} - ${song.artist || 'Unknown'}`,
             })
           } catch (error) {
+            // eslint-disable-next-line no-console
             console.warn('Failed to track GA event:', error)
           }
         }
@@ -304,55 +356,6 @@ const Player = () => {
     },
     [context, dispatch, showNotifications, startTime],
   )
-
-  const onAudioPlayTrackChange = useCallback(() => {
-    if (scrobbled) {
-      setScrobbled(false)
-    }
-    if (startTime !== null) {
-      setStartTime(null)
-    }
-  }, [scrobbled, startTime])
-
-  const onAudioPause = useCallback(
-    (info) => {
-      if (info && typeof info === 'object') {
-        dispatch(currentPlaying(info))
-      }
-    },
-    [dispatch],
-  )
-
-  const onAudioEnded = useCallback(
-    (currentPlayId, audioLists, info) => {
-      setScrobbled(false)
-      setStartTime(null)
-
-      if (info && typeof info === 'object') {
-        dispatch(currentPlaying(info))
-      }
-
-      if (info && info.trackId) {
-        dataProvider
-          .getOne('keepalive', { id: info.trackId })
-          .catch((e) => console.log('Keepalive error:', e))
-      }
-    },
-    [dispatch, dataProvider],
-  )
-
-  const onCoverClick = useCallback((mode, audioLists, audioInfo) => {
-    if (mode === 'full' && audioInfo?.song?.albumId) {
-      window.location.href = `#/album/${audioInfo.song.albumId}/show`
-    }
-  }, [])
-
-  const onBeforeDestroy = useCallback(() => {
-    return new Promise((resolve, reject) => {
-      dispatch(clearQueue())
-      reject()
-    })
-  }, [dispatch])
 
   if (!visible) {
     document.title = 'Jap Tap Samagams'
