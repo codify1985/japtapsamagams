@@ -78,7 +78,8 @@ const PlayerToolbar = ({ id, isRadio }) => {
 
   const buttonClass = isDesktop ? classes.button : classes.mobileButton
   const listItemClass = isDesktop ? classes.toolbar : classes.mobileListItem
-  const currentUser = useGetIdentity()?.identity?.id
+  const { identity } = useGetIdentity()
+  const currentUser = identity?.id
 
   const saveQueueButton = (
     <IconButton
