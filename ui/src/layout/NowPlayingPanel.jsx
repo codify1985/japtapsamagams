@@ -244,12 +244,11 @@ NowPlayingList.propTypes = {
 // Main NowPlayingPanel component
 const NowPlayingPanel = () => {
   const dispatch = useDispatch()
-  const count = useSelector((state) => state.activity.nowPlayingCount)
-  const streamReconnected = useSelector(
-    (state) => state.activity.streamReconnected,
-  )
-  const serverUp = useSelector(
-    (state) => !!state.activity.serverStart.startTime,
+  const activity = useSelector((state) => state.activity || {})
+  const count = activity.nowPlayingCount ?? 0
+  const streamReconnected = activity.streamReconnected
+  const serverUp = Boolean(
+    activity.serverStart && activity.serverStart.startTime,
   )
   const translate = useTranslate()
   const notify = useNotify()
@@ -334,7 +333,7 @@ const NowPlayingPanel = () => {
   )
 
   return (
-    <div>
+    <div data-testid="now-playing-panel">
       <NowPlayingButton count={count} onClick={handleMenuOpen} />
       <NowPlayingList
         anchorEl={anchorEl}

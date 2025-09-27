@@ -1,11 +1,12 @@
 import React from 'react'
 import { render, screen, fireEvent, cleanup } from '@testing-library/react'
 import { useMediaQuery } from '@material-ui/core'
-import { useGetOne } from 'react-admin'
+import { useGetOne, useGetIdentity } from 'react-admin'
 import { useDispatch } from 'react-redux'
 import { useToggleLove } from '../common'
 import { openSaveQueueDialog } from '../actions'
 import PlayerToolbar from './PlayerToolbar'
+import { isFavouritesEnabledForCurrentUser } from '../config'
 
 // Mock dependencies
 vi.mock('@material-ui/core', async () => {
@@ -18,6 +19,7 @@ vi.mock('@material-ui/core', async () => {
 
 vi.mock('react-admin', () => ({
   useGetOne: vi.fn(),
+  useGetIdentity: vi.fn(),
 }))
 
 vi.mock('react-redux', () => ({
@@ -41,6 +43,15 @@ vi.mock('react-hotkeys', () => ({
   GlobalHotKeys: () => <div data-testid="global-hotkeys" />,
 }))
 
+// Mock the config module with partial mocking
+vi.mock('../config', async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    isFavouritesEnabledForCurrentUser: vi.fn(),
+  }
+})
+
 describe('<PlayerToolbar />', () => {
   const mockToggleLove = vi.fn()
   const mockDispatch = vi.fn()
@@ -52,6 +63,10 @@ describe('<PlayerToolbar />', () => {
     useToggleLove.mockReturnValue([mockToggleLove, false])
     useDispatch.mockReturnValue(mockDispatch)
     openSaveQueueDialog.mockReturnValue({ type: 'OPEN_SAVE_QUEUE_DIALOG' })
+    // Add default mock for useGetIdentity
+    useGetIdentity.mockReturnValue({ identity: { id: 'default-user' } })
+    // Add default mock for isFavouritesEnabledForCurrentUser
+    isFavouritesEnabledForCurrentUser.mockReturnValue(true)
   })
 
   afterEach(cleanup)
@@ -161,6 +176,115 @@ describe('<PlayerToolbar />', () => {
 
       const loveButton = screen.getByTestId('love-button')
       expect(loveButton).toBeDisabled()
+    })
+  })
+
+  describe('Favourites functionality based on current user', () => {
+    beforeEach(() => {
+      useMediaQuery.mockReturnValue(true) // Desktop layout for consistency
+    })
+
+    it('renders buttons when favourites are enabled for current user', () => {
+      // Mock favourites enabled
+      isFavouritesEnabledForCurrentUser.mockReturnValue(true)
+
+      // Mock useGetIdentity to return a user
+      useGetIdentity.mockReturnValue({
+        identity: { id: 'test-user' },
+      })
+
+      render(<PlayerToolbar id="song-1" />)
+
+      expect(screen.getByTestId('save-queue-button')).toBeInTheDocument()
+      expect(screen.getByTestId('love-button')).toBeInTheDocument()
+      expect(isFavouritesEnabledForCurrentUser).toHaveBeenCalledWith(
+        'test-user',
+      )
+    })
+
+    it('does not render buttons when favourites are disabled for current user', () => {
+      // Mock favourites disabled
+      isFavouritesEnabledForCurrentUser.mockReturnValue(false)
+
+      // Mock useGetIdentity to return a user
+      useGetIdentity.mockReturnValue({
+        identity: { id: 'limited-user' },
+      })
+
+      render(<PlayerToolbar id="song-1" />)
+
+      expect(screen.queryByTestId('save-queue-button')).not.toBeInTheDocument()
+      expect(screen.queryByTestId('love-button')).not.toBeInTheDocument()
+      expect(isFavouritesEnabledForCurrentUser).toHaveBeenCalledWith(
+        'limited-user',
+      )
+    })
+
+    it('handles case when no user identity is available', () => {
+      // Mock favourites disabled
+      isFavouritesEnabledForCurrentUser.mockReturnValue(false)
+
+      // Mock useGetIdentity to return undefined identity
+      useGetIdentity.mockReturnValue({
+        identity: undefined,
+      })
+
+      render(<PlayerToolbar id="song-1" />)
+
+      expect(screen.queryByTestId('save-queue-button')).not.toBeInTheDocument()
+      expect(screen.queryByTestId('love-button')).not.toBeInTheDocument()
+      expect(isFavouritesEnabledForCurrentUser).toHaveBeenCalledWith(undefined)
+    })
+
+    it('handles case when user identity has no id', () => {
+      // Mock favourites disabled
+      isFavouritesEnabledForCurrentUser.mockReturnValue(false)
+
+      // Mock useGetIdentity to return identity without id
+      useGetIdentity.mockReturnValue({
+        identity: { name: 'Test User' },
+      })
+
+      render(<PlayerToolbar id="song-1" />)
+
+      expect(screen.queryByTestId('save-queue-button')).not.toBeInTheDocument()
+      expect(screen.queryByTestId('love-button')).not.toBeInTheDocument()
+      expect(isFavouritesEnabledForCurrentUser).toHaveBeenCalledWith(undefined)
+    })
+
+    describe('Mobile layout with favourites', () => {
+      beforeEach(() => {
+        useMediaQuery.mockReturnValue(false) // Mobile layout
+      })
+
+      it('renders buttons in separate list items when favourites enabled', () => {
+        isFavouritesEnabledForCurrentUser.mockReturnValue(true)
+        useGetIdentity.mockReturnValue({
+          identity: { id: 'test-user' },
+        })
+
+        render(<PlayerToolbar id="song-1" />)
+
+        const listItems = screen.getAllByRole('listitem')
+        expect(listItems).toHaveLength(2)
+        expect(screen.getByTestId('save-queue-button')).toBeInTheDocument()
+        expect(screen.getByTestId('love-button')).toBeInTheDocument()
+      })
+
+      it('does not render any list items when favourites disabled', () => {
+        isFavouritesEnabledForCurrentUser.mockReturnValue(false)
+        useGetIdentity.mockReturnValue({
+          identity: { id: 'limited-user' },
+        })
+
+        render(<PlayerToolbar id="song-1" />)
+
+        expect(screen.queryByRole('listitem')).not.toBeInTheDocument()
+        expect(
+          screen.queryByTestId('save-queue-button'),
+        ).not.toBeInTheDocument()
+        expect(screen.queryByTestId('love-button')).not.toBeInTheDocument()
+      })
     })
   })
 })

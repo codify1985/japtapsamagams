@@ -152,7 +152,7 @@ const CustomUserMenu = ({ onClick, ...rest }) => {
 const AppBar = (props) => {
   // const location = useLocation()
   const translate = useTranslate()
-  const isNotSmall = useMediaQuery((theme) => theme.breakpoints.up('sm'))
+  const isNotSmall = useMediaQuery((theme) => theme?.breakpoints.up('sm'))
   // Check if we're on the song page
   // const isSongPage = true;// location.pathname.startsWith('/song')
 

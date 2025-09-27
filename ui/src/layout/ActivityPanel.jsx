@@ -55,11 +55,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const getUptime = (serverStart) =>
-  formatDuration((Date.now() - serverStart.startTime) / 1000)
+const getUptime = (serverStart) => {
+  const startTime = serverStart?.startTime
+  if (!startTime) {
+    return formatDuration(0)
+  }
+  return formatDuration((Date.now() - startTime) / 1000)
+}
 
 const Uptime = () => {
-  const serverStart = useSelector((state) => state.activity.serverStart)
+  const serverStart = useSelector((state) => state.activity?.serverStart || {})
   const [uptime, setUptime] = useState(getUptime(serverStart))
   useInterval(() => {
     setUptime(getUptime(serverStart))
@@ -68,11 +73,12 @@ const Uptime = () => {
 }
 
 const ActivityPanel = () => {
-  const serverStart = useSelector((state) => state.activity.serverStart)
+  const activity = useSelector((state) => state.activity || {})
+  const serverStart = activity.serverStart || {}
   const up = serverStart.startTime
-  const scanStatus = useSelector((state) => state.activity.scanStatus)
+  const scanStatus = activity.scanStatus || {}
   const elapsed = useScanElapsedTime(
-    scanStatus.scanning,
+    Boolean(scanStatus.scanning),
     scanStatus.elapsedTime,
   )
   const [acknowledgedError, setAcknowledgedError] = useState(null)
@@ -119,7 +125,7 @@ const ActivityPanel = () => {
   })()
 
   return (
-    <div className={classes.wrapper}>
+    <div className={classes.wrapper} data-testid="activity-panel">
       <Tooltip title={tooltipTitle}>
         <IconButton className={classes.button} onClick={handleMenuOpen}>
           {!up || isErrorVisible ? (
