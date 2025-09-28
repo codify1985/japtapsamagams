@@ -20,7 +20,6 @@ const hasValidSessionForDifferentUser = (authInfo) => {
     const sessionUser = (tokenUser || storedUser || '').toLowerCase()
     const authUser = (authInfo?.username || '').toLowerCase()
 
-    console.log('Session user:', sessionUser, ' Auth user:', authUser)
     return sessionUser && authUser && sessionUser !== authUser
   } catch {
     return false
@@ -29,7 +28,6 @@ const hasValidSessionForDifferentUser = (authInfo) => {
 
 // config sent from server may contain authentication info, for example when the user is authenticated
 // by a reverse proxy request header
-console.log('Config: SERVER', config)
 if (config.auth && !hasValidSessionForDifferentUser(config.auth)) {
   try {
     storeAuthenticationInfo(config.auth)
