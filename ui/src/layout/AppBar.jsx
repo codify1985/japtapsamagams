@@ -5,6 +5,7 @@ import {
   useTranslate,
   usePermissions,
   getResources,
+  useGetIdentity,
 } from 'react-admin'
 import { useMediaQuery } from '@material-ui/core'
 import { MdInfo, MdPerson, MdSupervisorAccount } from 'react-icons/md'
@@ -26,7 +27,7 @@ import ActivityPanel from './ActivityPanel'
 import NowPlayingPanel from './NowPlayingPanel'
 import UserMenu from './UserMenu'
 import ShareButton from '../common/ShareButton'
-import config from '../config'
+import config, { isFavouritesEnabledForCurrentUser } from '../config'
 
 const useStyles = makeStyles(
   (theme) => ({
@@ -77,7 +78,7 @@ const settingsResources = (resource) =>
   resource.options &&
   resource.options.subMenu === 'settings'
 
-const CustomUserMenu = ({ onClick, ...rest }) => {
+const CustomUserMenu = ({ onClick, currentUser, ...rest }) => {
   const translate = useTranslate()
   const resources = useSelector(getResources)
   const classes = useStyles(rest)
@@ -137,12 +138,14 @@ const CustomUserMenu = ({ onClick, ...rest }) => {
       <UserMenu {...rest}>
         <PersonalMenu sidebarIsOpen={true} onClick={onClick} />
         <Divider />
-        {/* {renderUserMenuItemLink()} */}
-        {/* {resources
-          .filter(settingsResources)
-          .map((r) => renderSettingsMenuItemLink(r))} */}
+        {isFavouritesEnabledForCurrentUser(currentUser) &&
+          renderUserMenuItemLink()}
+        {permissions === 'admin' &&
+          resources
+            .filter(settingsResources)
+            .map((r) => renderSettingsMenuItemLink(r))}
         <Divider />
-        {/* <AboutMenuItem /> */}
+        {permissions === 'admin' && <AboutMenuItem />}
       </UserMenu>
       <Dialogs />
     </>
@@ -153,6 +156,8 @@ const AppBar = (props) => {
   // const location = useLocation()
   const translate = useTranslate()
   const isNotSmall = useMediaQuery((theme) => theme?.breakpoints.up('sm'))
+  const { identity } = useGetIdentity()
+  const currentUser = localStorage.getItem('username') || identity?.id
   // Check if we're on the song page
   // const isSongPage = true;// location.pathname.startsWith('/song')
 
@@ -179,7 +184,7 @@ const AppBar = (props) => {
                 label={isNotSmall ? translate('ra.action.share') : undefined}
               />
             )}
-            <CustomUserMenu />
+            <CustomUserMenu logout={props.logout} currentUser={currentUser} />
           </Box>
         }
       />

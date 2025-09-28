@@ -40,7 +40,24 @@ const defaultConfig = {
   enableInspect: true,
   defaultPerPage: 25,
   defaultUser: 'japtaptest',
+  // Authentication info that may be set by the server
+  auth: {
+    id: 'MVMrmivcaedABWnQdF6pnT',
+    isAdmin: false,
+    name: 'Japtap Test User',
+    subsonicSalt: '804b5e',
+    subsonicToken: '0e52e4ad34f0be4765c24d93128be2dc',
+    username: 'japtaptest',
+  },
+  // auth: true
 }
+
+// '{"auth":{"id":"MVMrmivcaedABWnQdF6pnT","isAdmin":false,"name":"Japtap Test User","subsonicSalt":"804b5e","subsonicToken":"0e52e4ad34f0be4765c24d93128be2dc","username":"japtaptest"},
+// "baseURL":"","defaultDownloadableShare":false,"defaultDownsamplingFormat":"opus","defaultLanguage":"","defaultTheme":"Japtap Apple","defaultUIVolume":100,"devActivityPanel":true,"devNewEventStream":false,
+// "devShowArtistPage":true,"devSidebarPlaylists":true,"devUIShowConfig":true,"enableCoverAnimation":true,"enableDownloads":true,"enableExternalServices":false,"enableFavourites":true,"enableInspect":true,"enableNowPlaying":true,
+// // "enableReplayGain":true,"enableSharing":true,"enableStarRating":true,"enableTranscodingConfig":false,"enableUserEditing":true,"firstTime":false,"gaTrackingId":"",
+// // "lastFMEnabled":false,"listenBrainzEnabled":false,
+// // "loginBackgroundURL":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAIAAAAiOjnJAAAABGdBTUEAALGPC/xhBQAAAiJJREFUeF7t0IEAAAAAw6D5Ux/khVBhwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDBgwIABAwYMGDDwMDDVlwABBWcSrQAAAABJRU5ErkJggg==","losslessFormats":"FLAC,ALAC,APE,SHN,DSF,WV,WVP,TAK,WAV","maxSidebarPlaylists":100,"separator":"/","shareURL":"http://localhost:4633","variousArtistsId":"63sqASlAfjbGMuLP4JhnZU","version":"dev","welcomeMessage":""}'
 
 let config
 

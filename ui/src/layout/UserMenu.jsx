@@ -120,7 +120,8 @@ const UserMenu = (props) => {
                 })
               : null,
           )}
-          {!config.auth && logout}
+          <Divider />
+          {logout}
         </MenuList>
       </Popover>
     </div>
