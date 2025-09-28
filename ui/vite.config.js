@@ -48,8 +48,16 @@ export default defineConfig({
       timeout: 60000,      // tolerate phone sleep
       overlay: true
     }, 
+    // proxy: {
+    //   '^/(auth|api|rest|backgrounds)/.*': 'http://localhost:' + backendPort,
+    // },
     proxy: {
-      '^/(auth|api|rest|backgrounds)/.*': 'http://localhost:' + backendPort,
+      '^/(auth|api|rest|backgrounds)/.*': {
+        target: 'http://localhost:' + backendPort,
+        headers: {
+          'Remote-User': 'japtaptest' // Add this for testing
+        }
+      }
     },
 
     

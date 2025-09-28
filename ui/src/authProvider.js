@@ -3,9 +3,34 @@ import { baseUrl } from './utils'
 import config from './config'
 import { removeHomeCache } from './utils/removeHomeCache'
 
+// Check if there is a valid session for a different user
+// to avoid overwriting the current session
+// when the config.auth is set from the server
+const hasValidSessionForDifferentUser = (authInfo) => {
+  const existingToken = localStorage.getItem('token')
+  if (!existingToken) return false
+
+  try {
+    const decoded = jwtDecode(existingToken)
+    const expired = decoded?.exp && decoded.exp * 1000 < Date.now()
+    if (expired) return false
+
+    const tokenUser = decoded?.sub
+    const storedUser = localStorage.getItem('username')
+    const sessionUser = (tokenUser || storedUser || '').toLowerCase()
+    const authUser = (authInfo?.username || '').toLowerCase()
+
+    console.log('Session user:', sessionUser, ' Auth user:', authUser)
+    return sessionUser && authUser && sessionUser !== authUser
+  } catch {
+    return false
+  }
+}
+
 // config sent from server may contain authentication info, for example when the user is authenticated
 // by a reverse proxy request header
-if (config.auth) {
+console.log('Config: SERVER', config)
+if (config.auth && !hasValidSessionForDifferentUser(config.auth)) {
   try {
     storeAuthenticationInfo(config.auth)
   } catch (e) {
