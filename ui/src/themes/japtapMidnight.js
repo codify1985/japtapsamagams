@@ -178,12 +178,12 @@ const japtapMidnight = createTheme({
       root: {
         backgroundColor: '#0B1020 !important',
       },
-      gutters: {
-        paddingLeft: '0 !important',
-        paddingRight: '0 !important',
-        alignItems: 'flex-end !important',
-        marginBottom: '0.75rem',
-      },
+      // gutters: {
+      //   paddingLeft: '0 !important',
+      //   paddingRight: '0 !important',
+      //   alignItems: 'flex-end !important',
+      //   marginBottom: '0.75rem',
+      // },
     },
 
     // Drawer / Sidebar
