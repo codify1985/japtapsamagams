@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { Field, Form } from 'react-final-form'
 import { useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
@@ -20,7 +19,7 @@ import {
   useVersion,
 } from 'react-admin'
 import Logo from '../icons/android-icon-192x192.png'
-
+import { useHistory, useLocation } from 'react-router-dom'
 import Notification from './Notification'
 import FormUserSignUp from './FormUserSignUp'
 import useCurrentTheme from '../themes/useCurrentTheme'
@@ -120,6 +119,7 @@ const FormLogin = ({
               {showGuestActions && (
                 <div className={classes.guestActions}>
                   <Button
+                    type="button"
                     variant="outlined"
                     color="primary"
                     onClick={onContinueAsGuest}
@@ -282,7 +282,8 @@ const FormSignUp = ({ loading, handleSubmit, validate }) => {
   )
 }
 
-const Login = ({ location }) => {
+const Login = () => {
+  const location = useLocation()
   const [loading, setLoading] = useState(false)
   const translate = useTranslate()
   const notify = useNotify()
@@ -295,13 +296,8 @@ const Login = ({ location }) => {
     [location?.search],
   )
   const requestedPath = location?.state?.nextPathname
-  const hashIncludesSignup =
-    typeof window !== 'undefined' && window.location.hash.includes('/signup')
   const wantsSignup =
-    searchParams.get('signup') === '1' ||
-    requestedPath === '/signup' ||
-    location?.pathname === '/signup' ||
-    hashIncludesSignup
+    searchParams.get('signup') === '1' || requestedPath === '/signup'
   const needsAdmin = Boolean(config.firstTime)
   const allowSelfSignup = Boolean(config.enableUserSelfSignup)
 
@@ -358,14 +354,6 @@ const Login = ({ location }) => {
     [translate, validateLogin],
   )
 
-  const updateHashSilently = useCallback((hash) => {
-    if (typeof window === 'undefined') {
-      return
-    }
-    const base = `${window.location.origin}${window.location.pathname}`
-    window.history.replaceState({}, '', `${base}${hash}`)
-  }, [])
-
   const handleContinueAsGuest = useCallback(() => {
     localStorage.setItem('ND_GUEST', 'true')
     localStorage.setItem('is-authenticated', 'guest')
@@ -386,14 +374,12 @@ const Login = ({ location }) => {
     if (!allowSelfSignup) {
       return
     }
-    history.push('/login?signup=1')
-    updateHashSilently('#/signup')
-  }, [allowSelfSignup, history, updateHashSilently])
+    history.push({ pathname: '/login', search: '?signup=1' })
+  }, [allowSelfSignup, history])
 
   const handleBackToLogin = useCallback(() => {
-    history.push('/login')
-    updateHashSilently('#/login')
-  }, [history, updateHashSilently])
+    history.replace('/login')
+  }, [history])
 
   const showUserSignup = allowSelfSignup && !needsAdmin && wantsSignup
 
