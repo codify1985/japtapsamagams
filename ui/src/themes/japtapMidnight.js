@@ -174,10 +174,15 @@ const japtapMidnight = createTheme({
       },
     },
 
-    // Toolbar (inside AppBar)
     MuiToolbar: {
       root: {
         backgroundColor: '#0B1020 !important',
+      },
+      gutters: {
+        paddingLeft: '0 !important',
+        paddingRight: '0 !important',
+        alignItems: 'flex-end !important',
+        marginBottom: '0.75rem',
       },
     },
 

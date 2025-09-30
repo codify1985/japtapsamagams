@@ -157,12 +157,42 @@
     display: none !important;
   }
 
-  /* Ensure audio title is hidden on mobile to save space */
   .react-jinke-music-player-main
     .music-player-panel
     .panel-content
     .progress-bar-content
-    .audio-title {
+    .songArtist {
+    display: none !important;
+  }
+
+  .react-jinke-music-player-main
+    .music-player-panel
+    .panel-content
+    .player-content
+    .group.play-sounds {
+    display: none !important;
+  }
+
+  /* .react-jinke-music-player-main .music-player-panel .panel-content .player-content .group.play-sounds[title="Volume"] {
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .react-jinke-music-player-main .music-player-panel .panel-content .player-content .group.play-sounds[title="Volume"] {
+    display: none !important;
+  } */
+
+  /* .react-jinke-music-player-main
+    .music-player-panel
+    .panel-content
+    .progress-bar-content
+    .songAlbum{
+    display: none !important;
+  } */
+
+  .audio-volume,
+  .player-content .audio-volume {
     display: none !important;
   }
 }

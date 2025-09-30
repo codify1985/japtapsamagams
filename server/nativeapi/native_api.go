@@ -40,6 +40,9 @@ func (n *Router) routes() http.Handler {
 
 	// Public
 	n.RX(r, "/translation", newTranslationRepository, false)
+	if conf.Server.EnableUserSelfSignup {
+		r.Post("/self-signup", n.selfSignupHandler())
+	}
 
 	// Protected
 	r.Group(func(r chi.Router) {

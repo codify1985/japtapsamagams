@@ -87,7 +87,11 @@ const UserEdit = (props) => {
           {
             type: 'update',
             resource: 'user',
-            payload: { id: values.id, data: values },
+            payload: {
+              id: values.id,
+              data: values,
+              isCurrentLoggedInUserAdmin: permissions === 'admin',
+            },
           },
           { returnPromise: true },
         )
@@ -155,7 +159,7 @@ const UserEdit = (props) => {
           <FormDataConsumer>
             {({ formData }) => (
               <>
-                {!formData.isAdmin && <LibrarySelectionField />}
+                {formData.isAdmin && <LibrarySelectionField />}
 
                 {formData.isAdmin && (
                   <Typography

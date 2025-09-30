@@ -1,14 +1,15 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { Field, Form } from 'react-final-form'
 import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Link from '@material-ui/core/Link'
 import TextField from '@material-ui/core/TextField'
-import { ThemeProvider, makeStyles } from '@material-ui/core/styles'
+import { ThemeProvider } from '@material-ui/core/styles'
 import {
   createMuiTheme,
   useLogin,
@@ -21,78 +22,13 @@ import {
 import Logo from '../icons/android-icon-192x192.png'
 
 import Notification from './Notification'
+import FormUserSignUp from './FormUserSignUp'
 import useCurrentTheme from '../themes/useCurrentTheme'
 import config from '../config'
 import { clearQueue } from '../actions'
 import { retrieveTranslation } from '../i18n'
 import { INSIGHTS_DOC_URL } from '../consts.js'
-
-const useStyles = makeStyles(
-  (theme) => ({
-    main: {
-      display: 'flex',
-      flexDirection: 'column',
-      minHeight: '100vh',
-      alignItems: 'center',
-      justifyContent: 'flex-start',
-      background: `url(${config.loginBackgroundURL})`,
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-    },
-    card: {
-      minWidth: 300,
-      marginTop: '6em',
-      overflow: 'visible',
-    },
-    avatar: {
-      margin: '1em',
-      display: 'flex',
-      justifyContent: 'center',
-      marginTop: '-3em',
-    },
-    icon: {
-      backgroundColor: 'transparent',
-      width: '6.3em',
-      height: '6.3em',
-    },
-    systemName: {
-      marginTop: '1em',
-      display: 'flex',
-      justifyContent: 'center',
-      color: '#3f51b5', //theme.palette.grey[500]
-    },
-    welcome: {
-      marginTop: '1em',
-      padding: '0 1em 1em 1em',
-      display: 'flex',
-      justifyContent: 'center',
-      flexWrap: 'wrap',
-      color: '#3f51b5', //theme.palette.grey[500]
-    },
-    form: {
-      padding: '0 1em 1em 1em',
-    },
-    input: {
-      marginTop: '1em',
-    },
-    actions: {
-      padding: '0 1em 1em 1em',
-    },
-    button: {},
-    systemNameLink: {
-      textDecoration: 'none',
-    },
-    message: {
-      marginTop: '1em',
-      padding: '0 1em 1em 1em',
-      textAlign: 'center',
-      wordBreak: 'break-word',
-      fontSize: '0.875em',
-    },
-  }),
-  { name: 'NDLogin' },
-)
+import useLoginStyles from './useLoginStyles'
 
 const renderInput = ({
   meta: { touched, error } = {},
@@ -108,9 +44,17 @@ const renderInput = ({
   />
 )
 
-const FormLogin = ({ loading, handleSubmit, validate }) => {
+const FormLogin = ({
+  loading,
+  handleSubmit,
+  validate,
+  onContinueAsGuest,
+  onOpenSignup,
+  showGuestActions,
+  showSelfSignup,
+}) => {
   const translate = useTranslate()
-  const classes = useStyles()
+  const classes = useLoginStyles()
 
   return (
     <Form
@@ -173,6 +117,32 @@ const FormLogin = ({ loading, handleSubmit, validate }) => {
                   {translate('ra.auth.sign_in')}
                 </Button>
               </CardActions>
+              {showGuestActions && (
+                <div className={classes.guestActions}>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={onContinueAsGuest}
+                    disabled={loading}
+                    className={`${classes.guestActionButton} ${classes.guestOutlinedButton}`}
+                    disableElevation
+                  >
+                    {translate('ra.auth.continue_as_guest')}
+                  </Button>
+                  {showSelfSignup && (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={onOpenSignup}
+                      disabled={loading}
+                      className={`${classes.guestActionButton} ${classes.guestContainedButton}`}
+                      disableElevation
+                    >
+                      {translate('ra.auth.user_signup')}
+                    </Button>
+                  )}
+                </div>
+              )}
             </Card>
             <Notification />
           </div>
@@ -184,7 +154,7 @@ const FormLogin = ({ loading, handleSubmit, validate }) => {
 
 const InsightsNotice = ({ url }) => {
   const translate = useTranslate()
-  const classes = useStyles()
+  const classes = useLoginStyles()
 
   const anchorRegex = /\[(.+?)]/g
   const originalMsg = translate('ra.auth.insightsCollectionNote')
@@ -240,7 +210,7 @@ const InsightsNotice = ({ url }) => {
 
 const FormSignUp = ({ loading, handleSubmit, validate }) => {
   const translate = useTranslate()
-  const classes = useStyles()
+  const classes = useLoginStyles()
 
   return (
     <Form
@@ -318,6 +288,22 @@ const Login = ({ location }) => {
   const notify = useNotify()
   const login = useLogin()
   const dispatch = useDispatch()
+  const history = useHistory()
+
+  const searchParams = useMemo(
+    () => new URLSearchParams(location?.search || ''),
+    [location?.search],
+  )
+  const requestedPath = location?.state?.nextPathname
+  const hashIncludesSignup =
+    typeof window !== 'undefined' && window.location.hash.includes('/signup')
+  const wantsSignup =
+    searchParams.get('signup') === '1' ||
+    requestedPath === '/signup' ||
+    location?.pathname === '/signup' ||
+    hashIncludesSignup
+  const needsAdmin = Boolean(config.firstTime)
+  const allowSelfSignup = Boolean(config.enableUserSelfSignup)
 
   const handleSubmit = useCallback(
     (auth) => {
@@ -372,7 +358,46 @@ const Login = ({ location }) => {
     [translate, validateLogin],
   )
 
-  if (config.firstTime) {
+  const updateHashSilently = useCallback((hash) => {
+    if (typeof window === 'undefined') {
+      return
+    }
+    const base = `${window.location.origin}${window.location.pathname}`
+    window.history.replaceState({}, '', `${base}${hash}`)
+  }, [])
+
+  const handleContinueAsGuest = useCallback(() => {
+    localStorage.setItem('ND_GUEST', 'true')
+    localStorage.setItem('is-authenticated', 'guest')
+    localStorage.setItem('role', 'guest')
+    localStorage.setItem('username', 'guest')
+    localStorage.removeItem('token')
+    localStorage.removeItem('userId')
+    localStorage.removeItem('avatar')
+    localStorage.removeItem('subsonic-salt')
+    localStorage.removeItem('subsonic-token')
+    localStorage.setItem('name', 'Guest')
+    dispatch(clearQueue())
+    const target = `${window.location.origin}${window.location.pathname}`
+    window.location.assign(target)
+  }, [dispatch])
+
+  const handleOpenSignup = useCallback(() => {
+    if (!allowSelfSignup) {
+      return
+    }
+    history.push('/login?signup=1')
+    updateHashSilently('#/signup')
+  }, [allowSelfSignup, history, updateHashSilently])
+
+  const handleBackToLogin = useCallback(() => {
+    history.push('/login')
+    updateHashSilently('#/login')
+  }, [history, updateHashSilently])
+
+  const showUserSignup = allowSelfSignup && !needsAdmin && wantsSignup
+
+  if (needsAdmin) {
     return (
       <FormSignUp
         handleSubmit={handleSubmit}
@@ -381,11 +406,18 @@ const Login = ({ location }) => {
       />
     )
   }
+  if (showUserSignup) {
+    return <FormUserSignUp onBackToLogin={handleBackToLogin} />
+  }
   return (
     <FormLogin
       handleSubmit={handleSubmit}
       validate={validateLogin}
       loading={loading}
+      onContinueAsGuest={handleContinueAsGuest}
+      onOpenSignup={handleOpenSignup}
+      showGuestActions={!needsAdmin}
+      showSelfSignup={allowSelfSignup && !needsAdmin}
     />
   )
 }
@@ -396,7 +428,7 @@ Login.propTypes = {
 }
 
 // We need to put the ThemeProvider decoration in another component
-// Because otherwise the useStyles() hook used in Login won't get
+// Because otherwise the useLoginStyles() hook used in Login won't get
 // the right theme
 const LoginWithTheme = (props) => {
   const theme = useCurrentTheme()

@@ -364,6 +364,9 @@
       "username": "Username",
       "password": "Password",
       "sign_in": "Sign in",
+      "continue_as_guest": "Guest",
+      "user_signup": "Sign up",
+      "create_account": "Create account",
       "sign_in_error": "Authentication failed, please retry",
       "logout": "Logout",
       "insightsCollectionNote": "Navidrome collects anonymous usage data to\nhelp improve the project. Click [here] to learn\nmore and to opt-out if you want"

@@ -101,6 +101,7 @@ var _ = Describe("serveIndex", func() {
 		Entry("enableInspect", func() { conf.Server.Inspect.Enabled = true }, "enableInspect", true),
 		Entry("defaultDownsamplingFormat", func() { conf.Server.DefaultDownsamplingFormat = "mp3" }, "defaultDownsamplingFormat", "mp3"),
 		Entry("enableUserEditing", func() { conf.Server.EnableUserEditing = false }, "enableUserEditing", false),
+		Entry("enableUserSelfSignup", func() { conf.Server.EnableUserSelfSignup = true }, "enableUserSelfSignup", true),
 		Entry("enableSharing", func() { conf.Server.EnableSharing = true }, "enableSharing", true),
 		Entry("devNewEventStream", func() { conf.Server.DevNewEventStream = true }, "devNewEventStream", true),
 	)
