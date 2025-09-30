@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/deluan/rest"
 	"github.com/navidrome/navidrome/model"
 	"github.com/navidrome/navidrome/utils/gg"
 )
@@ -41,6 +42,19 @@ func (u *MockedUserRepo) Put(usr *model.User) error {
 	usr.Password = usr.NewPassword
 	u.Data[strings.ToLower(usr.UserName)] = usr
 	return nil
+}
+
+func (u *MockedUserRepo) CreateSelfRegistered(usr *model.User) (string, error) {
+	if u.Error != nil {
+		return "", u.Error
+	}
+	if _, exists := u.Data[strings.ToLower(usr.UserName)]; exists {
+		return "", &rest.ValidationError{Errors: map[string]string{"userName": "ra.validation.unique"}}
+	}
+	if err := u.Put(usr); err != nil {
+		return "", err
+	}
+	return usr.ID, nil
 }
 
 func (u *MockedUserRepo) FindByUsername(username string) (*model.User, error) {

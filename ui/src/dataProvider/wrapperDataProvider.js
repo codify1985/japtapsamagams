@@ -113,7 +113,8 @@ const createUser = async (params) => {
 
 // Enhanced user update that handles library associations
 const updateUser = async (params) => {
-  const { data } = params
+  const { data, isCurrentLoggedInUserAdmin } = params
+
   const { libraryIds, ...userData } = data
   const userId = params.id
 
@@ -124,7 +125,11 @@ const updateUser = async (params) => {
   })
 
   // Then handle library associations for non-admin users
-  if (!userData.isAdmin && libraryIds !== undefined) {
+  if (
+    isCurrentLoggedInUserAdmin &&
+    !userData.isAdmin &&
+    libraryIds !== undefined
+  ) {
     await handleUserLibraryAssociation(userId, libraryIds)
   }
 

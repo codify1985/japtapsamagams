@@ -112,10 +112,14 @@ const ToggleAutoImport = ({ resource, source }) => {
   ) : null
 }
 
-const PlaylistListBulkActions = (props) => (
+const PlaylistListBulkActions = ({ isCurrentUserAdmin, ...props }) => (
   <>
-    <ChangePublicStatusButton public={true} {...props} />
-    <ChangePublicStatusButton public={false} {...props} />
+    {isCurrentUserAdmin && (
+      <ChangePublicStatusButton public={true} {...props} />
+    )}
+    {isCurrentUserAdmin && (
+      <ChangePublicStatusButton public={false} {...props} />
+    )}
     <BulkDeleteButton {...props} />
   </>
 )
@@ -123,6 +127,8 @@ const PlaylistListBulkActions = (props) => (
 const PlaylistList = (props) => {
   const isXsmall = useMediaQuery((theme) => theme.breakpoints.down('xs'))
   const isDesktop = useMediaQuery((theme) => theme.breakpoints.up('md'))
+  const { permissions } = usePermissions()
+  const isCurrentUserAdmin = permissions === 'admin'
   useResourceRefresh('playlist')
 
   const toggleableFields = useMemo(
@@ -133,7 +139,7 @@ const PlaylistList = (props) => {
       updatedAt: isDesktop && (
         <DateField source="updatedAt" sortByOrder={'DESC'} />
       ),
-      public: !isXsmall && (
+      public: !isXsmall && isCurrentUserAdmin && (
         <TogglePublicInput source="public" sortByOrder={'DESC'} />
       ),
       comment: <TextField source="comment" />,
@@ -154,7 +160,11 @@ const PlaylistList = (props) => {
       exporter={false}
       filters={<PlaylistFilter />}
       actions={<PlaylistListActions />}
-      bulkActionButtons={!isXsmall && <PlaylistListBulkActions />}
+      bulkActionButtons={
+        !isXsmall && (
+          <PlaylistListBulkActions isCurrentUserAdmin={isCurrentUserAdmin} />
+        )
+      }
     >
       <Datagrid rowClick="show" isRowSelectable={(r) => isWritable(r?.ownerId)}>
         <TextField source="name" />

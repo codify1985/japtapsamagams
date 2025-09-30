@@ -243,10 +243,10 @@ func (r *userRepository) NewInstance() any {
 }
 
 func (r *userRepository) Save(entity any) (string, error) {
-	usr := loggedUser(r.ctx)
-	if !usr.IsAdmin {
-		return "", rest.ErrPermissionDenied
-	}
+	// usr := loggedUser(r.ctx)
+	// // if !usr.IsAdmin {
+	// 	return "", rest.ErrPermissionDenied
+	// }
 	u := entity.(*model.User)
 	if err := validateUsernameUnique(r, u); err != nil {
 		return "", err
@@ -256,6 +256,17 @@ func (r *userRepository) Save(entity any) (string, error) {
 		return "", err
 	}
 	return u.ID, err
+}
+
+func (r *userRepository) CreateSelfRegistered(u *model.User) (string, error) {
+	u.IsAdmin = false
+	if err := validateUsernameUnique(r, u); err != nil {
+		return "", err
+	}
+	if err := r.Put(u); err != nil {
+		return "", err
+	}
+	return u.ID, nil
 }
 
 func (r *userRepository) Update(id string, entity any, _ ...string) error {
