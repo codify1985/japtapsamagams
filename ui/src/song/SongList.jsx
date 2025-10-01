@@ -77,8 +77,26 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  // songListContainer: {
+  //     '& > .MuiToolbar-root:first-of-type': {
+  //       paddingRight: '0 !important',
+  //       alignItems: 'flex-end !important',
+  //       marginBottom: '0.75rem',
+  //     },
+  //     '& > .MuiToolbar-gutters:first-of-type': {
+  //       paddingRight: '0 !important',
+  //       alignItems: 'flex-end !important',
+  //       marginBottom: '0.75rem',
+  //     },
+  // },
   songListContainer: {
-    '& [class*="RaListToolbar-toolbar"]': {
+    '& [class*="MuiToolbar-root"]:first-of-type': {
+      // paddingLeft: '0 !important',
+      paddingRight: '0 !important',
+      alignItems: 'flex-end !important',
+      marginBottom: '0.75rem',
+    },
+    '& [class*="MuiToolbar-gutters"]:first-of-type': {
       // paddingLeft: '0 !important',
       paddingRight: '0 !important',
       alignItems: 'flex-end !important',
@@ -102,7 +120,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }))
-
 const SongFilter = (props) => {
   const classes = useStyles()
   const translate = useTranslate()
