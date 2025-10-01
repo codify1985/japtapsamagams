@@ -165,14 +165,21 @@
     display: none !important;
   }
 
-  .react-jinke-music-player-main
+  /* .react-jinke-music-player-main
     .music-player-panel
     .panel-content
     .progress-bar-content
     .songTitle {
     display: none !important;
-  }
-  
+  } */
+
+  /* .react-jinke-music-player-main
+    .music-player-panel
+    .panel-content
+    .progress-bar-content
+    .songAlbum {
+    display: none !important;
+  } */
 
   .react-jinke-music-player-main
     .music-player-panel
