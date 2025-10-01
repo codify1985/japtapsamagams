@@ -171,12 +171,19 @@ const japtapApple = createTheme({
       root: {
         backgroundColor: '#0B1020 !important',
       },
+      // not needed now
       // gutters: {
       //   paddingLeft: '0 !important',
       //   paddingRight: '0 !important',
       //   alignItems: 'flex-end !important',
       //   marginBottom: '0.75rem',
       // },
+    },
+
+    RaListToolbar: {
+      toolbar: {
+        paddingLeft: '0 !important'
+      },
     },
 
     // Drawer / Sidebar

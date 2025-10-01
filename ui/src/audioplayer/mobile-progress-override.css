@@ -168,6 +168,15 @@
   .react-jinke-music-player-main
     .music-player-panel
     .panel-content
+    .progress-bar-content
+    .songTitle {
+    display: none !important;
+  }
+  
+
+  .react-jinke-music-player-main
+    .music-player-panel
+    .panel-content
     .player-content
     .group.play-sounds {
     display: none !important;

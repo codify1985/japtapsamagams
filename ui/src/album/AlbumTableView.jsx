@@ -189,7 +189,7 @@ const AlbumTableView = ({
         <div className={classes.rightIconWrapper}>
           <AlbumContextMenu
             record={r}
-            showLove={currentUser !== config.defaultUser}
+            showLove={currentUser === 'admin'}
             currentUser={currentUser}
           />
         </div>
