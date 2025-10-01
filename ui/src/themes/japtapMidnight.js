@@ -186,9 +186,9 @@ const japtapMidnight = createTheme({
       // },
     },
 
-     RaListToolbar: {
+    RaListToolbar: {
       toolbar: {
-        paddingLeft: '0 !important'
+        paddingLeft: '0 !important',
       },
     },
 

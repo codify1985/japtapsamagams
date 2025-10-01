@@ -91,7 +91,7 @@ const useAlbumListStyles = makeStyles((theme) => ({
     // margin: '1rem',
     [theme.breakpoints.down('sm')]: {
       margin: '0.75rem',
-      marginBottom: '3.5rem', // to avoid double margin with bottom pagination
+      marginBottom: '2.5rem', // to avoid double margin with bottom pagination
     },
   },
 }))

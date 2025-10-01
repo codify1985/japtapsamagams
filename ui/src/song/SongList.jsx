@@ -98,6 +98,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('sm')]: {
       // stack and add padding so the first row clears the sticky toolbar
       margin: '0.75rem',
+      marginBottom: '2.5rem', // to avoid double margin with bottom pagination
     },
   },
 }))

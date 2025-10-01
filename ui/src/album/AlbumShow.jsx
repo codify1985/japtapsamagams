@@ -21,6 +21,9 @@ const useStyles = makeStyles(
     },
     albumShowContainer: {
       margin: '0.75rem',
+      [theme.breakpoints.down('sm')]: {
+        marginBottom: '3rem', // to avoid double margin with bottom pagination
+      },
     },
   }),
   {

@@ -182,7 +182,7 @@ const japtapApple = createTheme({
 
     RaListToolbar: {
       toolbar: {
-        paddingLeft: '0 !important'
+        paddingLeft: '0 !important',
       },
     },
 
