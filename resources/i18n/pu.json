@@ -1,0 +1,663 @@
+{
+  "languageName": "ਪੰਜਾਬੀ",
+  "resources": {
+    "song": {
+      "name": "ਸਾਰੇ ਕੀਰਤਨ |||| ਸਾਰੇ ਕੀਰਤਨ",
+      "fields": {
+        "albumArtist": "ਐਲਬਮ ਕਲਾਕਾਰ",
+        "duration": "ਮਿਆਦ",
+        "trackNumber": "#",
+        "playCount": "ਪਲੇਜ਼",
+        "title": "ਸਿਰਲੇਖ",
+        "artist": "ਕੀਰਤਨੀ",
+        "album": "ਸਮਾਗਮ",
+        "path": "ਫਾਈਲ ਮਾਰਗ",
+        "libraryName": "ਲਾਇਬ੍ਰੇਰੀ",
+        "genre": "ਜਾਨਰ",
+        "compilation": "ਸੰਕਲਨ",
+        "year": "ਸਾਲ",
+        "size": "ਫਾਈਲ ਆਕਾਰ",
+        "updatedAt": "ਅਪਡੇਟ",
+        "bitRate": "ਬਿਟ ਰੇਟ",
+        "bitDepth": "ਬਿਟ ਡੈਪਥ",
+        "sampleRate": "ਸੈਂਪਲ ਰੇਟ",
+        "channels": "ਚੈਨਲ",
+        "discSubtitle": "ਡਿਸਕ ਉਪਸਿਰਲੇਖ",
+        "starred": "ਮਨਪਸੰਦ",
+        "comment": "ਟਿੱਪਣੀ",
+        "rating": "ਰੇਟਿੰਗ",
+        "quality": "ਗੁਣਵੱਤਾ",
+        "bpm": "BPM",
+        "playDate": "ਆਖਰੀ ਵਾਰ ਚਲਾਇਆ",
+        "createdAt": "ਜੋੜਿਆ ਗਿਆ",
+        "grouping": "ਗਰੁੱਪਿੰਗ",
+        "mood": "ਮੰਨਸਥਿਤੀ",
+        "participants": "ਵਾਧੂ ਭਾਗੀਦਾਰ",
+        "tags": "ਵਾਧੂ ਟੈਗ",
+        "mappedTags": "ਮੈਪ ਕੀਤੇ ਟੈਗ",
+        "rawTags": "ਕੱਚੇ ਟੈਗ",
+        "missing": "ਗੁੰਮ"
+      },
+      "actions": {
+        "addToQueue": "ਬਾਅਦ ਵਿੱਚ ਚਲਾਓ",
+        "playNow": "ਹੁਣੇ ਚਲਾਓ",
+        "addToPlaylist": "ਪਲੇਲਿਸਟ ਵਿੱਚ ਜੋੜੋ",
+        "showInPlaylist": "ਪਲੇਲਿਸਟ ਵਿੱਚ ਵੇਖੋ",
+        "shuffleAll": "ਸਾਰਾ ਸ਼ਫਲ",
+        "download": "ਡਾਊਨਲੋਡ",
+        "playNext": "ਅਗਲਾ ਚਲਾਓ",
+        "info": "ਜਾਣਕਾਰੀ"
+      },
+      "lists": {
+        "recentKirtan": "ਨਵਾਂ ਜੋੜਿਆ",
+        "simran": "ਸਿਮਰਨ",
+        "starred": "ਮਨਪਸੰਦ"
+      },
+      "songList": "ਡਿਫਾਲਟ ਲਾਇਬ੍ਰੇਰੀ"
+    },
+    "album": {
+      "name": "ਸਮਾਗਮ |||| ਸਮਾਗਮ",
+      "fields": {
+        "albumArtist": "ਐਲਬਮ ਕਲਾਕਾਰ",
+        "artist": "ਕਲਾਕਾਰ",
+        "duration": "ਮਿਆਦ",
+        "songCount": "ਕੀਰਤਨ",
+        "playCount": "ਪਲੇਜ਼",
+        "size": "ਆਕਾਰ",
+        "name": "ਨਾਂ",
+        "libraryName": "ਲਾਇਬ੍ਰੇਰੀ",
+        "genre": "ਜਾਨਰ",
+        "compilation": "ਸੰਕਲਨ",
+        "year": "ਸਾਲ",
+        "date": "ਰਿਕਾਰਡਿੰਗ ਤਾਰੀਖ",
+        "originalDate": "ਮੂਲ",
+        "releaseDate": "ਜਾਰੀ",
+        "releases": "ਰਿਲੀਜ਼ |||| ਰਿਲੀਜ਼ਾਂ",
+        "released": "ਜਾਰੀ",
+        "updatedAt": "ਅਪਡੇਟ",
+        "comment": "ਟਿੱਪਣੀ",
+        "rating": "ਰੇਟਿੰਗ",
+        "createdAt": "ਜੋੜਿਆ ਗਿਆ",
+        "recordLabel": "ਲੇਬਲ",
+        "catalogNum": "ਕੈਟਾਲਾਗ ਨੰਬਰ",
+        "releaseType": "ਕਿਸਮ",
+        "grouping": "ਗਰੁੱਪਿੰਗ",
+        "media": "ਮੀਡੀਆ",
+        "mood": "ਮੰਨਸਥਿਤੀ",
+        "missing": "ਗੁੰਮ"
+      },
+      "actions": {
+        "playAll": "ਚਲਾਓ",
+        "playNext": "ਅਗਲਾ ਚਲਾਓ",
+        "addToQueue": "ਬਾਅਦ ਵਿੱਚ ਚਲਾਓ",
+        "share": "ਸਾਂਝਾ ਕਰੋ",
+        "shuffle": "ਸ਼ਫਲ",
+        "addToPlaylist": "ਪਲੇਲਿਸਟ ਵਿੱਚ ਜੋੜੋ",
+        "download": "ਡਾਊਨਲੋਡ",
+        "info": "ਜਾਣਕਾਰੀ"
+      },
+      "lists": {
+        "all": "ਸਭ",
+        "random": "ਬੇਤਰਤੀਬ",
+        "search": "ਖੋਜ",
+        "recentlyAdded": "ਹੋਮ",
+        "recentlyPlayed": "ਹਾਲ ਹੀ ਵਿੱਚ ਚਲਾਇਆ",
+        "mostPlayed": "ਸਭ ਤੋਂ ਵੱਧ ਚਲਾਇਆ",
+        "starred": "ਮਨਪਸੰਦ",
+        "topRated": "ਸ਼੍ਰੇਸ਼ਟ ਰੇਟਿੰਗ"
+      },
+      "navigator": {
+        "no_albums": "ਕੋਈ ਸਮਾਗਮ ਨਹੀਂ"
+      }
+    },
+    "artist": {
+      "name": "ਕੀਰਤਨੀ |||| ਕੀਰਤਨੀਆਂ",
+      "fields": {
+        "name": "ਨਾਂ",
+        "albumCount": "ਸਮਾਗਮ ਗਿਣਤੀ",
+        "songCount": "ਕੀਰਤਨ ਗਿਣਤੀ",
+        "size": "ਆਕਾਰ",
+        "playCount": "ਪਲੇਜ਼",
+        "rating": "ਰੇਟਿੰਗ",
+        "genre": "ਜਾਨਰ",
+        "role": "ਭੂਮਿਕਾ",
+        "missing": "ਗੁੰਮ"
+      },
+      "roles": {
+        "artist": "ਕਲਾਕਾਰ |||| ਕਲਾਕਾਰ",
+        "albumartist": "ਐਲਬਮ ਕਲਾਕਾਰ |||| ਐਲਬਮ ਕਲਾਕਾਰ",
+        "composer": "ਸੰਗੀਤਕਾਰ |||| ਸੰਗੀਤਕਾਰ",
+        "conductor": "ਸੰਗੀਤ ਨਿਰਦੇਸ਼ਕ |||| ਸੰਗੀਤ ਨਿਰਦੇਸ਼ਕ",
+        "lyricist": "ਗੀਤਕਾਰ |||| ਗੀਤਕਾਰ",
+        "arranger": "ਐਰੇਂਜਰ |||| ਐਰੇਂਜਰ",
+        "producer": "ਨਿਰਮਾਤਾ |||| ਨਿਰਮਾਤਾ",
+        "director": "ਨਿਰਦੇਸ਼ਕ |||| ਨਿਰਦੇਸ਼ਕ",
+        "engineer": "ਇੰਜੀਨੀਅਰ |||| ਇੰਜੀਨੀਅਰ",
+        "mixer": "ਮਿਕਸਰ |||| ਮਿਕਸਰ",
+        "remixer": "ਰੀਮਿਕਸਰ |||| ਰੀਮਿਕਸਰ",
+        "djmixer": "ਡੀਜੇ ਮਿਕਸਰ |||| ਡੀਜੇ ਮਿਕਸਰ",
+        "performer": "ਪੇਸ਼ਕਾਰ |||| ਪੇਸ਼ਕਾਰ",
+        "maincredit": "ਐਲਬਮ ਕਲਾਕਾਰ ਜਾਂ ਕਲਾਕਾਰ |||| ਐਲਬਮ ਕਲਾਕਾਰ ਜਾਂ ਕਲਾਕਾਰ"
+      },
+      "actions": {
+        "topSongs": "ਟਾਪ ਗੀਤ",
+        "shuffle": "ਸ਼ਫਲ",
+        "radio": "ਰੇਡੀਓ"
+      }
+    },
+    "user": {
+      "name": "ਯੂਜ਼ਰ |||| ਯੂਜ਼ਰ",
+      "fields": {
+        "userName": "ਯੂਜ਼ਰਨਾਂ",
+        "isAdmin": "ਐਡਮਿਨ",
+        "lastLoginAt": "ਆਖਰੀ ਲਾਗਇਨ",
+        "lastAccessAt": "ਆਖਰੀ ਐਕਸੈੱਸ",
+        "updatedAt": "ਅਪਡੇਟ",
+        "name": "ਨਾਂ",
+        "password": "ਪਾਸਵਰਡ",
+        "createdAt": "ਬਣਾਇਆ",
+        "changePassword": "ਪਾਸਵਰਡ ਬਦਲਣਾ?",
+        "currentPassword": "ਮੌਜੂਦਾ ਪਾਸਵਰਡ",
+        "newPassword": "ਨਵਾਂ ਪਾਸਵਰਡ",
+        "token": "ਟੋਕਨ",
+        "libraries": "ਲਾਇਬ੍ਰੇਰੀਆਂ"
+      },
+      "helperTexts": {
+        "name": "ਨਾਂ ਵਿੱਚ ਬਦਲਾਅ ਅਗਲੀ ਲਾਗਇਨ 'ਤੇ ਹੀ ਦਿਖੇਗਾ",
+        "libraries": "ਇਸ ਯੂਜ਼ਰ ਲਈ ਖਾਸ ਲਾਇਬ੍ਰੇਰੀਆਂ ਚੁਣੋ, ਜਾਂ ਡਿਫਾਲਟ ਲਈ ਖਾਲੀ ਛੱਡੋ"
+      },
+      "notifications": {
+        "created": "ਯੂਜ਼ਰ ਬਣਾਇਆ",
+        "updated": "ਯੂਜ਼ਰ ਅਪਡੇਟ",
+        "deleted": "ਯੂਜ਼ਰ ਹਟਾਇਆ"
+      },
+      "validation": {
+        "librariesRequired": "ਨਾਨ-ਐਡਮਿਨ ਯੂਜ਼ਰ ਲਈ ਘੱਟੋ-ਘੱਟ ਇੱਕ ਲਾਇਬ੍ਰੇਰੀ ਲਾਜ਼ਮੀ ਹੈ"
+      },
+      "message": {
+        "listenBrainzToken": "ਆਪਣਾ ListenBrainz ਯੂਜ਼ਰ ਟੋਕਨ ਦਿਓ।",
+        "clickHereForToken": "ਟੋਕਨ ਲਈ ਇੱਥੇ ਕਲਿਕ ਕਰੋ",
+        "selectAllLibraries": "ਸਾਰੀਆਂ ਲਾਇਬ੍ਰੇਰੀਆਂ ਚੁਣੋ",
+        "adminAutoLibraries": "ਐਡਮਿਨ ਯੂਜ਼ਰਾਂ ਨੂੰ ਆਪਣੇ ਆਪ ਸਾਰੀਆਂ ਲਾਇਬ੍ਰੇਰੀਆਂ ਦੀ ਪਹੁੰਚ ਹੁੰਦੀ ਹੈ"
+      }
+    },
+    "player": {
+      "name": "ਪਲੇਅਰ |||| ਪਲੇਅਰ",
+      "fields": {
+        "name": "ਨਾਂ",
+        "transcodingId": "ਟ੍ਰਾਂਸਕੋਡਿੰਗ",
+        "maxBitRate": "ਅਧਿਕਤਮ ਬਿਟ ਰੇਟ",
+        "client": "ਕਲਾਇੰਟ",
+        "userName": "ਯੂਜ਼ਰਨਾਂ",
+        "lastSeen": "ਆਖਰੀ ਵਾਰ ਵੇਖਿਆ",
+        "reportRealPath": "ਅਸਲੀ ਮਾਰਗ ਰਿਪੋਰਟ",
+        "scrobbleEnabled": "ਬਾਹਰੀ ਸੇਵਾਵਾਂ ਨੂੰ ਸਕਰਾਬਲ ਭੇਜੋ"
+      }
+    },
+    "transcoding": {
+      "name": "ਟ੍ਰਾਂਸਕੋਡਿੰਗ |||| ਟ੍ਰਾਂਸਕੋਡਿੰਗ",
+      "fields": {
+        "name": "ਨਾਂ",
+        "targetFormat": "ਟਾਰਗੇਟ ਫਾਰਮੈਟ",
+        "defaultBitRate": "ਡਿਫਾਲਟ ਬਿਟ ਰੇਟ",
+        "command": "ਕਮਾਂਡ"
+      }
+    },
+    "playlist": {
+      "name": "ਪਲੇਲਿਸਟ |||| ਪਲੇਲਿਸਟਾਂ",
+      "fields": {
+        "name": "ਨਾਂ",
+        "duration": "ਮਿਆਦ",
+        "ownerName": "ਮਾਲਕ",
+        "public": "ਸਰਵਜਨਿਕ",
+        "updatedAt": "ਅਪਡੇਟ",
+        "createdAt": "ਬਣਾਇਆ",
+        "songCount": "ਗੀਤ",
+        "comment": "ਟਿੱਪਣੀ",
+        "sync": "ਆਟੋ-ਇੰਪੋਰਟ",
+        "path": "ਇਥੋਂ ਆਯਾਤ"
+      },
+      "actions": {
+        "selectPlaylist": "ਇੱਕ ਪਲੇਲਿਸਟ ਚੁਣੋ:",
+        "addNewPlaylist": "\"%{name}\" ਬਣਾਓ",
+        "export": "ਐਕਸਪੋਰਟ",
+        "saveQueue": "ਕਤਾਰ ਨੂੰ ਪਲੇਲਿਸਟ ਵਿੱਚ ਸੇਵ ਕਰੋ",
+        "makePublic": "ਸਰਵਜਨਿਕ ਬਣਾਓ",
+        "makePrivate": "ਨਿੱਜੀ ਬਣਾਓ",
+        "searchOrCreate": "ਪਲੇਲਿਸਟ ਖੋਜੋ ਜਾਂ ਨਵੀਂ ਬਣਾਉਣ ਲਈ ਲਿਖੋ...",
+        "pressEnterToCreate": "ਨਵੀਂ ਪਲੇਲਿਸਟ ਬਣਾਉਣ ਲਈ Enter ਦਬਾਓ",
+        "removeFromSelection": "ਚੋਣ ਤੋਂ ਹਟਾਓ"
+      },
+      "message": {
+        "duplicate_song": "ਡੁਹਰਾਏ ਗੀਤ ਜੋੜੋ",
+        "song_exist": "ਪਲੇਲਿਸਟ ਵਿੱਚ ਡੁਹਰਾਏ ਗੀਤ ਜੋੜੇ ਜਾ ਰਹੇ ਹਨ। ਕੀ ਤੁਸੀਂ ਇਹਨਾਂ ਨੂੰ ਜੋੜਨਾ ਚਾਹੁੰਦੇ ਹੋ ਜਾਂ ਸਕਿਪ ਕਰਨਾ?",
+        "noPlaylistsFound": "ਕੋਈ ਪਲੇਲਿਸਟ ਨਹੀਂ ਮਿਲੀ",
+        "noPlaylists": "ਕੋਈ ਪਲੇਲਿਸਟ ਉਪਲਬਧ ਨਹੀਂ"
+      }
+    },
+    "radio": {
+      "name": "ਰੇਡੀਓ |||| ਰੇਡੀਓ",
+      "fields": {
+        "name": "ਨਾਂ",
+        "streamUrl": "ਸਟ੍ਰੀਮ URL",
+        "homePageUrl": "ਹੋਮ ਪੇਜ URL",
+        "updatedAt": "ਅਪਡੇਟ",
+        "createdAt": "ਬਣਾਇਆ"
+      },
+      "actions": {
+        "playNow": "ਹੁਣੇ ਚਲਾਓ"
+      }
+    },
+    "share": {
+      "legacyError": "ਸ਼ੇਅਰ ਮੀਨੂ ਨਹੀਂ ਖੁਲਿਆ",
+      "shared": "ਸਫਲਤਾਪੂਰਵਕ ਸਾਂਝਾ ਕੀਤਾ",
+      "platformOpenError": "%{platform} ਨਹੀਂ ਖੁੱਲਿਆ",
+      "webShareNotAvailable": "ਸਿਸਟਮ ਸ਼ੇਅਰ ਉਪਲਬਧ ਨਹੀਂ",
+      "copyLink": {
+        "label": "ਲਿੰਕ ਕਾਪੀ ਕਰੋ",
+        "success": "URL ਕਲਿੱਪਬੋਰਡ ਵਿੱਚ ਕਾਪੀ ਹੋਇਆ",
+        "error": "ਲਿੰਕ ਕਾਪੀ ਨਹੀਂ ਹੋ ਸਕਿਆ"
+      },
+      "email": {
+        "label": "ਈਮੇਲ ਰਾਹੀਂ ਸਾਂਝਾ ਕਰੋ",
+        "error": "ਈਮੇਲ ਕਲਾਇੰਟ ਨਹੀਂ ਖੁੱਲਿਆ"
+      },
+      "webShare": "ਸਿਸਟਮ ਸ਼ੇਅਰ",
+      "more": "ਹੋਰ ਵਿਕਲਪ",
+      "socials": {
+        "twitter": "X/Twitter 'ਤੇ ਸਾਂਝਾ ਕਰੋ",
+        "facebook": "Facebook 'ਤੇ ਸਾਂਝਾ ਕਰੋ",
+        "linkedin": "LinkedIn 'ਤੇ ਸਾਂਝਾ ਕਰੋ"
+      },
+      "qr": {
+        "label": "QR ਕੋਡ ਦਿਖਾਓ",
+        "title": "QR ਕੋਡ",
+        "description": "ਸਾਂਝਾ ਕਰਨ ਲਈ ਇਹ QR ਕੋਡ ਸਕੈਨ ਕਰੋ",
+        "generating": "QR ਕੋਡ ਬਣਾਇਆ ਜਾ ਰਿਹਾ ਹੈ...",
+        "failed": "QR ਕੋਡ ਬਣਾਉਣ ਵਿੱਚ ਅਸਫਲ",
+        "fallbackHint": "ਸੁਝਾਅ: ਬੈਕਅੱਪ ਲਈ ਬਾਹਰੀ ਫਾਲਬੈਕ ਚਾਲੂ ਕਰੋ",
+        "localSuccess": "QR ਕੋਡ ਬਣ ਗਿਆ",
+        "localError": "ਲੋਕਲ QR ਬਣਾਉਣ ਵਿੱਚ ਅਸਫਲ। ਬਾਹਰੀ ਫਾਲਬੈਕ ਚਾਲੂ ਕਰੋ।",
+        "download": "PNG ਡਾਊਨਲੋਡ ਕਰੋ",
+        "downloadSuccess": "QR ਕੋਡ ਡਾਊਨਲੋਡ ਹੋ ਗਿਆ",
+        "downloadError": "QR ਕੋਡ ਡਾਊਨਲੋਡ ਅਸਫਲ"
+      }
+    },
+    "missing": {
+      "name": "ਗੁੰਮ ਫਾਈਲ |||| ਗੁੰਮ ਫਾਈਲਾਂ",
+      "empty": "ਕੋਈ ਗੁੰਮ ਫਾਈਲ ਨਹੀਂ",
+      "fields": {
+        "path": "ਮਾਰਗ",
+        "size": "ਆਕਾਰ",
+        "libraryName": "ਲਾਇਬ੍ਰੇਰੀ",
+        "updatedAt": "ਗਾਇਬ ਹੋਣ ਦੀ ਤਾਰੀਖ"
+      },
+      "actions": {
+        "remove": "ਹਟਾਓ",
+        "remove_all": "ਸਭ ਹਟਾਓ"
+      },
+      "notifications": {
+        "removed": "ਗੁੰਮ ਫਾਈਲ(ਾਂ) ਹਟਾਈਆਂ ਗਈਆਂ"
+      }
+    },
+    "library": {
+      "name": "ਲਾਇਬ੍ਰੇਰੀ |||| ਲਾਇਬ੍ਰੇਰੀਆਂ",
+      "fields": {
+        "name": "ਨਾਂ",
+        "path": "ਮਾਰਗ",
+        "remotePath": "ਰਿਮੋਟ ਮਾਰਗ",
+        "lastScanAt": "ਆਖਰੀ ਸਕੈਨ",
+        "songCount": "ਗੀਤ",
+        "albumCount": "ਐਲਬਮ",
+        "artistCount": "ਕਲਾਕਾਰ",
+        "totalSongs": "ਗੀਤ",
+        "totalAlbums": "ਐਲਬਮ",
+        "totalArtists": "ਕਲਾਕਾਰ",
+        "totalFolders": "ਫੋਲਡਰ",
+        "totalFiles": "ਫਾਈਲਾਂ",
+        "totalMissingFiles": "ਗੁੰਮ ਫਾਈਲਾਂ",
+        "totalSize": "ਕੁੱਲ ਆਕਾਰ",
+        "totalDuration": "ਮਿਆਦ",
+        "defaultNewUsers": "ਨਵੇਂ ਯੂਜ਼ਰਾਂ ਲਈ ਡਿਫਾਲਟ",
+        "createdAt": "ਬਣਾਇਆ",
+        "updatedAt": "ਅਪਡੇਟ"
+      },
+      "sections": {
+        "basic": "ਮੂਲ ਜਾਣਕਾਰੀ",
+        "statistics": "ਅੰਕੜੇ"
+      },
+      "actions": {
+        "scan": "ਲਾਇਬ੍ਰੇਰੀ ਸਕੈਨ ਕਰੋ",
+        "manageUsers": "ਯੂਜ਼ਰ ਪਹੁੰਚ ਪ੍ਰਬੰਧਿਤ ਕਰੋ",
+        "viewDetails": "ਵੇਰਵੇ ਵੇਖੋ"
+      },
+      "notifications": {
+        "created": "ਲਾਇਬ੍ਰੇਰੀ ਸਫਲਤਾਪੂਰਵਕ ਬਣਾਈ ਗਈ",
+        "updated": "ਲਾਇਬ੍ਰੇਰੀ ਸਫਲਤਾਪੂਰਵਕ ਅਪਡੇਟ ਕੀਤੀ ਗਈ",
+        "deleted": "ਲਾਇਬ੍ਰੇਰੀ ਸਫਲਤਾਪੂਰਵਕ ਹਟਾਈ ਗਈ",
+        "scanStarted": "ਲਾਇਬ੍ਰੇਰੀ ਸਕੈਨ ਸ਼ੁਰੂ ਹੋਇਆ",
+        "scanCompleted": "ਲਾਇਬ੍ਰੇਰੀ ਸਕੈਨ ਮੁਕੰਮਲ"
+      },
+      "validation": {
+        "nameRequired": "ਲਾਇਬ੍ਰੇਰੀ ਦਾ ਨਾਂ ਲਾਜ਼ਮੀ ਹੈ",
+        "pathRequired": "ਲਾਇਬ੍ਰੇਰੀ ਮਾਰਗ ਲਾਜ਼ਮੀ ਹੈ",
+        "pathNotDirectory": "ਲਾਇਬ੍ਰੇਰੀ ਮਾਰਗ ਇੱਕ ਫੋਲਡਰ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ",
+        "pathNotFound": "ਲਾਇਬ੍ਰੇਰੀ ਮਾਰਗ ਨਹੀਂ ਮਿਲਿਆ",
+        "pathNotAccessible": "ਲਾਇਬ੍ਰੇਰੀ ਮਾਰਗ ਉਪਲਬਧ ਨਹੀਂ",
+        "pathInvalid": "ਗਲਤ ਲਾਇਬ੍ਰੇਰੀ ਮਾਰਗ"
+      },
+      "messages": {
+        "deleteConfirm": "ਕੀ ਤੁਸੀਂ ਇਹ ਲਾਇਬ੍ਰੇਰੀ ਹਟਾਉਣੀ ਚਾਹੁੰਦੇ ਹੋ? ਇਸ ਨਾਲ ਜੁੜੇ ਸਾਰੇ ਡਾਟਾ ਅਤੇ ਯੂਜ਼ਰ ਪਹੁੰਚ ਹਟਾ ਦਿੱਤੀ ਜਾਵੇਗੀ।",
+        "scanInProgress": "ਸਕੈਨ ਜਾਰੀ...",
+        "noLibrariesAssigned": "ਇਸ ਯੂਜ਼ਰ ਨੂੰ ਕੋਈ ਲਾਇਬ੍ਰੇਰੀ ਨਿਯੁਕਤ ਨਹੀਂ"
+      }
+    }
+  },
+  "ra": {
+    "auth": {
+      "welcome1": "Navidrome ਇੰਸਟਾਲ ਕਰਨ ਲਈ ਧੰਨਵਾਦ!",
+      "welcome2": "ਸ਼ੁਰੂ ਕਰਨ ਲਈ, ਇੱਕ ਐਡਮਿਨ ਯੂਜ਼ਰ ਬਣਾਓ",
+      "confirmPassword": "ਪਾਸਵਰਡ ਪੁਸ਼ਟੀ ਕਰੋ",
+      "buttonCreateAdmin": "ਐਡਮਿਨ ਬਣਾਓ",
+      "auth_check_error": "ਕਿਰਪਾ ਕਰਕੇ ਜਾਰੀ ਰੱਖਣ ਲਈ ਲਾਗਇਨ ਕਰੋ",
+      "user_menu": "ਪ੍ਰੋਫਾਈਲ",
+      "username": "ਯੂਜ਼ਰਨਾਂ",
+      "password": "ਪਾਸਵਰਡ",
+      "sign_in": "ਸਾਇਨ ਇਨ",
+      "continue_as_guest": "ਮੇਹਮਾਨ",
+      "user_signup": "ਸਾਇਨ ਅੱਪ",
+      "create_account": "ਅਕਾਊਂਟ ਬਣਾਓ",
+      "sign_in_error": "ਪਛਾਣ ਅਸਫਲ, ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ",
+      "logout": "ਲਾਗਆਉਟ",
+      "insightsCollectionNote": "Navidrome ਗੁਮਨਾਮ ਵਰਤੋਂ ਡਾਟਾ ਇਕੱਠਾ ਕਰਦਾ ਹੈ\nਪਰਜੈਕਟ ਵਿੱਚ ਸੁਧਾਰ ਲਈ। ਹੋਰ ਜਾਣਨ ਲਈ [ਇੱਥੇ] ਕਲਿਕ ਕਰੋ\nਅਤੇ ਚਾਹੋ ਤਾਂ ਆਪਟ-ਆਉਟ ਕਰੋ"
+    },
+    "validation": {
+      "invalidChars": "ਕਿਰਪਾ ਕਰਕੇ ਸਿਰਫ਼ ਅੱਖਰ ਅਤੇ ਅੰਕ ਵਰਤੋ",
+      "passwordDoesNotMatch": "ਪਾਸਵਰਡ ਮੇਲ ਨਹੀਂ ਖਾਂਦਾ",
+      "required": "ਲਾਜ਼ਮੀ",
+      "minLength": "ਘੱਟੋ-ਘੱਟ %{min} ਅੱਖਰ",
+      "maxLength": "%{max} ਅੱਖਰਾਂ ਤੋਂ ਘੱਟ",
+      "minValue": "ਘੱਟੋ-ਘੱਟ %{min}",
+      "maxValue": "%{max} ਤੋਂ ਵੱਧ ਨਹੀਂ",
+      "number": "ਨੰਬਰ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ",
+      "email": "ਵੈਧ ਈਮੇਲ ਹੋਣੀ ਚਾਹੀਦੀ ਹੈ",
+      "oneOf": "ਇਹਨਾਂ ਵਿੱਚੋਂ ਇੱਕ ਹੋਣਾ ਚਾਹੀਦਾ: %{options}",
+      "regex": "ਖਾਸ ਫਾਰਮੈਟ ਨਾਲ ਮੇਲ ਖਾਣਾ ਚਾਹੀਦਾ ਹੈ (regexp): %{pattern}",
+      "unique": "ਵਿਸ਼ੇਸ਼ ਹੋਣਾ ਚਾਹੀਦਾ",
+      "url": "ਵੈਧ URL ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ"
+    },
+    "action": {
+      "add_filter": "ਫਿਲਟਰ ਜੋੜੋ",
+      "add": "ਜੋੜੋ",
+      "back": "ਵਾਪਸ ਜਾਓ",
+      "bulk_actions": "1 ਆਈਟਮ ਚੁਣਿਆ |||| %{smart_count} ਆਈਟਮ ਚੁਣੇ",
+      "bulk_actions_mobile": "1 |||| %{smart_count}",
+      "cancel": "ਰੱਦ ਕਰੋ",
+      "clear_input_value": "ਮੁੱਲ ਸਾਫ਼ ਕਰੋ",
+      "clone": "ਕਲੋਨ",
+      "confirm": "ਪੁਸ਼ਟੀ ਕਰੋ",
+      "create": "ਬਣਾਓ",
+      "delete": "ਹਟਾਓ",
+      "edit": "ਸੋਧੋ",
+      "export": "ਐਕਸਪੋਰਟ",
+      "list": "ਸੂਚੀ",
+      "refresh": "ਰਿਫ੍ਰੈਸ਼",
+      "remove_filter": "ਇਹ ਫਿਲਟਰ ਹਟਾਓ",
+      "remove": "ਹਟਾਓ",
+      "save": "ਸੇਵ ਕਰੋ",
+      "search": "ਖੋਜ",
+      "show": "ਵੇਖੋ",
+      "sort": "ਤਰਤੀਬ",
+      "undo": "ਅਨਡੂ",
+      "expand": "ਫੈਲਾਓ",
+      "close": "ਬੰਦ ਕਰੋ",
+      "open_menu": "ਮੀਨੂ ਖੋਲ੍ਹੋ",
+      "close_menu": "ਮੀਨੂ ਬੰਦ ਕਰੋ",
+      "unselect": "ਚੋਣ ਹਟਾਓ",
+      "skip": "ਛੱਡੋ",
+      "share": "ਸਾਂਝਾ ਕਰੋ",
+      "download": "ਡਾਊਨਲੋਡ",
+      "play_all": "ਸਭ ਚਲਾਓ"
+    },
+    "boolean": {
+      "true": "ਹਾਂ",
+      "false": "ਨਹੀਂ"
+    },
+    "page": {
+      "create": "%{name} ਬਣਾਓ",
+      "dashboard": "ਡੈਸ਼ਬੋਰਡ",
+      "edit": "%{name} #%{id}",
+      "error": "ਕੁਝ ਗਲਤ ਹੋ ਗਿਆ",
+      "list": "%{name}",
+      "loading": "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ",
+      "not_found": "ਨਹੀਂ ਮਿਲਿਆ",
+      "show": "%{name} #%{id}",
+      "empty": "ਅਜੇ ਤੱਕ ਕੋਈ %{name} ਨਹੀਂ।",
+      "invite": "ਕੀ ਤੁਸੀਂ ਇੱਕ ਜੋੜਨਾ ਚਾਹੁੰਦੇ ਹੋ?"
+    },
+    "input": {
+      "file": {
+        "upload_several": "ਅੱਪਲੋਡ ਲਈ ਕੁਝ ਫਾਈਲਾਂ ਡ੍ਰੌਪ ਕਰੋ, ਜਾਂ ਚੁਣਨ ਲਈ ਕਲਿਕ ਕਰੋ।",
+        "upload_single": "ਅੱਪਲੋਡ ਲਈ ਇੱਕ ਫਾਈਲ ਡ੍ਰੌਪ ਕਰੋ, ਜਾਂ ਚੁਣਨ ਲਈ ਕਲਿਕ ਕਰੋ।"
+      },
+      "image": {
+        "upload_several": "ਅੱਪਲੋਡ ਲਈ ਕੁਝ ਤਸਵੀਰਾਂ ਡ੍ਰੌਪ ਕਰੋ, ਜਾਂ ਚੁਣਨ ਲਈ ਕਲਿਕ ਕਰੋ।",
+        "upload_single": "ਅੱਪਲੋਡ ਲਈ ਇੱਕ ਤਸਵੀਰ ਡ੍ਰੌਪ ਕਰੋ, ਜਾਂ ਚੁਣਨ ਲਈ ਕਲਿਕ ਕਰੋ।"
+      },
+      "references": {
+        "all_missing": "ਹਵਾਲਾ ਡਾਟਾ ਨਹੀਂ ਮਿਲਿਆ।",
+        "many_missing": "ਘੱਟੋ-ਘੱਟ ਇੱਕ ਸੰਬੰਧਤ ਹਵਾਲਾ ਹੁਣ ਉਪਲਬਧ ਨਹੀਂ।",
+        "single_missing": "ਸੰਬੰਧਤ ਹਵਾਲਾ ਹੁਣ ਉਪਲਬਧ ਨਹੀਂ।"
+      },
+      "password": {
+        "toggle_visible": "ਪਾਸਵਰਡ ਲੁਕਾਓ",
+        "toggle_hidden": "ਪਾਸਵਰਡ ਦਿਖਾਓ"
+      }
+    },
+    "message": {
+      "about": "ਬਾਰੇ",
+      "are_you_sure": "ਕੀ ਤੁਹਾਨੂੰ ਯਕੀਨ ਹੈ?",
+      "bulk_delete_content": "ਕੀ ਤੁਸੀਂ ਇਹ %{name} ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ? |||| ਕੀ ਤੁਸੀਂ ਇਹ %{smart_count} ਆਈਟਮ ਹਟਾਉਣੇ ਚਾਹੁੰਦੇ ਹੋ?",
+      "bulk_delete_title": "%{name} ਹਟਾਓ |||| %{smart_count} %{name} ਹਟਾਓ",
+      "delete_content": "ਕੀ ਤੁਸੀਂ ਇਹ ਆਈਟਮ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?",
+      "delete_title": "%{name} #%{id} ਹਟਾਓ",
+      "details": "ਵੇਰਵੇ",
+      "error": "ਕਲਾਇੰਟ ਗਲਤੀ ਕਾਰਨ ਤੁਹਾਡੀ ਬੇਨਤੀ ਪੂਰੀ ਨਹੀਂ ਹੋ ਸਕੀ।",
+      "invalid_form": "ਫਾਰਮ ਵੈਧ ਨਹੀਂ। ਕਿਰਪਾ ਕਰਕੇ ਗਲਤੀਆਂ ਦੀ ਜਾਂਚ ਕਰੋ",
+      "loading": "ਸਫ਼ਾ ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ, ਥੋੜ੍ਹਾ ਇੰਤਜ਼ਾਰ ਕਰੋ",
+      "no": "ਨਹੀਂ",
+      "not_found": "ਜਾਂ ਤਾਂ ਤੁਸੀਂ ਗਲਤ URL ਟਾਈਪ ਕੀਤਾ, ਜਾਂ ਖਰਾਬ ਲਿੰਕ ਫਾਲੋ ਕੀਤਾ।",
+      "yes": "ਹਾਂ",
+      "unsaved_changes": "ਤੁਹਾਡੇ ਕੁਝ ਬਦਲਾਅ ਸੇਵ ਨਹੀਂ ਹੋਏ। ਕੀ ਤੁਸੀਂ ਉਹਨਾਂ ਨੂੰ ਨਜ਼ਰਅੰਦਾਜ਼ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?",
+      "noItemsToPlay": "ਚਲਾਉਣ ਲਈ ਕੁਝ ਨਹੀਂ",
+      "playAllLoadError": "ਟ੍ਰੈਕ ਲੋਡ ਕਰਦੇ ਸਮੇਂ ਗਲਤੀ"
+    },
+    "navigation": {
+      "no_results": "ਕੋਈ ਨਤੀਜੇ ਨਹੀਂ ਮਿਲੇ",
+      "no_more_results": "ਪੇਜ ਨੰਬਰ %{page} ਸੀਮਾਵਾਂ ਤੋਂ ਬਾਹਰ ਹੈ। ਪਹਿਲਾ ਪੇਜ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+      "page_out_of_boundaries": "ਪੇਜ ਨੰਬਰ %{page} ਸੀਮਾਵਾਂ ਤੋਂ ਬਾਹਰ",
+      "page_out_from_end": "ਆਖਰੀ ਪੇਜ ਤੋਂ ਅੱਗੇ ਨਹੀਂ ਜਾ ਸਕਦੇ",
+      "page_out_from_begin": "ਪੇਜ 1 ਤੋਂ ਪਹਿਲਾਂ ਨਹੀਂ ਜਾ ਸਕਦੇ",
+      "page_range_info": "%{offsetBegin}-%{offsetEnd} ਵਿੱਚੋਂ %{total}",
+      "page_rows_per_page": "ਪੇਜ ਪ੍ਰਤੀ ਆਈਟਮ:",
+      "next": "ਅਗਲਾ",
+      "prev": "ਪਿਛਲਾ",
+      "skip_nav": "ਸਮੱਗਰੀ 'ਤੇ ਜਾਓ"
+    },
+    "notification": {
+      "updated": "ਆਈਟਮ ਅਪਡੇਟ ਹੋਇਆ |||| %{smart_count} ਆਈਟਮ ਅਪਡੇਟ ਹੋਏ",
+      "created": "ਆਈਟਮ ਬਣਾਇਆ",
+      "deleted": "ਆਈਟਮ ਹਟਾਇਆ |||| %{smart_count} ਆਈਟਮ ਹਟਾਏ",
+      "bad_item": "ਗਲਤ ਆਈਟਮ",
+      "item_doesnt_exist": "ਆਈਟਮ ਮੌਜੂਦ ਨਹੀਂ",
+      "http_error": "ਸਰਵਰ ਸੰਚਾਰ ਗਲਤੀ",
+      "data_provider_error": "dataProvider ਗਲਤੀ। ਹੋਰ ਵੇਰਵੇ ਲਈ ਕਮਾਂਡ ਲਾਈਨ ਵੇਖੋ।",
+      "i18n_error": "ਦਿੱਤੀ ਭਾਸ਼ਾ ਲਈ ਅਨੁਵਾਦ ਲੋਡ ਨਹੀਂ ਹੋਏ",
+      "canceled": "ਕਾਰਵਾਈ ਰੱਦ",
+      "logged_out": "ਤੁਹਾਡਾ ਸੈਸ਼ਨ ਖਤਮ ਹੋ ਗਿਆ, ਕਿਰਪਾ ਕਰਕੇ ਮੁੜ ਕਨੈਕਟ ਕਰੋ।",
+      "new_version": "ਨਵਾਂ ਵਰਜਨ ਉਪਲਬਧ! ਕਿਰਪਾ ਕਰਕੇ ਇਹ ਵਿਂਡੋ ਰਿਫ੍ਰੈਸ਼ ਕਰੋ।"
+    },
+    "toggleFieldsMenu": {
+      "columnsToDisplay": "ਦਿਖਾਉਣ ਲਈ ਕਾਲਮ",
+      "layout": "ਲੇਆਉਟ",
+      "grid": "ਗਰਿਡ",
+      "table": "ਟੇਬਲ"
+    }
+  },
+  "message": {
+    "note": "ਨੋਟ",
+    "transcodingDisabled": "ਸੁਰੱਖਿਆ ਕਾਰਨਾਂ ਕਰਕੇ ਵੈੱਬ ਇੰਟਰਫੇਸ ਰਾਹੀਂ ਟ੍ਰਾਂਸਕੋਡਿੰਗ ਸੰਰਚਨਾ ਬਦਲਣਾ ਅਯੋਗ ਹੈ। ਜੇ ਤੁਸੀਂ ਟ੍ਰਾਂਸਕੋਡਿੰਗ ਵਿਕਲਪ ਬਦਲਣਾ (ਸੰਪਾਦਿਤ ਜਾਂ ਜੋੜਣਾ) ਚਾਹੁੰਦੇ ਹੋ, ਤਾਂ ਸਰਵਰ ਨੂੰ %{config} ਸੰਰਚਨਾ ਨਾਲ ਦੁਬਾਰਾ ਚਲਾਓ।",
+    "transcodingEnabled": "Navidrome ਇਸ ਵੇਲੇ %{config} ਨਾਲ ਚੱਲ ਰਿਹਾ ਹੈ, ਜਿਸ ਨਾਲ ਵੈੱਬ ਇੰਟਰਫੇਸ ਤੋਂ ਟ੍ਰਾਂਸਕੋਡਿੰਗ ਸੈਟਿੰਗਾਂ ਰਾਹੀਂ ਸਿਸਟਮ ਕਮਾਂਡ ਚੱਲ ਸਕਦੀਆਂ ਹਨ। ਅਸੀਂ ਸੁਰੱਖਿਆ ਲਈ ਇਸਨੂੰ ਅਯੋਗ ਰੱਖਣ ਦੀ ਸਿਫਾਰਿਸ਼ ਕਰਦੇ ਹਾਂ ਅਤੇ ਸਿਰਫ਼ ਸੰਰਚਨਾ ਕਰਦੇ ਸਮੇਂ ਚਾਲੂ ਕਰੋ।",
+    "songsAddedToPlaylist": "1 ਗੀਤ ਪਲੇਲਿਸਟ ਵਿੱਚ ਜੋੜਿਆ |||| %{smart_count} ਗੀਤ ਪਲੇਲਿਸਟ ਵਿੱਚ ਜੋੜੇ",
+    "noSimilarSongsFound": "ਕੋਈ ਮਿਲਦੇ-ਜੁਲਦੇ ਗੀਤ ਨਹੀਂ ਮਿਲੇ",
+    "noTopSongsFound": "ਕੋਈ ਟਾਪ ਗੀਤ ਨਹੀਂ ਮਿਲੇ",
+    "noPlaylistsAvailable": "ਕੋਈ ਉਪਲਬਧ ਨਹੀਂ",
+    "delete_user_title": "ਯੂਜ਼ਰ '%{name}' ਹਟਾਓ",
+    "delete_user_content": "ਕੀ ਤੁਸੀਂ ਇਹ ਯੂਜ਼ਰ ਅਤੇ ਇਸ ਦਾ ਸਾਰਾ ਡਾਟਾ (ਪਲੇਲਿਸਟਾਂ ਅਤੇ ਪਸੰਦਾਂ ਸਮੇਤ) ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?",
+    "remove_missing_title": "ਗੁੰਮ ਫਾਈਲਾਂ ਹਟਾਓ",
+    "remove_missing_content": "ਕੀ ਤੁਸੀਂ ਚੁਣੀਆਂ ਗੁੰਮ ਫਾਈਲਾਂ ਡੇਟਾਬੇਸ ਤੋਂ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ? ਇਸ ਨਾਲ ਉਹਨਾਂ ਨਾਲ ਜੁੜੀਆਂ ਪਲੇ ਕਾਊਂਟਾਂ ਅਤੇ ਰੇਟਿੰਗਾਂ ਸਥਾਈ ਤੌਰ 'ਤੇ ਹਟ ਜਾਣਗੀਆਂ।",
+    "remove_all_missing_title": "ਸਭ ਗੁੰਮ ਫਾਈਲਾਂ ਹਟਾਓ",
+    "remove_all_missing_content": "ਕੀ ਤੁਸੀਂ ਡੇਟਾਬੇਸ ਤੋਂ ਸਭ ਗੁੰਮ ਫਾਈਲਾਂ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ? ਇਸ ਨਾਲ ਉਹਨਾਂ ਨਾਲ ਜੁੜੀਆਂ ਪਲੇ ਕਾਊਂਟਾਂ ਅਤੇ ਰੇਟਿੰਗਾਂ ਸਥਾਈ ਤੌਰ 'ਤੇ ਹਟ ਜਾਣਗੀਆਂ।",
+    "notifications_blocked": "ਤੁਸੀਂ ਬ੍ਰਾਊਜ਼ਰ ਸੈਟਿੰਗਾਂ ਵਿੱਚ ਇਸ ਸਾਈਟ ਲਈ ਸੂਚਨਾਵਾਂ ਬਲਾਕ ਕੀਤੀਆਂ ਹਨ",
+    "notifications_not_available": "ਇਹ ਬ੍ਰਾਊਜ਼ਰ ਡੈਸਕਟੌਪ ਨੋਟੀਫਿਕੇਸ਼ਨ ਸਮਰਥਨ ਨਹੀਂ ਕਰਦਾ ਜਾਂ ਤੁਸੀਂ https ਰਾਹੀਂ ਐਕਸੈੱਸ ਨਹੀਂ ਕਰ ਰਹੇ",
+    "lastfmLinkSuccess": "Last.fm ਨਾਲ ਕਨੈਕਸ਼ਨ ਸਫਲ ਅਤੇ ਸਕਰਾਬਲਿੰਗ ਚਾਲੂ",
+    "lastfmLinkFailure": "Last.fm ਨਾਲ ਕਨੈਕਸ਼ਨ ਨਹੀਂ ਹੋ ਸਕਿਆ",
+    "lastfmUnlinkSuccess": "Last.fm ਅਨਲਿੰਕ ਹੋ ਗਿਆ ਅਤੇ ਸਕਰਾਬਲਿੰਗ ਬੰਦ",
+    "lastfmUnlinkFailure": "Last.fm ਅਨਲਿੰਕ ਨਹੀਂ ਹੋ ਸਕਿਆ",
+    "listenBrainzLinkSuccess": "ListenBrainz ਨਾਲ ਸਫਲ ਲਿੰਕ ਹੋਇਆ ਅਤੇ ਯੂਜ਼ਰ: %{user} ਵਜੋਂ ਸਕਰਾਬਲਿੰਗ ਚਾਲੂ",
+    "listenBrainzLinkFailure": "ListenBrainz ਨਾਲ ਲਿੰਕ ਨਹੀਂ ਹੋ ਸਕਿਆ: %{error}",
+    "listenBrainzUnlinkSuccess": "ListenBrainz ਅਨਲਿੰਕ ਹੋ ਗਿਆ ਅਤੇ ਸਕਰਾਬਲਿੰਗ ਬੰਦ",
+    "listenBrainzUnlinkFailure": "ListenBrainz ਅਨਲਿੰਕ ਨਹੀਂ ਹੋ ਸਕਿਆ",
+    "openIn": {
+      "lastfm": "Last.fm ਵਿੱਚ ਖੋਲ੍ਹੋ",
+      "musicbrainz": "MusicBrainz ਵਿੱਚ ਖੋਲ੍ਹੋ"
+    },
+    "lastfmLink": "ਹੋਰ ਪੜ੍ਹੋ...",
+    "shareOriginalFormat": "ਮੂਲ ਫਾਰਮੈਟ ਵਿੱਚ ਸਾਂਝਾ ਕਰੋ",
+    "shareDialogTitle": "%{resource} '%{name}' ਸਾਂਝਾ ਕਰੋ",
+    "shareBatchDialogTitle": "1 %{resource} ਸਾਂਝਾ ਕਰੋ |||| %{smart_count} %{resource} ਸਾਂਝਾ ਕਰੋ",
+    "shareCopyToClipboard": "ਕਲਿੱਪਬੋਰਡ 'ਤੇ ਕਾਪੀ: Ctrl+C, Enter",
+    "shareSuccess": "URL ਕਲਿੱਪਬੋਰਡ 'ਤੇ ਕਾਪੀ ਹੋਇਆ: %{url}",
+    "shareFailure": "URL %{url} ਕਾਪੀ ਕਰਨ ਵਿੱਚ ਗਲਤੀ",
+    "downloadDialogTitle": "%{resource} '%{name}' (%{size}) ਡਾਊਨਲੋਡ ਕਰੋ",
+    "downloadOriginalFormat": "ਮੂਲ ਫਾਰਮੈਟ ਵਿੱਚ ਡਾਊਨਲੋਡ"
+  },
+  "menu": {
+    "library": "ਲਾਇਬ੍ਰੇਰੀ",
+    "librarySelector": {
+      "allLibraries": "ਸਾਰੀਆਂ ਲਾਇਬ੍ਰੇਰੀਆਂ (%{count})",
+      "multipleLibraries": "%{total} ਵਿੱਚੋਂ %{selected} ਲਾਇਬ੍ਰੇਰੀਆਂ",
+      "selectLibraries": "ਲਾਇਬ੍ਰੇਰੀਆਂ ਚੁਣੋ",
+      "none": "ਕੋਈ ਨਹੀਂ"
+    },
+    "settings": "ਸੈਟਿੰਗਾਂ",
+    "version": "ਵਰਜਨ",
+    "theme": "ਥੀਮ",
+    "personal": {
+      "name": "ਨਿੱਜੀ",
+      "options": {
+        "theme": "ਥੀਮ",
+        "language": "ਭਾਸ਼ਾ",
+        "defaultView": "ਡਿਫਾਲਟ ਦ੍ਰਿਸ਼",
+        "desktop_notifications": "ਡੈਸਕਟੌਪ ਸੂਚਨਾਵਾਂ",
+        "lastfmNotConfigured": "Last.fm API-Key ਸੰਰਚਿਤ ਨਹੀਂ",
+        "lastfmScrobbling": "Last.fm ਤੇ ਸਕਰਾਬਲ ਕਰੋ",
+        "listenBrainzScrobbling": "ListenBrainz ਤੇ ਸਕਰਾਬਲ ਕਰੋ",
+        "replaygain": "ReplayGain ਮੋਡ",
+        "preAmp": "ReplayGain ਪ੍ਰੀ-ਐਂਪ (dB)",
+        "gain": {
+          "none": "ਅਯੋਗ",
+          "album": "ਐਲਬਮ ਗੇਨ ਵਰਤੋ",
+          "track": "ਟ੍ਰੈਕ ਗੇਨ ਵਰਤੋ"
+        }
+      }
+    },
+    "albumList": "ਸਮਾਗਮ",
+    "songList": "ਡਿਫਾਲਟ ਲਾਇਬ੍ਰੇਰੀ",
+    "playlists": "ਪਲੇਲਿਸਟਾਂ",
+    "sharedPlaylists": "ਸਾਂਝੀਆਂ ਪਲੇਲਿਸਟਾਂ",
+    "about": "ਬਾਰੇ"
+  },
+  "player": {
+    "playListsText": "ਪਲੇ ਕਤਾਰ",
+    "openText": "ਖੋਲ੍ਹੋ",
+    "closeText": "ਬੰਦ ਕਰੋ",
+    "notContentText": "ਸੰਗੀਤ ਨਹੀਂ",
+    "clickToPlayText": "ਚਲਾਉਣ ਲਈ ਕਲਿਕ ਕਰੋ",
+    "clickToPauseText": "ਰੋਕਣ ਲਈ ਕਲਿਕ ਕਰੋ",
+    "nextTrackText": "ਅਗਲਾ ਟ੍ਰੈਕ",
+    "previousTrackText": "ਪਿਛਲਾ ਟ੍ਰੈਕ",
+    "reloadText": "ਦੁਬਾਰਾ ਲੋਡ ਕਰੋ",
+    "volumeText": "ਵਾਲਿਊਮ",
+    "toggleLyricText": "ਲਿਰਿਕਸ ਟੋਂਗਲ ਕਰੋ",
+    "toggleMiniModeText": "ਮਿਨਿਮਾਈਜ਼",
+    "destroyText": "ਮਿਟਾਓ",
+    "downloadText": "ਡਾਊਨਲੋਡ",
+    "removeAudioListsText": "ਆਡੀਓ ਸੂਚੀਆਂ ਹਟਾਓ",
+    "clickToDeleteText": "%{name} ਮਿਟਾਉਣ ਲਈ ਕਲਿਕ ਕਰੋ",
+    "emptyLyricText": "ਕੋਈ ਲਿਰਿਕਸ ਨਹੀਂ",
+    "playModeText": {
+      "order": "ਕ੍ਰਮ ਵਿੱਚ",
+      "orderLoop": "ਦੁਹਰਾਓ",
+      "singleLoop": "ਇੱਕ ਗੀਤ ਦੁਹਰਾਓ",
+      "shufflePlay": "ਸ਼ਫਲ"
+    }
+  },
+  "about": {
+    "links": {
+      "homepage": "ਹੋਮ ਪੇਜ",
+      "source": "ਸੋਰਸ ਕੋਡ",
+      "featureRequests": "ਫੀਚਰ ਬੇਨਤੀਆਂ",
+      "lastInsightsCollection": "ਆਖਰੀ ਇਨਸਾਈਟਸ ਕਲੈਕਸ਼ਨ",
+      "insights": {
+        "disabled": "ਅਯੋਗ",
+        "waiting": "ਉਡੀਕ"
+      }
+    },
+    "tabs": {
+      "about": "ਬਾਰੇ",
+      "config": "ਕੰਫਿਗਰੇਸ਼ਨ"
+    },
+    "config": {
+      "configName": "ਕੰਫਿਗ ਨਾਮ",
+      "environmentVariable": "ਇਨਵਾਇਰਨਮੈਂਟ ਵੇਰੀਏਬਲ",
+      "currentValue": "ਮੌਜੂਦਾ ਮੁੱਲ",
+      "configurationFile": "ਕੰਫਿਗਰੇਸ਼ਨ ਫਾਈਲ",
+      "exportToml": "ਕੰਫਿਗਰੇਸ਼ਨ ਐਕਸਪੋਰਟ (TOML)",
+      "exportSuccess": "ਕੰਫਿਗਰੇਸ਼ਨ TOML ਫਾਰਮੈਟ ਵਿੱਚ ਕਲਿੱਪਬੋਰਡ 'ਤੇ ਕਾਪੀ ਹੋਇਆ",
+      "exportFailed": "ਕੰਫਿਗ ਕਾਪੀ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+      "devFlagsHeader": "ਡਿਵੈਲਪਮੈਂਟ ਫਲੈਗ (ਬਦਲ ਸਕਦੇ/ਹਟ ਸਕਦੇ)",
+      "devFlagsComment": "ਇਹ ਪ੍ਰਯੋਗਾਤਮਕ ਸੈਟਿੰਗਾਂ ਹਨ ਅਤੇ ਭਵਿੱਖ ਵਿੱਚ ਹਟਾਈਆਂ ਜਾ ਸਕਦੀਆਂ ਹਨ"
+    }
+  },
+  "activity": {
+    "title": "ਗਤੀਵਿਧੀ",
+    "totalScanned": "ਕੁੱਲ ਸਕੈਨ ਕੀਤੇ ਫੋਲਡਰ",
+    "quickScan": "ਕੁਇਕ ਸਕੈਨ",
+    "fullScan": "ਫੁੱਲ ਸਕੈਨ",
+    "serverUptime": "ਸਰਵਰ ਅਪਟਾਈਮ",
+    "serverDown": "ਆਫਲਾਈਨ",
+    "scanType": "ਕਿਸਮ",
+    "status": "ਸਕੈਨ ਗਲਤੀ",
+    "elapsedTime": "ਲੱਗਿਆ ਸਮਾਂ"
+  },
+  "nowPlaying": {
+    "title": "ਹੁਣ ਚੱਲ ਰਿਹਾ",
+    "empty": "ਕੁਝ ਵੀ ਨਹੀਂ ਚੱਲ ਰਿਹਾ",
+    "minutesAgo": "%{smart_count} ਮਿੰਟ ਪਹਿਲਾਂ |||| %{smart_count} ਮਿੰਟ ਪਹਿਲਾਂ"
+  },
+  "help": {
+    "title": "Navidrome ਹਾਟਕੀ",
+    "hotkeys": {
+      "show_help": "ਇਹ ਮਦਦ ਦਿਖਾਓ",
+      "toggle_menu": "ਮੇਨੂ ਸਾਈਡ ਬਾਰ ਟੋਂਗਲ",
+      "toggle_play": "ਚਲਾਓ / ਰੋਕੋ",
+      "prev_song": "ਪਿਛਲਾ ਗੀਤ",
+      "next_song": "ਅਗਲਾ ਗੀਤ",
+      "current_song": "ਮੌਜੂਦਾ ਗੀਤ 'ਤੇ ਜਾਓ",
+      "vol_up": "ਵਾਲਿਊਮ ਵਧਾਓ",
+      "vol_down": "ਵਾਲਿਊਮ ਘਟਾਓ",
+      "toggle_love": "ਇਸ ਟ੍ਰੈਕ ਨੂੰ ਮਨਪਸੰਦ ਵਿੱਚ ਜੋੜੋ"
+    }
+  }
+}
