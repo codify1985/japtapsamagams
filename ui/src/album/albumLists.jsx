@@ -64,7 +64,7 @@ const useAlbumLists = () => {
     // },
     // Only show starred if user is not 'japtaptest' and favourites are enabled
     ...(config.enableFavourites &&
-      currentUser !== config.defaultUser && {
+      currentUser === 'admin' && {
         starred: {
           icon: (
             <DynamicMenuIcon

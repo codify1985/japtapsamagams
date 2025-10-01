@@ -368,76 +368,77 @@ const Player = () => {
   // Removed mobile-specific volume forcing logic
 
   // Force show progress bar AND controls on mobile using DOM manipulation as backup
-  useEffect(() => {
-    const forcePlayerElementsVisible = () => {
-      // Force progress bar visible
-      const progressBars = document.querySelectorAll('.progress-bar-content')
-      progressBars.forEach((bar) => {
-        if (bar) {
-          bar.style.setProperty('display', 'flex', 'important')
-          bar.style.setProperty('visibility', 'visible', 'important')
-          bar.style.setProperty('opacity', '1', 'important')
-          bar.style.setProperty('order', '-1', 'important')
-        }
-      })
+  // useEffect(() => {
+  //   const forcePlayerElementsVisible = () => {
+  //     // Force progress bar visible
+  //     const progressBars = document.querySelectorAll('.progress-bar-content')
+  //     progressBars.forEach((bar) => {
+  //       if (bar) {
+  //         bar.style.setProperty('display', 'flex', 'important')
+  //         bar.style.setProperty('visibility', 'visible', 'important')
+  //         bar.style.setProperty('opacity', '1', 'important')
+  //         bar.style.setProperty('order', '-1', 'important')
+  //       }
+  //     })
 
-      // Force player controls visible
-      const playerContents = document.querySelectorAll('.player-content')
-      playerContents.forEach((content) => {
-        if (content) {
-          content.style.setProperty('display', 'flex', 'important')
-          content.style.setProperty('visibility', 'visible', 'important')
-          content.style.setProperty('opacity', '1', 'important')
-          content.style.setProperty('order', '1', 'important')
-          content.style.setProperty('justify-content', 'center', 'important')
-          content.style.setProperty('align-items', 'center', 'important')
-        }
-      })
+  //     // Force player controls visible
+  //     const playerContents = document.querySelectorAll('.player-content')
+  //     playerContents.forEach((content) => {
+  //       if (content) {
+  //         content.style.setProperty('display', 'flex', 'important')
+  //         content.style.setProperty('visibility', 'visible', 'important')
+  //         content.style.setProperty('opacity', '1', 'important')
+  //         content.style.setProperty('order', '1', 'important')
+  //         content.style.setProperty('justify-content', 'center', 'important')
+  //         content.style.setProperty('align-items', 'center', 'important')
+  //       }
+  //     })
 
-      // Force individual control buttons visible
-      const controlButtons = document.querySelectorAll(
-        '.play-btn, .prev-audio, .next-audio, .player-content .group',
-      )
-      controlButtons.forEach((button) => {
-        if (button) {
-          button.style.setProperty('display', 'inline-flex', 'important')
-          button.style.setProperty('visibility', 'visible', 'important')
-          button.style.setProperty('opacity', '1', 'important')
-        }
-      })
+  //     // Force individual control buttons visible
+  //     const controlButtons = document.querySelectorAll(
+  //       '.play-btn, .prev-audio, .next-audio, .player-content .group',
+  //     )
+  //     controlButtons.forEach((button) => {
+  //       console.log('Button:', button, button.className, button.title)
+  //       if (button) {
+  //         button.style.setProperty('display', 'inline-flex', 'important')
+  //         button.style.setProperty('visibility', 'visible', 'important')
+  //         button.style.setProperty('opacity', '1', 'important')
+  //       }
+  //     })
 
-      // Force panel content to be column layout on mobile
-      if (window.innerWidth <= 767) {
-        const panelContents = document.querySelectorAll(
-          '.music-player-panel .panel-content',
-        )
-        panelContents.forEach((panel) => {
-          if (panel) {
-            panel.style.setProperty('flex-direction', 'column', 'important')
-            panel.style.setProperty('align-items', 'stretch', 'important')
-            panel.style.setProperty('gap', '8px', 'important')
-            panel.style.setProperty('height', 'auto', 'important')
-          }
-        })
-      }
-    }
+  //     // Force panel content to be column layout on mobile
+  //     if (window.innerWidth <= 767) {
+  //       const panelContents = document.querySelectorAll(
+  //         '.music-player-panel .panel-content',
+  //       )
+  //       panelContents.forEach((panel) => {
+  //         if (panel) {
+  //           panel.style.setProperty('flex-direction', 'column', 'important')
+  //           panel.style.setProperty('align-items', 'stretch', 'important')
+  //           panel.style.setProperty('gap', '8px', 'important')
+  //           panel.style.setProperty('height', 'auto', 'important')
+  //         }
+  //       })
+  //     }
+  //   }
 
-    // Run immediately
-    forcePlayerElementsVisible()
+  //   // Run immediately
+  //   forcePlayerElementsVisible()
 
-    // Also run when DOM changes (in case library modifies it)
-    const observer = new MutationObserver(forcePlayerElementsVisible)
-    observer.observe(document.body, { childList: true, subtree: true })
+  //   // Also run when DOM changes (in case library modifies it)
+  //   const observer = new MutationObserver(forcePlayerElementsVisible)
+  //   observer.observe(document.body, { childList: true, subtree: true })
 
-    // Run on window resize to handle orientation changes
-    const handleResize = () => forcePlayerElementsVisible()
-    window.addEventListener('resize', handleResize)
+  //   // Run on window resize to handle orientation changes
+  //   const handleResize = () => forcePlayerElementsVisible()
+  //   window.addEventListener('resize', handleResize)
 
-    return () => {
-      observer.disconnect()
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [])
+  //   return () => {
+  //     observer.disconnect()
+  //     window.removeEventListener('resize', handleResize)
+  //   }
+  // }, [])
 
   // Safety guards - prevent rendering if state is not properly initialized
   if (!playerState || !playerState.queue || !Array.isArray(playerState.queue)) {

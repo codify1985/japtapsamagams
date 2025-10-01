@@ -76,8 +76,10 @@ const useFilterStyles = makeStyles((theme) => ({
 const useAlbumListStyles = makeStyles((theme) => ({
   albumListContainer: {
     '& [class*="RaListToolbar-toolbar"]': {
-      paddingLeft: '0 !important',
+      // paddingLeft: '0 !important',
       paddingRight: '0 !important',
+      alignItems: 'flex-end !important',
+      //marginBottom: '0.75rem',
     },
     '& .RaFilter-form': {
       margin: 0,
@@ -89,6 +91,7 @@ const useAlbumListStyles = makeStyles((theme) => ({
     // margin: '1rem',
     [theme.breakpoints.down('sm')]: {
       margin: '0.75rem',
+      marginBottom: '3.5rem', // to avoid double margin with bottom pagination
     },
   },
 }))
@@ -375,7 +378,6 @@ const AlbumList = (props) => {
         perPage={perPage}
         pagination={<Pagination rowsPerPageOptions={perPageOptions} />}
         title={<AlbumListTitle albumListType={albumListType} />}
-        // transform={transformFilters}
       >
         {albumView.grid ? (
           <AlbumGridView

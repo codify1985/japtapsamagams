@@ -186,6 +186,12 @@ const japtapMidnight = createTheme({
       // },
     },
 
+     RaListToolbar: {
+      toolbar: {
+        paddingLeft: '0 !important'
+      },
+    },
+
     // Drawer / Sidebar
     MuiDrawer: {
       paper: {

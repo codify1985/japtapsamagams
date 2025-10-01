@@ -79,8 +79,10 @@ const useStyles = makeStyles((theme) => ({
   },
   songListContainer: {
     '& [class*="RaListToolbar-toolbar"]': {
-      paddingLeft: '0 !important',
+      // paddingLeft: '0 !important',
       paddingRight: '0 !important',
+      alignItems: 'flex-end !important',
+      marginBottom: '0.75rem',
     },
     //testing below css
     //  '& .RaFilter-form': {
