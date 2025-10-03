@@ -1,18 +1,21 @@
 import { createTheme } from '@material-ui/core/styles'
+import createPlayerStylesheet from './japtapAppleTheme.css.js'
 
 // Japtap Apple - Enhanced Apple-inspired theme based on Japtap Midnight
+const PRIMARY_MAIN = '#0A84FF'
+
 const japtapApple = createTheme({
   themeName: 'Japtap Apple',
   palette: {
     mode: 'dark',
     primary: {
-      main: '#0A84FF', //'#50c8ff',//
+      main: PRIMARY_MAIN, //'#50c8ff',//
       light: '#5AA9FF',
       dark: '#0062D6',
       contrastText: '#FFFFFF',
     },
     secondary: {
-      main: '#0A84FF', // #0A84FF',
+      main: PRIMARY_MAIN, // #0A84FF',
       light: '#5AA9FF',
       dark: '#0062D6',
       contrastText: '#FFFFFF',
@@ -660,7 +663,7 @@ const japtapApple = createTheme({
 
   player: {
     theme: 'dark',
-    // Custom stylesheet would be defined here if needed
+    stylesheet: createPlayerStylesheet(PRIMARY_MAIN),
   },
 })
 
