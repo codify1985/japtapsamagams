@@ -5,13 +5,13 @@ import { SelectLanguage } from './SelectLanguage'
 import { SelectTheme } from './SelectTheme'
 import { SelectDefaultView } from './SelectDefaultView'
 import { NotificationsToggle } from './NotificationsToggle'
-import { LastfmScrobbleToggle } from './LastfmScrobbleToggle'
-import { ListenBrainzScrobbleToggle } from './ListenBrainzScrobbleToggle'
-import config from '../config'
-import { ReplayGainToggle } from './ReplayGainToggle'
+// import { LastfmScrobbleToggle } from './LastfmScrobbleToggle'
+// import { ListenBrainzScrobbleToggle } from './ListenBrainzScrobbleToggle'
+// import config from '../config'
+// import { ReplayGainToggle } from './ReplayGainToggle'
 
 const useStyles = makeStyles({
-  root: { marginTop: '1em' },
+  root: { marginTop: '1em', margin: '0.75em' },
 })
 
 const Personal = () => {
@@ -25,10 +25,10 @@ const Personal = () => {
         <SelectTheme />
         <SelectLanguage />
         <SelectDefaultView />
-        {config.enableReplayGain && <ReplayGainToggle />}
+        {/* {config.enableReplayGain && <ReplayGainToggle />} */}
         <NotificationsToggle />
-        {config.lastFMEnabled && <LastfmScrobbleToggle />}
-        {config.listenBrainzEnabled && <ListenBrainzScrobbleToggle />}
+        {/* {config.lastFMEnabled && <LastfmScrobbleToggle />} */}
+        {/* {config.listenBrainzEnabled && <ListenBrainzScrobbleToggle />} */}
       </SimpleForm>
     </Card>
   )

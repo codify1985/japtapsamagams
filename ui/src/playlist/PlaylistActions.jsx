@@ -1,14 +1,18 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import {
-  Button,
   sanitizeListRestProps,
   TopToolbar,
   useTranslate,
   useDataProvider,
   useNotify,
+  usePermissions,
 } from 'react-admin'
-import { useMediaQuery, makeStyles } from '@material-ui/core'
+import {
+  Button as MuiButton,
+  useMediaQuery,
+  makeStyles,
+} from '@material-ui/core'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import ShuffleIcon from '@material-ui/icons/Shuffle'
 import CloudDownloadOutlinedIcon from '@material-ui/icons/CloudDownloadOutlined'
@@ -35,6 +39,59 @@ const useStyles = makeStyles({
   toolbar: { display: 'flex', justifyContent: 'space-between', width: '100%' },
 })
 
+const sanitizeButtonProps = ({
+  basePath,
+  handleSubmit,
+  handleSubmitWithRedirect,
+  invalid,
+  onSave,
+  pristine,
+  record,
+  redirect,
+  resource,
+  saving,
+  submitOnEnter,
+  undoable,
+  sx,
+  ...rest
+}) => rest
+
+const baseButtonSx = {
+  borderRadius: 1.5,
+  px: 1.5,
+  gap: 1,
+  minHeight: 44,
+  textTransform: 'none',
+}
+
+const PlaylistButton = ({
+  children,
+  label,
+  disabled,
+  className,
+  style,
+  sx,
+  ...rest
+}) => {
+  const sanitizedProps = sanitizeButtonProps(rest)
+  const { style: sanitizedStyle, ...buttonProps } = sanitizedProps
+  return (
+    <MuiButton
+      {...buttonProps}
+      className={className}
+      startIcon={children}
+      disabled={disabled}
+      aria-label={typeof label === 'string' ? label : undefined}
+      style={{ minWidth: 0, ...(sanitizedStyle || {}), ...(style || {}) }}
+      color="primary"
+      variant="text"
+      sx={{ ...baseButtonSx, ...(sx || {}) }}
+    >
+      {label}
+    </MuiButton>
+  )
+}
+
 const PlaylistActions = ({ className, ids, data, record, ...rest }) => {
   const dispatch = useDispatch()
   const translate = useTranslate()
@@ -43,6 +100,9 @@ const PlaylistActions = ({ className, ids, data, record, ...rest }) => {
   const notify = useNotify()
   const isDesktop = useMediaQuery((theme) => theme.breakpoints.up('md'))
   const isNotSmall = useMediaQuery((theme) => theme.breakpoints.up('sm'))
+  // const { identity } = useGetIdentity()
+  // const currentUser = localStorage.getItem('username') || identity?.id
+  const { permissions } = usePermissions()
 
   const getAllSongsAndDispatch = React.useCallback(
     (action) => {
@@ -115,37 +175,40 @@ const PlaylistActions = ({ className, ids, data, record, ...rest }) => {
     <TopToolbar className={className} {...sanitizeListRestProps(rest)}>
       <div className={classes.toolbar}>
         <div>
-          <Button
+          <PlaylistButton
             onClick={handlePlay}
             label={translate('resources.album.actions.playAll')}
           >
             <PlayArrowIcon />
-          </Button>
-          <Button
+          </PlaylistButton>
+          <PlaylistButton
             onClick={handleShuffle}
             label={translate('resources.album.actions.shuffle')}
           >
             <ShuffleIcon />
-          </Button>
-          <Button
+          </PlaylistButton>
+          <PlaylistButton
             onClick={handlePlayNext}
             label={translate('resources.album.actions.playNext')}
           >
             <RiPlayList2Fill />
-          </Button>
-          <Button
+          </PlaylistButton>
+          <PlaylistButton
             onClick={handlePlayLater}
             label={translate('resources.album.actions.addToQueue')}
           >
             <RiPlayListAddFill />
-          </Button>
-          {config.enableSharing && (
-            <Button onClick={handleShare} label={translate('ra.action.share')}>
+          </PlaylistButton>
+          {config.enableSharing && permissions === 'admin' && (
+            <PlaylistButton
+              onClick={handleShare}
+              label={translate('ra.action.share')}
+            >
               <ShareIcon />
-            </Button>
+            </PlaylistButton>
           )}
           {config.enableDownloads && (
-            <Button
+            <PlaylistButton
               onClick={handleDownload}
               label={
                 translate('ra.action.download') +
@@ -153,14 +216,16 @@ const PlaylistActions = ({ className, ids, data, record, ...rest }) => {
               }
             >
               <CloudDownloadOutlinedIcon />
-            </Button>
+            </PlaylistButton>
           )}
-          <Button
-            onClick={handleExport}
-            label={translate('resources.playlist.actions.export')}
-          >
-            <QueueMusicIcon />
-          </Button>
+          {config.enableSharing && permissions === 'admin' && (
+            <PlaylistButton
+              onClick={handleExport}
+              label={translate('resources.playlist.actions.export')}
+            >
+              <QueueMusicIcon />
+            </PlaylistButton>
+          )}
         </div>
         <div>{isNotSmall && <ToggleFieldsMenu resource="playlistTrack" />}</div>
       </div>

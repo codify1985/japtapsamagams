@@ -31,7 +31,7 @@ const PlaylistShowLayout = (props) => {
   useResourceRefresh('song')
 
   return (
-    <>
+    <div style={{ margin: '0.75rem' }}>
       {record && <RaTitle title={<Title subTitle={record.name} />} />}
       {record && <PlaylistDetails {...context} />}
       {record && (
@@ -60,7 +60,7 @@ const PlaylistShowLayout = (props) => {
           />
         </ReferenceManyField>
       )}
-    </>
+    </div>
   )
 }
 

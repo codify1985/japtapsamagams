@@ -9,6 +9,7 @@ import {
   useVersion,
   useListContext,
   FunctionField,
+  useGetIdentity,
 } from 'react-admin'
 import clsx from 'clsx'
 import { useDispatch } from 'react-redux'
@@ -100,6 +101,8 @@ const PlaylistSongs = ({ playlistId, readOnly, actions, ...props }) => {
   const dataProvider = useDataProvider()
   const notify = useNotify()
   const version = useVersion()
+  const { identity } = useGetIdentity()
+  const currentUser = localStorage.getItem('username') || identity?.id
   useResourceRefresh('song', 'playlist')
 
   useEffect(() => {
@@ -232,7 +235,7 @@ const PlaylistSongs = ({ playlistId, readOnly, actions, ...props }) => {
               {columns}
               <SongContextMenu
                 onAddToPlaylist={onAddToPlaylist}
-                showLove={true}
+                showLove={currentUser !== config.defaultUser ? true : false}
                 className={classes.contextMenu}
               />
             </SongDatagrid>
