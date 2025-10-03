@@ -1,33 +1,35 @@
 import LightTheme from './light'
 import DarkTheme from './dark'
 import ExtraDarkTheme from './extradark'
-import GreenTheme from './green'
+// import GreenTheme from './green'
 import SpotifyTheme from './spotify'
-import LigeraTheme from './ligera'
-import MonokaiTheme from './monokai'
-import ElectricPurpleTheme from './electricPurple'
+// import LigeraTheme from './ligera'
+// import MonokaiTheme from './monokai'
+// import ElectricPurpleTheme from './electricPurple'
 import NordTheme from './nord'
 import GruvboxDarkTheme from './gruvboxDark'
 import CatppuccinMacchiatoTheme from './catppuccinMacchiato'
 import NuclearTheme from './nuclear'
 import JaptapMidnightTheme from './japtapMidnight'
 import JaptapAppleTheme from './japtapApple'
+import appleLiquidGlassTheme from './appleLiquidGlassTheme'
 
 export default {
   // Classic default themes
   LightTheme,
   DarkTheme,
+  JaptapAppleTheme,
   // New themes should be added here, in alphabetic order
   CatppuccinMacchiatoTheme,
-  JaptapAppleTheme,
-  JaptapMidnightTheme,
-  ElectricPurpleTheme,
+  // ElectricPurpleTheme,
   ExtraDarkTheme,
-  GreenTheme,
+  // GreenTheme,
   GruvboxDarkTheme,
-  LigeraTheme,
-  MonokaiTheme,
+  //LigeraTheme,
+  // MonokaiTheme,
   NordTheme,
   NuclearTheme,
   SpotifyTheme,
+  JaptapMidnightTheme,
+  appleLiquidGlassTheme,
 }

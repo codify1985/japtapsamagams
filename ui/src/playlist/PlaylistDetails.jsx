@@ -19,10 +19,15 @@ const useStyles = makeStyles(
       [theme.breakpoints.down('xs')]: {
         padding: '0.7em',
         minWidth: '20em',
+        height: '8em',
       },
       [theme.breakpoints.up('sm')]: {
         padding: '1em',
         minWidth: '32em',
+        height: '10em',
+      },
+      [theme.breakpoints.up('lg')]: {
+        height: '15em',
       },
     },
     cardContents: {

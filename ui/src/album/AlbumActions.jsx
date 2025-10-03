@@ -2,14 +2,18 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import {
-  Button,
   sanitizeListRestProps,
   TopToolbar,
   useRecordContext,
   useTranslate,
   useGetIdentity,
 } from 'react-admin'
-import { useMediaQuery, makeStyles } from '@material-ui/core'
+import {
+  Button as MuiButton,
+  useMediaQuery,
+  makeStyles,
+} from '@material-ui/core'
+import clsx from 'clsx'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import ShuffleIcon from '@material-ui/icons/Shuffle'
 import CloudDownloadOutlinedIcon from '@material-ui/icons/CloudDownloadOutlined'
@@ -33,12 +37,71 @@ const useStyles = makeStyles({
   toolbar: { display: 'flex', justifyContent: 'space-between', width: '100%' },
 })
 
-const AlbumButton = ({ children, ...rest }) => {
+const useAlbumButtonStyles = makeStyles((theme) => ({
+  root: {
+    minWidth: 0,
+    textTransform: 'none',
+    color: theme.palette.primary?.main || theme.palette.text?.primary,
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+    '& .MuiButton-startIcon': {
+      marginRight: theme.spacing(0.5),
+    },
+    '& .MuiSvgIcon-root, & svg': {
+      color: 'inherit',
+    },
+  },
+}))
+
+const sanitizeButtonProps = ({
+  basePath,
+  handleSubmit,
+  handleSubmitWithRedirect,
+  invalid,
+  onSave,
+  pristine,
+  record,
+  redirect,
+  resource,
+  saving,
+  submitOnEnter,
+  undoable,
+  sx,
+  ...rest
+}) => rest
+
+const AlbumButton = ({
+  children,
+  label,
+  disabled,
+  className,
+  style,
+  ...rest
+}) => {
   const record = useRecordContext(rest) || {}
+  const icon = React.Children.count(children)
+    ? React.Children.toArray(children)[0]
+    : undefined
+  const sanitizedProps = sanitizeButtonProps(rest)
+  const { style: sanitizedStyle, ...buttonProps } = sanitizedProps
+  const classes = useAlbumButtonStyles()
+  const combinedStyle = { ...(sanitizedStyle || {}), ...(style || {}) }
+
   return (
-    <Button {...rest} disabled={record.missing}>
-      {children}
-    </Button>
+    <MuiButton
+      {...buttonProps}
+      className={clsx(classes.root, className)}
+      startIcon={icon}
+      color="primary"
+      variant="text"
+      disableElevation
+      size="small"
+      disabled={record.missing || disabled}
+      aria-label={typeof label === 'string' ? label : undefined}
+      style={combinedStyle}
+    >
+      {label}
+    </MuiButton>
   )
 }
 
@@ -102,12 +165,14 @@ const AlbumActions = ({
           >
             <ShuffleIcon />
           </AlbumButton>
-          <AlbumButton
-            onClick={handlePlayNext}
-            label={translate('resources.album.actions.playNext')}
-          >
-            <RiPlayList2Fill />
-          </AlbumButton>
+          {isFavouritesEnabled && (
+            <AlbumButton
+              onClick={handlePlayNext}
+              label={translate('resources.album.actions.playNext')}
+            >
+              <RiPlayList2Fill />
+            </AlbumButton>
+          )}
           <AlbumButton
             onClick={handlePlayLater}
             label={translate('resources.album.actions.addToQueue')}
@@ -122,7 +187,7 @@ const AlbumActions = ({
               <PlaylistAddIcon />
             </AlbumButton>
           )}
-          {config.enableSharing && (
+          {config.enableSharing && isFavouritesEnabled && (
             <ShareButton
               record={record}
               entityType="album"
@@ -134,7 +199,8 @@ const AlbumActions = ({
                 errorCorrectionLevel: 'M',
               }}
               allowExternalQrFallback={false}
-              label={isNotSmall ? translate('ra.action.share') : undefined}
+              label={translate('ra.action.share')}
+              alwaysShowLabel
             />
           )}
           {config.enableDownloads && (

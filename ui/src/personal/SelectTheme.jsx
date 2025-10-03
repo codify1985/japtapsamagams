@@ -23,10 +23,10 @@ export const SelectTheme = (props) => {
       return { id: key, name: themes[key].themeName }
     }),
   )
-  themeChoices.push({
-    id: helpKey,
-    name: <HelpMsg caption={'Create your own'} />,
-  })
+  // themeChoices.push({
+  //   id: helpKey,
+  //   name: <HelpMsg caption={'Create your own'} />,
+  // })
   return (
     <SelectInput
       {...props}

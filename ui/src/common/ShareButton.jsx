@@ -12,6 +12,7 @@ import {
   useTheme,
   Divider,
 } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
 import {
   Share as ShareIcon,
   FileCopy as CopyIcon,
@@ -25,6 +26,21 @@ import { useTranslate, useNotify, Button } from 'react-admin'
 import { useDispatch } from 'react-redux'
 import { openShareMenu } from '../actions'
 import { generateQRCodeLocal, downloadQRCode } from './qr'
+import clsx from 'clsx'
+
+const useAlwaysShowLabelStyles = makeStyles((theme) => ({
+  root: {
+    minWidth: 0,
+    textTransform: 'none',
+    color: theme.palette.primary.main,
+    '& .MuiButton-startIcon': {
+      marginRight: theme.spacing(0.5),
+    },
+    '& .MuiSvgIcon-root, & svg': {
+      color: 'inherit',
+    },
+  },
+}))
 
 // Utility functions
 const isWebShareAvailable = () =>
@@ -204,6 +220,7 @@ const ShareButton = forwardRef(
       externalQrTimeoutMs = 4000,
       onShared,
       menuPlacement = 'bottom-start',
+      alwaysShowLabel = false,
       ...buttonProps
     },
     ref,
@@ -212,6 +229,7 @@ const ShareButton = forwardRef(
     const translate = useTranslate()
     const notify = useNotify()
     const dispatch = useDispatch()
+    const classes = useAlwaysShowLabelStyles()
 
     const isMobile = !useMediaQuery(theme.breakpoints.up('md'))
     const [menuAnchor, setMenuAnchor] = useState(null)
@@ -562,16 +580,41 @@ const ShareButton = forwardRef(
       translate,
     ])
 
+    const {
+      label: _ignoredButtonLabel,
+      style: customButtonStyle,
+      className: customButtonClassName,
+      ...restButtonProps
+    } = buttonProps
+
     return (
       <>
-        <Button
-          onClick={handleButtonClick}
-          disabled={isDisabled}
-          label={finalLabel}
-          {...buttonProps}
-        >
-          {icon}
-        </Button>
+        {alwaysShowLabel ? (
+          <MuiButton
+            onClick={handleButtonClick}
+            disabled={isDisabled}
+            startIcon={icon}
+            aria-label={finalLabel}
+            ref={ref}
+            variant="text"
+            color="primary"
+            disableElevation
+            className={clsx(classes.root, customButtonClassName)}
+            style={customButtonStyle}
+            {...restButtonProps}
+          >
+            {finalLabel}
+          </MuiButton>
+        ) : (
+          <Button
+            onClick={handleButtonClick}
+            disabled={isDisabled}
+            label={finalLabel}
+            {...buttonProps}
+          >
+            {icon}
+          </Button>
+        )}
 
         {/* Desktop menu */}
         <Menu

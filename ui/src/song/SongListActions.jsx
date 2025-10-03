@@ -185,26 +185,31 @@ export const SongListActions = (props) => {
   // console.debug('[SongListActions] listContext:', listContext)
 
   const songDispLabel = currentFilter.title === 'simran' ? 'Simrans' : 'Kirtans'
+  const isCurrentFilterNotEmpty = Object.keys(currentFilter).length > 0
   return (
     <TopToolbar className={className} {...sanitizeListRestProps(rest)}>
       <PlayAllButton filters={currentFilter} />
       <ShuffleAllButton filters={currentFilter} />
-      {config.enableDownloads && !loading && songs && songs.length > 0 && (
-        <Button
-          onClick={handleDownloadAll}
-          label={
-            songs.length === 1
-              ? translate('ra.action.download') +
-                (isDesktop ? ` (${formatBytes(totalSize)})` : '')
-              : translate('ra.action.download') +
-                (isDesktop
-                  ? ` (${songs.length} ${songDispLabel}, ${formatBytes(totalSize)})`
-                  : ` (${songs.length})`)
-          }
-        >
-          <CloudDownloadOutlinedIcon />
-        </Button>
-      )}
+      {config.enableDownloads &&
+        !loading &&
+        songs &&
+        songs.length > 0 &&
+        isCurrentFilterNotEmpty && (
+          <Button
+            onClick={handleDownloadAll}
+            label={
+              songs.length === 1
+                ? translate('ra.action.download') +
+                  (isDesktop ? ` (${formatBytes(totalSize)})` : '')
+                : translate('ra.action.download') +
+                  (isDesktop
+                    ? ` (${songs.length} ${songDispLabel}, ${formatBytes(totalSize)})`
+                    : ` (${songs.length})`)
+            }
+          >
+            <CloudDownloadOutlinedIcon />
+          </Button>
+        )}
       {/* TODO : ADD THIS BACK  */}
       {/* {config.enableSharing && (
          <BatchShareButton {...props}  />
