@@ -115,7 +115,6 @@ const Cover = withContentRect('bounds')(({
   measureRef,
   contentRect,
 }) => {
-  console.log('Cover render', record.id, record)
   // Force height to be the same as the width determined by the GridList
   // noinspection JSSuspiciousNameCombination
   const classes = useCoverStyles({
