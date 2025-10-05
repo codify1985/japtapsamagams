@@ -17,7 +17,7 @@ const defaultConfig = {
   gaTrackingId: '',
   devActivityPanel: true,
   enableStarRating: false,
-  defaultTheme: 'Japtap Apple',
+  defaultTheme: 'High Contrast',
   defaultLanguage: '',
   defaultUIVolume: 100,
   enableUserEditing: true,
@@ -41,6 +41,8 @@ const defaultConfig = {
   enableInspect: true,
   defaultPerPage: 25,
   defaultUser: 'japtaptest',
+  maxYears: 2022,
+  defaultAlbumView: 'grid',
   // Authentication info that may be set by the server
   auth: {
     id: 'MVMrmivcaedABWnQdF6pnT',

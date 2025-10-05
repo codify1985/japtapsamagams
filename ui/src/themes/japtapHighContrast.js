@@ -1,11 +1,20 @@
 import { createTheme } from '@material-ui/core/styles'
-import createPlayerStylesheet from './japtapAppleTheme.css.js'
+import createPlayerStylesheet from './japtapHighContrastTheme.css.js'
 
 // Japtap Apple - Enhanced Apple-inspired theme based on Japtap Midnight
 const PRIMARY_MAIN = '#0A84FF'
+const SURFACE_BASE = 'rgba(16, 23, 42, 0.85)'
+const SURFACE_GRADIENT =
+  'linear-gradient(150deg, rgba(44, 62, 104, 0.3) 0%, rgba(16, 23, 42, 0.85) 48%, rgba(6, 12, 26, 0.96) 100%)'
+const SURFACE_BORDER = 'rgba(116, 142, 198, 0.22)'
+const SURFACE_SHADOW = '0 26px 50px rgba(2, 6, 20, 0.46)'
+const LIST_ROW_GRADIENT =
+  'linear-gradient(145deg, rgba(34, 48, 78, 0.35) 0%, rgba(14, 22, 40, 0.82) 50%, rgba(6, 12, 26, 0.94) 100%)'
+const LIST_ROW_GRADIENT_HOVER =
+  'linear-gradient(145deg, rgba(52, 74, 116, 0.45) 0%, rgba(18, 28, 48, 0.9) 52%, rgba(8, 14, 30, 0.98) 100%)'
 
-const japtapApple = createTheme({
-  themeName: 'Japtap Apple',
+const japtapHighContrast = createTheme({
+  themeName: 'High Contrast',
   palette: {
     mode: 'dark',
     primary: {
@@ -134,14 +143,19 @@ const japtapApple = createTheme({
     MuiPaper: {
       root: {
         color: '#E6EAF2',
-        backgroundColor: 'rgba(20, 25, 45, 0.75)',
+        backgroundColor: SURFACE_BASE,
+        backgroundImage: SURFACE_GRADIENT,
         backdropFilter: 'blur(12px)',
         // Fallback for browsers without backdrop filter support
         '@supports not (backdrop-filter: blur(12px))': {
-          backgroundColor: 'rgba(20, 25, 45, 0.95)',
+          backgroundColor: 'rgba(16, 23, 42, 0.93)',
+          backgroundImage:
+            'linear-gradient(150deg, rgba(34, 48, 78, 0.25) 0%, rgba(16, 23, 42, 0.9) 55%, rgba(6, 12, 26, 0.96) 100%)',
         },
-        border: '1px solid rgba(230, 234, 242, 0.06)',
+        border: `1px solid ${SURFACE_BORDER}`,
         borderRadius: 16, // More Apple-like
+        boxShadow: SURFACE_SHADOW,
+        transition: 'background 180ms ease, box-shadow 220ms ease',
       },
       rounded: {
         borderRadius: 24, // Apple-inspired rounded papers
@@ -205,13 +219,6 @@ const japtapApple = createTheme({
         '& .MuiSvgIcon-root': {
           color: '#0A84FF',
         },
-      },
-    },
-
-    MuiList: {
-      padding: {
-        paddingTop: 0,
-        paddingBottom: 0,
       },
     },
 
@@ -311,12 +318,51 @@ const japtapApple = createTheme({
         },
       },
     },
+    MuiList: {
+      padding: {
+        paddingTop: 0,
+        paddingBottom: 0,
+      },
+    },
 
     // List item icons
     MuiListItemIcon: {
       root: {
         color: '#0A84FF',
         minWidth: '40px',
+      },
+    },
+
+    RaSongSimpleList: {
+      MuiList: {
+        padding: {
+          paddingTop: 0,
+          paddingBottom: 0,
+        },
+      },
+      listItem: {
+        backgroundColor: 'rgba(14, 22, 40, 0.86)',
+        backgroundImage: LIST_ROW_GRADIENT,
+        border: `1px solid ${SURFACE_BORDER}`,
+        borderRadius: 20,
+        boxShadow: '0 22px 44px rgba(2, 6, 20, 0.45)',
+        backdropFilter: 'blur(18px)',
+        padding: '12px 18px',
+        marginBottom: '3px',
+        // marginLeft: '3px',
+        marginRight: '3px',
+        transition:
+          'transform 160ms ease, box-shadow 220ms ease, background 200ms ease',
+        '@supports not (backdrop-filter: blur(18px))': {
+          backgroundColor: 'rgba(16, 23, 42, 0.94)',
+          backgroundImage:
+            'linear-gradient(145deg, rgba(38, 56, 92, 0.36) 0%, rgba(16, 23, 42, 0.9) 48%, rgba(6, 12, 26, 0.96) 100%)',
+        },
+        '&:hover': {
+          transform: 'translateY(-2px)',
+          boxShadow: '0 28px 56px rgba(2, 6, 20, 0.5)',
+          backgroundImage: LIST_ROW_GRADIENT_HOVER,
+        },
       },
     },
 
@@ -445,12 +491,25 @@ const japtapApple = createTheme({
     // Cards - enhanced with Apple-like rounded corners
     MuiCard: {
       root: {
-        backgroundColor: 'rgba(20, 25, 45, 0.7)',
+        backgroundColor: SURFACE_BASE,
+        backgroundImage: SURFACE_GRADIENT,
         backdropFilter: 'blur(12px)',
-        border: '1px solid rgba(230, 234, 242, 0.06)',
+        border: `1px solid ${SURFACE_BORDER}`,
         borderRadius: 20, // More Apple-like
+        boxShadow: '0 32px 60px rgba(2, 6, 20, 0.5)',
+        isolation: 'isolate',
+        transition:
+          'transform 180ms ease, box-shadow 220ms ease, background 220ms ease',
+        '&:hover': {
+          transform: 'translateY(-3px)',
+          boxShadow: '0 38px 70px rgba(2, 6, 20, 0.55)',
+          backgroundImage:
+            'linear-gradient(150deg, rgba(52, 74, 116, 0.38) 0%, rgba(16, 23, 42, 0.88) 48%, rgba(6, 12, 26, 0.98) 100%)',
+        },
         '@supports not (backdrop-filter: blur(12px))': {
-          backgroundColor: 'rgba(20, 25, 45, 0.9)',
+          backgroundColor: 'rgba(16, 23, 42, 0.93)',
+          backgroundImage:
+            'linear-gradient(150deg, rgba(34, 48, 78, 0.28) 0%, rgba(16, 23, 42, 0.9) 55%, rgba(6, 12, 26, 0.96) 100%)',
         },
       },
     },
@@ -497,11 +556,20 @@ const japtapApple = createTheme({
     MuiTableBody: {
       root: {
         '& .MuiTableRow-root': {
-          '&:hover': {
-            backgroundColor: 'rgba(10, 132, 255, 0.05)',
-          },
+          backgroundColor: 'rgba(14, 22, 40, 0.82)',
+          backgroundImage: LIST_ROW_GRADIENT,
+          transition: 'background 160ms ease, box-shadow 200ms ease',
+          borderBottom: `1px solid ${SURFACE_BORDER}`,
           '&:nth-of-type(even)': {
-            backgroundColor: 'rgba(230, 234, 242, 0.02)',
+            backgroundImage:
+              'linear-gradient(145deg, rgba(38, 56, 92, 0.4) 0%, rgba(16, 23, 42, 0.85) 48%, rgba(6, 12, 26, 0.96) 100%)',
+          },
+          '&:hover, &.MuiTableRow-hover:hover': {
+            backgroundImage: LIST_ROW_GRADIENT_HOVER,
+            boxShadow: '0 18px 36px rgba(2, 6, 20, 0.42)',
+          },
+          '& td, & th': {
+            borderBottom: `1px solid ${SURFACE_BORDER}`,
           },
         },
       },
@@ -636,6 +704,59 @@ const japtapApple = createTheme({
     },
 
     // Custom Navidrome components
+    NDAlbumGridView: {
+      albumContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '5px',
+        padding: '18px 18px 18px',
+        // minHeight: '100%',
+        borderRadius: 26,
+        backgroundColor: 'rgba(14, 22, 40, 0.88)',
+        backgroundImage: SURFACE_GRADIENT,
+        border: `1px solid ${SURFACE_BORDER}`,
+        // boxShadow: '0 24px 52px rgba(2, 6, 20, 0.5)',
+        backdropFilter: 'blur(18px)',
+        isolation: 'isolate',
+        transition:
+          'transform 180ms ease, box-shadow 240ms ease, background 220ms ease',
+        '&:hover': {
+          transform: 'translateY(-4px)',
+          boxShadow: '0 32px 68px rgba(2, 6, 20, 0.55)',
+          backgroundImage:
+            'linear-gradient(150deg, rgba(56, 78, 124, 0.4) 0%, rgba(16, 23, 42, 0.88) 48%, rgba(6, 12, 26, 0.98) 100%)',
+        },
+        '@supports not (backdrop-filter: blur(18px))': {
+          backgroundColor: 'rgba(16, 23, 42, 0.94)',
+          backgroundImage:
+            'linear-gradient(150deg, rgba(38, 56, 92, 0.38) 0%, rgba(16, 23, 42, 0.9) 48%, rgba(6, 12, 26, 0.96) 100%)',
+        },
+        '& img': {
+          borderRadius: 26, // Match the container!
+          boxShadow: '0 18px 40px rgba(2, 6, 20, 0.45)',
+        },
+      },
+      link: {
+        borderRadius: 26, // Match the container!
+        overflow: 'hidden',
+        boxShadow: '0 18px 36px rgba(2, 6, 20, 0.4)',
+        transition: 'transform 160ms ease, box-shadow 220ms ease',
+        '&:hover': {
+          transform: 'translateY(-2px)',
+          boxShadow: '0 24px 52px rgba(2, 6, 20, 0.48)',
+        },
+      },
+      tileBar: {
+        background:
+          'linear-gradient(0deg, rgba(5, 8, 16, 0.85) 0%, rgba(5, 8, 16, 0) 100%)',
+        //borderRadius: '0 0 26px 26px', // Match parent for perfect rounding
+        borderRadius: 26, // Match the container!
+      },
+      albumLink: {
+        borderRadius: 26, // Match the container!
+        // padding: '0 4px',
+      },
+    },
     NDLogin: {
       systemNameLink: {
         color: '#0A84FF',
@@ -674,4 +795,4 @@ const japtapApple = createTheme({
   },
 })
 
-export default japtapApple
+export default japtapHighContrast

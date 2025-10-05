@@ -155,25 +155,30 @@ const PlaylistList = (props) => {
   })
 
   return (
-    <List
-      {...props}
-      exporter={false}
-      filters={<PlaylistFilter />}
-      actions={<PlaylistListActions />}
-      bulkActionButtons={
-        !isXsmall && (
-          <PlaylistListBulkActions isCurrentUserAdmin={isCurrentUserAdmin} />
-        )
-      }
-    >
-      <Datagrid rowClick="show" isRowSelectable={(r) => isWritable(r?.ownerId)}>
-        <TextField source="name" />
-        {columns}
-        <Writable>
-          <EditButton />
-        </Writable>
-      </Datagrid>
-    </List>
+    <div style={{ marginLeft: '1rem', marginRight: '1rem', marginTop: '1rem' }}>
+      <List
+        {...props}
+        exporter={false}
+        filters={<PlaylistFilter />}
+        actions={<PlaylistListActions />}
+        bulkActionButtons={
+          !isXsmall && (
+            <PlaylistListBulkActions isCurrentUserAdmin={isCurrentUserAdmin} />
+          )
+        }
+      >
+        <Datagrid
+          rowClick="show"
+          isRowSelectable={(r) => isWritable(r?.ownerId)}
+        >
+          <TextField source="name" />
+          {columns}
+          <Writable>
+            <EditButton />
+          </Writable>
+        </Datagrid>
+      </List>
+    </div>
   )
 }
 

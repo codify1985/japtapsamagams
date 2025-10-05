@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   username: {
     maxWidth: '11em',
     marginTop: '-0.7em',
-    marginBottom: '-1em',
+    marginBottom: '0em',
   },
   usernameWrap: {
     whiteSpace: 'nowrap',

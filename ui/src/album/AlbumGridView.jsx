@@ -22,7 +22,7 @@ import config from '../config'
 const useStyles = makeStyles(
   (theme) => ({
     root: {
-      margin: '20px',
+      margin: '10px',
       display: 'grid',
     },
     tileBar: {
@@ -93,7 +93,7 @@ const useCoverStyles = makeStyles({
   cover: {
     display: 'inline-block',
     width: '100%',
-    objectFit: 'contain',
+    objectFit: (props) => props.objectFit,
     height: (props) => props.height,
     transition: 'opacity 0.3s ease-in-out',
   },
@@ -115,9 +115,13 @@ const Cover = withContentRect('bounds')(({
   measureRef,
   contentRect,
 }) => {
+  console.log('Cover render', record.id, record)
   // Force height to be the same as the width determined by the GridList
   // noinspection JSSuspiciousNameCombination
-  const classes = useCoverStyles({ height: contentRect.bounds.width })
+  const classes = useCoverStyles({
+    height: contentRect.bounds.width,
+    objectFit: record.date === '2025' ? 'none' : 'cover',
+  })
   const [imageLoading, setImageLoading] = React.useState(true)
   const [imageError, setImageError] = React.useState(false)
   const [, dragAlbumRef] = useDrag(
@@ -219,11 +223,11 @@ const AlbumGridTile = ({
           )}
         </span>
       </Link>
-      {showArtist ? (
+      {/* {showArtist ? (
         <ArtistLinkField record={record} className={classes.albumSubtitle} />
       ) : (
         <AlbumDatesField record={record} className={classes.albumSubtitle} />
-      )}
+      )} */}
     </div>
   )
 }

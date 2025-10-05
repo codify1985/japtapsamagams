@@ -1,8 +1,9 @@
 import { ALBUM_MODE_GRID, ALBUM_MODE_TABLE } from '../actions'
+import config from '../config'
 
 export const albumViewReducer = (
   previousState = {
-    grid: false,
+    grid: config.defaultAlbumView === 'grid',
   },
   payload,
 ) => {

@@ -5,11 +5,11 @@
       "name": "All Kirtan |||| All Kirtans",
       "fields": {
         "albumArtist": "Album Artist",
-        "duration": "Time",
+        "duration": "Duration",
         "trackNumber": "#",
         "playCount": "Plays",
         "title": "Title",
-        "artist": "Kirtani",
+        "artist": "Kirtania",
         "album": "Samagam",
         "path": "File path",
         "libraryName": "Library",
@@ -56,7 +56,7 @@
       "songList": "Default Library"
     },
     "album": {
-      "name": "Samagam |||| Samagams",
+      "name": "Samagam |||| Samagam",
       "fields": {
         "albumArtist": "Album Artist",
         "artist": "Artist",
@@ -111,7 +111,7 @@
       }
     },
     "artist": {
-      "name": "Kirtani |||| Kirtanis",
+      "name": "Kirtania |||| Kirtania",
       "fields": {
         "name": "Name",
         "albumCount": "Samagam Count",
@@ -405,7 +405,7 @@
       "remove_filter": "Remove this filter",
       "remove": "Remove",
       "save": "Save",
-      "search": "Search",
+      "search": "Kirtania/Samgam Name/Year",
       "show": "Show",
       "sort": "Sort",
       "undo": "Undo",

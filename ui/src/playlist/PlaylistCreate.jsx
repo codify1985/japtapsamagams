@@ -32,15 +32,21 @@ const PlaylistCreate = (props) => {
   }
 
   return (
-    <Create title={<Title subTitle={title} />} {...props} onSuccess={onSuccess}>
-      <SimpleForm redirect="list" variant={'outlined'}>
-        <TextInput source="name" validate={required()} />
-        <TextInput multiline source="comment" />
-        {permissions === 'admin' && (
-          <BooleanInput source="public" initialValue={false} />
-        )}
-      </SimpleForm>
-    </Create>
+    <div style={{ marginLeft: '1rem', marginRight: '1rem', marginTop: '1rem' }}>
+      <Create
+        title={<Title subTitle={title} />}
+        {...props}
+        onSuccess={onSuccess}
+      >
+        <SimpleForm redirect="list" variant={'outlined'}>
+          <TextInput source="name" validate={required()} />
+          <TextInput multiline source="comment" />
+          {permissions === 'admin' && (
+            <BooleanInput source="public" initialValue={false} />
+          )}
+        </SimpleForm>
+      </Create>
+    </div>
   )
 }
 

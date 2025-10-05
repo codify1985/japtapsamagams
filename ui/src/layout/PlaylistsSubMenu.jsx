@@ -46,6 +46,7 @@ const PlaylistMenuItemLink = ({ pls, sidebarIsOpen }) => {
       }
       sidebarIsOpen={sidebarIsOpen}
       dense={false}
+      style={{ marginLeft: '2rem' }}
     />
   )
 }

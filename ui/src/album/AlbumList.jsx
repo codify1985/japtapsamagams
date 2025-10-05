@@ -109,7 +109,7 @@ const YearDropdown = ({
 
   const yearChoices = React.useMemo(() => {
     const choices = []
-    const maxYears = 2009 // from 2009 to current year
+    const maxYears = config.maxYears || 2009 // from 2009 to current year
     for (let y = currentYear; y >= maxYears; y--) {
       choices.push({ id: y, name: String(y) })
     }

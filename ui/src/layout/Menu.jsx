@@ -11,6 +11,9 @@ import {
 import ViewListIcon from '@material-ui/icons/ViewList'
 import AlbumIcon from '@material-ui/icons/Album'
 import MusicNoteIcon from '@material-ui/icons/MusicNote'
+import LibraryMusicOutlinedIcon from '@material-ui/icons/LibraryMusicOutlined'
+import { PostAddOutlined } from '@material-ui/icons'
+import SpaOutlinedIcon from '@material-ui/icons/SpaOutlined'
 import HomeIcon from '@material-ui/icons/Home'
 import SubMenu from './SubMenu'
 import { humanize, pluralize } from 'inflection'
@@ -71,9 +74,11 @@ const Menu = ({ dense = false }) => {
   const songLists = {
     all: {
       params: `sort=random&order=ASC&page=1&perPage=${config.defaultPerPage}&filter={}`,
+      icon: <LibraryMusicOutlinedIcon />,
     },
     recentKirtan: {
       params: `sort=createdAt&order=DESC&page=1&perPage=${config.defaultPerPage}&filter={}`,
+      icon: <PostAddOutlined />,
     },
     ...(config.enableFavourites &&
       currentUser !== config.defaultUser && {
@@ -83,6 +88,7 @@ const Menu = ({ dense = false }) => {
       }),
     simran: {
       params: `displayedFilters={}&filter={"title":"simran"}&order=ASC&page=1&perPage=${config.defaultPerPage}&sort=random`,
+      icon: <SpaOutlinedIcon />,
     },
   }
 
@@ -160,7 +166,7 @@ const Menu = ({ dense = false }) => {
         to={to}
         activeClassName={classes.active}
         primaryText={name}
-        leftIcon={resource?.icon || <MusicNoteIcon />}
+        leftIcon={songLists[type]?.icon || <MusicNoteIcon />}
         sidebarIsOpen={open}
         dense={dense}
         exact

@@ -65,7 +65,7 @@ const (
 	ScanIgnoreFile = ".ndignore"
 
 	PlaceholderArtistArt = "artist-placeholder.webp"
-	PlaceholderAlbumArt  = "album-placeholder.webp"
+	PlaceholderAlbumArt  = "gurunanakdevji.jpg"
 	PlaceholderAvatar    = "logo-192x192.png"
 	UICoverArtSize       = 300
 	DefaultUIVolume      = 100

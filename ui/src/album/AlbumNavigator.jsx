@@ -143,7 +143,7 @@ const AlbumNavigator = ({ currentAlbum }) => {
       <TextField
         select
         label={
-          translate('resources.album.name', { smart_count: 2 }) || 'Samagams'
+          translate('resources.album.name', { smart_count: 2 }) || 'Samagam'
         }
         value={albumId}
         onChange={handleAlbumChange}
