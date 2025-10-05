@@ -191,7 +191,7 @@ const AlbumActions = ({
             <ShareButton
               record={record}
               entityType="album"
-              shareText={`Check out this album: ${record.name}`}
+              shareText={`🙏Dhan Guru Nanak🙏: ${record.name}`}
               desktopOptions={['webshare', 'copy', 'qr']}
               qrOptions={{
                 width: 250,
