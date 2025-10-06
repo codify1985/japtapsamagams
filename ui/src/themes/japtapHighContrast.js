@@ -301,6 +301,14 @@ const japtapHighContrast = createTheme({
       },
     },
 
+    NDAlbumDetails: {
+      cover: {
+        borderRadius: '26px !important',
+        boxShadow: '-1px 1px 6px 0px #00000057',
+        objectFit: 'cover',
+      },
+    },
+
     // List items in sidebar
     MuiListItem: {
       root: {
@@ -709,28 +717,28 @@ const japtapHighContrast = createTheme({
         display: 'flex',
         flexDirection: 'column',
         gap: '5px',
-        padding: '18px 18px 18px',
+        padding: '2px 2px 2px',
         // minHeight: '100%',
-        borderRadius: 26,
-        backgroundColor: 'rgba(14, 22, 40, 0.88)',
-        backgroundImage: SURFACE_GRADIENT,
-        border: `1px solid ${SURFACE_BORDER}`,
+        // borderRadius: 26,
+        // backgroundColor: 'rgba(14, 22, 40, 0.88)',
+        // backgroundImage: SURFACE_GRADIENT,
+        // border: `1px solid ${SURFACE_BORDER}`,
         // boxShadow: '0 24px 52px rgba(2, 6, 20, 0.5)',
         backdropFilter: 'blur(18px)',
         isolation: 'isolate',
-        transition:
-          'transform 180ms ease, box-shadow 240ms ease, background 220ms ease',
-        '&:hover': {
-          transform: 'translateY(-4px)',
-          boxShadow: '0 32px 68px rgba(2, 6, 20, 0.55)',
-          backgroundImage:
-            'linear-gradient(150deg, rgba(56, 78, 124, 0.4) 0%, rgba(16, 23, 42, 0.88) 48%, rgba(6, 12, 26, 0.98) 100%)',
-        },
-        '@supports not (backdrop-filter: blur(18px))': {
-          backgroundColor: 'rgba(16, 23, 42, 0.94)',
-          backgroundImage:
-            'linear-gradient(150deg, rgba(38, 56, 92, 0.38) 0%, rgba(16, 23, 42, 0.9) 48%, rgba(6, 12, 26, 0.96) 100%)',
-        },
+        // transition:
+        //   'transform 180ms ease, box-shadow 240ms ease, background 220ms ease',
+        // '&:hover': {
+        //   transform: 'translateY(-4px)',
+        //   boxShadow: '0 32px 68px rgba(2, 6, 20, 0.55)',
+        //   // backgroundImage:
+        //   //   'linear-gradient(150deg, rgba(56, 78, 124, 0.4) 0%, rgba(16, 23, 42, 0.88) 48%, rgba(6, 12, 26, 0.98) 100%)',
+        // },
+        // '@supports not (backdrop-filter: blur(18px))': {
+        //   backgroundColor: 'rgba(16, 23, 42, 0.94)',
+        //   backgroundImage:
+        //     'linear-gradient(150deg, rgba(38, 56, 92, 0.38) 0%, rgba(16, 23, 42, 0.9) 48%, rgba(6, 12, 26, 0.96) 100%)',
+        // },
         '& img': {
           borderRadius: 26, // Match the container!
           boxShadow: '0 18px 40px rgba(2, 6, 20, 0.45)',
@@ -741,10 +749,10 @@ const japtapHighContrast = createTheme({
         overflow: 'hidden',
         boxShadow: '0 18px 36px rgba(2, 6, 20, 0.4)',
         transition: 'transform 160ms ease, box-shadow 220ms ease',
-        '&:hover': {
-          transform: 'translateY(-2px)',
-          boxShadow: '0 24px 52px rgba(2, 6, 20, 0.48)',
-        },
+        // '&:hover': {
+        //   transform: 'translateY(-2px)',
+        //   boxShadow: '0 24px 52px rgba(2, 6, 20, 0.48)',
+        // },
       },
       tileBar: {
         background:

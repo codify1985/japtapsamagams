@@ -60,42 +60,48 @@ const UserCreate = (props) => {
   }
 
   return (
-    <Create title={<Title subTitle={title} />} {...props}>
-      <SimpleForm save={save} validate={validateUserForm} variant={'outlined'}>
-        <TextInput
-          spellCheck={false}
-          source="userName"
-          validate={[required()]}
-        />
-        <TextInput source="name" validate={[required()]} />
-        <TextInput spellCheck={false} source="email" validate={[email()]} />
-        <PasswordInput
-          spellCheck={false}
-          source="password"
-          validate={[required()]}
-        />
-        <BooleanInput source="isAdmin" defaultValue={false} />
+    <div style={{ margin: '0.75em' }}>
+      <Create title={<Title subTitle={title} />} {...props}>
+        <SimpleForm
+          save={save}
+          validate={validateUserForm}
+          variant={'outlined'}
+        >
+          <TextInput
+            spellCheck={false}
+            source="userName"
+            validate={[required()]}
+          />
+          <TextInput source="name" validate={[required()]} />
+          <TextInput spellCheck={false} source="email" validate={[email()]} />
+          <PasswordInput
+            spellCheck={false}
+            source="password"
+            validate={[required()]}
+          />
+          <BooleanInput source="isAdmin" defaultValue={false} />
 
-        {/* Conditional Library Selection */}
-        <FormDataConsumer>
-          {({ formData }) => (
-            <>
-              {!formData.isAdmin && <LibrarySelectionField />}
+          {/* Conditional Library Selection */}
+          <FormDataConsumer>
+            {({ formData }) => (
+              <>
+                {!formData.isAdmin && <LibrarySelectionField />}
 
-              {formData.isAdmin && (
-                <Typography
-                  variant="body2"
-                  color="textSecondary"
-                  style={{ marginTop: 16, marginBottom: 16 }}
-                >
-                  {translate('resources.user.message.adminAutoLibraries')}
-                </Typography>
-              )}
-            </>
-          )}
-        </FormDataConsumer>
-      </SimpleForm>
-    </Create>
+                {formData.isAdmin && (
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    style={{ marginTop: 16, marginBottom: 16 }}
+                  >
+                    {translate('resources.user.message.adminAutoLibraries')}
+                  </Typography>
+                )}
+              </>
+            )}
+          </FormDataConsumer>
+        </SimpleForm>
+      </Create>
+    </div>
   )
 }
 

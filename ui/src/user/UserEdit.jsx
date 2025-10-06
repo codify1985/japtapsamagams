@@ -114,73 +114,75 @@ const UserEdit = (props) => {
   }
 
   return (
-    <Edit title={<UserTitle />} undoable={false} {...props}>
-      <SimpleForm
-        variant={'outlined'}
-        toolbar={<UserToolbar showDelete={canDelete} />}
-        save={save}
-        validate={validateForm}
-      >
-        {permissions === 'admin' && (
-          <TextInput
-            spellCheck={false}
-            source="userName"
-            validate={[required()]}
-          />
-        )}
-        <TextInput
-          source="name"
-          validate={[required()]}
-          {...getNameHelperText()}
-        />
-        <TextInput spellCheck={false} source="email" validate={[email()]} />
-        <BooleanInput source="changePassword" />
-        <FormDataConsumer>
-          {(formDataProps) => (
-            <CurrentPasswordInput
+    <div style={{ margin: '0.75em' }}>
+      <Edit title={<UserTitle />} undoable={false} {...props}>
+        <SimpleForm
+          variant={'outlined'}
+          toolbar={<UserToolbar showDelete={canDelete} />}
+          save={save}
+          validate={validateForm}
+        >
+          {permissions === 'admin' && (
+            <TextInput
               spellCheck={false}
-              isMyself={isMyself}
-              {...formDataProps}
+              source="userName"
+              validate={[required()]}
             />
           )}
-        </FormDataConsumer>
-        <FormDataConsumer>
-          {(formDataProps) => (
-            <NewPasswordInput spellCheck={false} {...formDataProps} />
-          )}
-        </FormDataConsumer>
-
-        {permissions === 'admin' && (
-          <BooleanInput source="isAdmin" initialValue={false} />
-        )}
-
-        {/* Conditional Library Selection for Admin Users Only */}
-        {permissions === 'admin' && (
+          <TextInput
+            source="name"
+            validate={[required()]}
+            {...getNameHelperText()}
+          />
+          <TextInput spellCheck={false} source="email" validate={[email()]} />
+          <BooleanInput source="changePassword" />
           <FormDataConsumer>
-            {({ formData }) => (
-              <>
-                {formData.isAdmin && <LibrarySelectionField />}
-
-                {formData.isAdmin && (
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    style={{ marginTop: 16, marginBottom: 16 }}
-                  >
-                    {translate('resources.user.message.adminAutoLibraries')}
-                  </Typography>
-                )}
-              </>
+            {(formDataProps) => (
+              <CurrentPasswordInput
+                spellCheck={false}
+                isMyself={isMyself}
+                {...formDataProps}
+              />
             )}
           </FormDataConsumer>
-        )}
+          <FormDataConsumer>
+            {(formDataProps) => (
+              <NewPasswordInput spellCheck={false} {...formDataProps} />
+            )}
+          </FormDataConsumer>
 
-        <DateField variant="body1" source="lastLoginAt" showTime />
-        <DateField variant="body1" source="lastAccessAt" showTime />
-        <DateField variant="body1" source="updatedAt" showTime />
-        <DateField variant="body1" source="createdAt" showTime />
-      </SimpleForm>
-    </Edit>
+          {permissions === 'admin' && (
+            <BooleanInput source="isAdmin" initialValue={false} />
+          )}
+
+          {/* Conditional Library Selection for Admin Users Only */}
+          {permissions === 'admin' && (
+            <FormDataConsumer>
+              {({ formData }) => (
+                <>
+                  {formData.isAdmin && <LibrarySelectionField />}
+
+                  {formData.isAdmin && (
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      style={{ marginTop: 16, marginBottom: 16 }}
+                    >
+                      {translate('resources.user.message.adminAutoLibraries')}
+                    </Typography>
+                  )}
+                </>
+              )}
+            </FormDataConsumer>
+          )}
+
+          <DateField variant="body1" source="lastLoginAt" showTime />
+          <DateField variant="body1" source="lastAccessAt" showTime />
+          <DateField variant="body1" source="updatedAt" showTime />
+          <DateField variant="body1" source="createdAt" showTime />
+        </SimpleForm>
+      </Edit>
+    </div>
   )
 }
 

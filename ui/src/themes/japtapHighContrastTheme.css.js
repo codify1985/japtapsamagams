@@ -76,20 +76,43 @@ const createPlayerStylesheet = (primaryColor) => {
   border-radius: 12px;
 }
 
-/* Expanded panel (full player) */
+/* Expanded panel (full player)
+
+ box-shadow:
+    0 26px 70px rgba(0, 0, 0, 0.50),
+    0 8px 22px rgba(0, 0, 0, 0.32);*/
 .react-jinke-music-player-main .music-player-panel {
-  border-radius: 24px;
+  border-radius: 26px;
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: linear-gradient(
     180deg,
-    rgba(26, 36, 56, 0.96),
-    rgba(16, 24, 40, 0.92)
+    rgba(10, 132, 255, 0.92) 0%,      /* Primary accent blue at the top */
+    rgba(26, 36, 56, 0.98) 60%,       /* Deep navy for body */
+    rgba(16, 24, 40, 1) 100%          /* Solid dark at the bottom */
   );
-  box-shadow:
-    0 26px 70px rgba(0, 0, 0, 0.50),
-    0 8px 22px rgba(0, 0, 0, 0.32);
+  box-shadow: 0 8px 32px rgba(10, 132, 255, 0.18), 0 2px 8px rgba(0,0,0,0.24);
+ 
   backdrop-filter: blur(6px) saturate(110%);
   overflow: hidden;
+  
+}
+
+.react-jinke-music-player-main
+  .music-player-panel
+  .panel-content
+  .progress-bar-content
+  .songTitle,
+.react-jinke-music-player-main
+  .music-player-panel
+  .panel-content
+  .progress-bar-content
+  .songAlbum,
+  .react-jinke-music-player-main
+  .music-player-panel
+  .panel-content
+  .progress-bar-content
+  .songArtist {
+  color: white !important;
 }
 
 /* Seekbar accents (panel) */
