@@ -204,7 +204,7 @@ const AlbumGridTile = ({
             <AlbumContextMenu
               record={record}
               color={'white'}
-              showLove={currentUser !== config.defaultUser}
+              showLove={currentUser === 'admin'}
             />
           }
         />

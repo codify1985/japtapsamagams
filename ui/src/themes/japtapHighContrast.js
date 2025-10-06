@@ -764,6 +764,14 @@ const japtapHighContrast = createTheme({
         borderRadius: 26, // Match the container!
         // padding: '0 4px',
       },
+      albumPlayButton: {
+        color: 'white',
+        padding: '0.35rem',
+        boxShadow: '0 8px 8px rgb(0 0 0 / 30%)',
+        transition: 'padding .3s ease',
+        borderRadius: '50%',
+        backgroundColor: '#0A84FF',
+      },
     },
     NDLogin: {
       systemNameLink: {
