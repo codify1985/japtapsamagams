@@ -73,7 +73,7 @@ const useStyles = makeStyles(
         minWidth: '10em',
       },
       [theme.breakpoints.up('lg')]: {
-        height: '15em',
+        height: '14em',
         width: '15em',
         minWidth: '15em',
       },

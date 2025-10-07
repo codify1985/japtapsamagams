@@ -119,7 +119,7 @@ const Cover = withContentRect('bounds')(({
   // noinspection JSSuspiciousNameCombination
   const classes = useCoverStyles({
     height: contentRect.bounds.width,
-    objectFit: record.date === '2025' ? 'none' : 'cover',
+    objectFit: 'cover',
   })
   const [imageLoading, setImageLoading] = React.useState(true)
   const [imageError, setImageError] = React.useState(false)

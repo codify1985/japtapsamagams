@@ -41,7 +41,7 @@ const defaultConfig = {
   enableInspect: true,
   defaultPerPage: 25,
   defaultUser: 'japtaptest',
-  maxYears: 2022,
+  maxYears: 2016,
   defaultAlbumView: 'grid',
   // Authentication info that may be set by the server
   auth: {
