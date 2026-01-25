@@ -11,7 +11,13 @@ import QueueMusicIcon from '@material-ui/icons/QueueMusic'
 import { Typography } from '@material-ui/core'
 import { useTheme } from '@material-ui/core/styles'
 import QueueMusicOutlinedIcon from '@material-ui/icons/QueueMusicOutlined'
-import { BiDotsVerticalRounded, BiMenu, BiListUl, BiSolidPlusCircle, BiCog } from 'react-icons/bi'
+import {
+  BiDotsVerticalRounded,
+  BiMenu,
+  BiListUl,
+  BiSolidPlusCircle,
+  BiCog,
+} from 'react-icons/bi'
 import { useDrop } from 'react-dnd'
 import SubMenu from './SubMenu'
 import { canChangeTracks } from '../common'
@@ -138,7 +144,7 @@ const PlaylistsSubMenu = ({ state, setState, sidebarIsOpen, dense }) => {
           }
           onAction={onPlaylistAdd}
         >
-           {/* <MenuItemLink
+          {/* <MenuItemLink
               to={`/playlist/create`}
               primaryText={
                 <Typography variant="inherit" noWrap>

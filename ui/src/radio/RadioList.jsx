@@ -103,7 +103,6 @@ const RadioList = ({ permissions, ...props }) => {
     }),
   }
 
-
   // const toggleableFields = {
   //   name: <TextField source="name" />,
   //   homePageUrl: (
