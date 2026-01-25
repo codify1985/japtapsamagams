@@ -232,8 +232,6 @@ const AlbumTableView = ({
       )}
       showCover={true}
       coverSrc={(r) => {
-        console.log('recoredv**************')
-        console.log(r)
         if (!shouldShowCover(r)) {
           return undefined // This will fallback to Avatar with initials
         }
