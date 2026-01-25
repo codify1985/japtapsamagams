@@ -32,26 +32,11 @@ import { formatBytes } from '../utils'
 import config, { isFavouritesEnabledForCurrentUser } from '../config'
 import { ToggleFieldsMenu } from '../common'
 import ShareButton from '../common/ShareButton'
+import AlbumButton from './AlbumButton'
 
 const useStyles = makeStyles({
   toolbar: { display: 'flex', justifyContent: 'space-between', width: '100%' },
 })
-
-const useAlbumButtonStyles = makeStyles((theme) => ({
-  root: {
-    minWidth: 0,
-    textTransform: 'none',
-    color: theme.palette.primary?.main || theme.palette.text?.primary,
-    paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1),
-    '& .MuiButton-startIcon': {
-      marginRight: theme.spacing(0.5),
-    },
-    '& .MuiSvgIcon-root, & svg': {
-      color: 'inherit',
-    },
-  },
-}))
 
 const sanitizeButtonProps = ({
   basePath,
@@ -69,41 +54,6 @@ const sanitizeButtonProps = ({
   sx,
   ...rest
 }) => rest
-
-const AlbumButton = ({
-  children,
-  label,
-  disabled,
-  className,
-  style,
-  ...rest
-}) => {
-  const record = useRecordContext(rest) || {}
-  const icon = React.Children.count(children)
-    ? React.Children.toArray(children)[0]
-    : undefined
-  const sanitizedProps = sanitizeButtonProps(rest)
-  const { style: sanitizedStyle, ...buttonProps } = sanitizedProps
-  const classes = useAlbumButtonStyles()
-  const combinedStyle = { ...(sanitizedStyle || {}), ...(style || {}) }
-
-  return (
-    <MuiButton
-      {...buttonProps}
-      className={clsx(classes.root, className)}
-      startIcon={icon}
-      color="primary"
-      variant="text"
-      disableElevation
-      size="small"
-      disabled={record.missing || disabled}
-      aria-label={typeof label === 'string' ? label : undefined}
-      style={combinedStyle}
-    >
-      {label}
-    </MuiButton>
-  )
-}
 
 const AlbumActions = ({
   className,

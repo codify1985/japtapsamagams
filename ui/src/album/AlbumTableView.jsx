@@ -11,7 +11,7 @@ import {
 } from 'react-admin'
 import { useMediaQuery } from '@material-ui/core'
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
 import { useDrag } from 'react-dnd'
 import {
   ArtistLinkField,
@@ -28,7 +28,33 @@ import { DraggableTypes } from '../consts'
 import subsonic from '../subsonic'
 import clsx from 'clsx'
 
-const useStyles = makeStyles({
+// Helper function to check if a date is within the last 7 days
+const isWithinLast7Days = (dateString) => {
+  if (!dateString) return false
+  const createdDate = new Date(dateString)
+  const now = new Date()
+  const diffTime = now - createdDate
+  const diffDays = diffTime / (1000 * 60 * 60 * 24)
+  return diffDays <= 7 && diffDays >= 0
+}
+
+// Helper function to format date as "Oct 23rd"
+const formatRecentDate = (dateString) => {
+  const date = new Date(dateString)
+  const month = date.toLocaleDateString('en-US', { month: 'short' })
+  const day = date.getDate()
+
+  // Add ordinal suffix (st, nd, rd, th)
+  const getOrdinal = (n) => {
+    const s = ['th', 'st', 'nd', 'rd']
+    const v = n % 100
+    return n + (s[(v - 20) % 10] || s[v] || s[0])
+  }
+
+  return `${month} ${getOrdinal(day)}`
+}
+
+const useStyles = makeStyles((theme) => ({
   columnIcon: {
     marginLeft: '3px',
     marginTop: '-2px',
@@ -66,7 +92,11 @@ const useStyles = makeStyles({
     //   padding: '0px !important',
     // },
   },
-})
+  recentlyAdded: {
+    color: theme.palette.primary.main,
+    fontWeight: 'bold',
+  },
+}))
 
 const AlbumDatagridRow = (props) => {
   const { record, className } = props
@@ -163,7 +193,13 @@ const AlbumTableView = ({
       primaryText={(r) => r.name}
       secondaryText={(r) => (
         <>
-          {r.albumArtist}
+          {isWithinLast7Days(r.createdAt) ? (
+            <span className={classes.recentlyAdded}>
+              Recently Added on {formatRecentDate(r.createdAt)}
+            </span>
+          ) : (
+            r.albumArtist
+          )}
           {config.enableStarRating && (
             <>
               <br />
@@ -196,6 +232,8 @@ const AlbumTableView = ({
       )}
       showCover={true}
       coverSrc={(r) => {
+        console.log('recoredv**************')
+        console.log(r)
         if (!shouldShowCover(r)) {
           return undefined // This will fallback to Avatar with initials
         }

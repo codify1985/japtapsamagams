@@ -108,7 +108,9 @@ const AlbumSongs = (props) => {
         />
       ),
       artist: isDesktop && <ArtistLinkField source="artist" sortable={false} />,
-      duration: <DurationField source="duration" sortable={false} />,
+      duration: isDesktop && (
+        <DurationField source="duration" sortable={false} />
+      ),
       year: isDesktop && (
         <FunctionField
           source="year"

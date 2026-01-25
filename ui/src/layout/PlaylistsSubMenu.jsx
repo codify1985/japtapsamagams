@@ -9,8 +9,9 @@ import {
 import { useHistory } from 'react-router-dom'
 import QueueMusicIcon from '@material-ui/icons/QueueMusic'
 import { Typography } from '@material-ui/core'
+import { useTheme } from '@material-ui/core/styles'
 import QueueMusicOutlinedIcon from '@material-ui/icons/QueueMusicOutlined'
-import { BiCog } from 'react-icons/bi'
+import { BiDotsVerticalRounded, BiMenu, BiListUl, BiSolidPlusCircle, BiCog } from 'react-icons/bi'
 import { useDrop } from 'react-dnd'
 import SubMenu from './SubMenu'
 import { canChangeTracks } from '../common'
@@ -53,6 +54,7 @@ const PlaylistMenuItemLink = ({ pls, sidebarIsOpen }) => {
 
 const PlaylistsSubMenu = ({ state, setState, sidebarIsOpen, dense }) => {
   const history = useHistory()
+  const theme = useTheme()
   const { data, loaded } = useQueryWithStore({
     type: 'getList',
     resource: 'playlist',
@@ -101,6 +103,11 @@ const PlaylistsSubMenu = ({ state, setState, sidebarIsOpen, dense }) => {
     [history],
   )
 
+  const onPlaylistAdd = useCallback(
+    () => history.push('/playlist/create'),
+    [history],
+  )
+
   return (
     <>
       {currentUser !== config.defaultUser && (
@@ -111,9 +118,37 @@ const PlaylistsSubMenu = ({ state, setState, sidebarIsOpen, dense }) => {
           name={'menu.playlists'}
           icon={<QueueMusicIcon />}
           dense={dense}
-          actionIcon={<BiCog />}
-          onAction={onPlaylistConfig}
+          actionIcon2={
+            <BiMenu
+              style={{
+                color: theme.palette.primary.main,
+                fontSize: '1.5rem',
+                fontWeight: 'bold',
+              }}
+            />
+          }
+          onAction2={onPlaylistConfig}
+          actionIcon={
+            <BiSolidPlusCircle
+              style={{
+                color: theme.palette.primary.main,
+                fontSize: '1.5rem',
+              }}
+            />
+          }
+          onAction={onPlaylistAdd}
         >
+           {/* <MenuItemLink
+              to={`/playlist/create`}
+              primaryText={
+                <Typography variant="inherit" noWrap>
+                  {'Add Playlist'}
+                </Typography>
+              }
+              sidebarIsOpen={sidebarIsOpen}
+              dense={false}
+              style={{ marginLeft: '2rem' }}
+            /> */}
           {myPlaylists.map(renderPlaylistMenuItemLink)}
         </SubMenu>
       )}

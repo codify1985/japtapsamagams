@@ -55,6 +55,8 @@ const SubMenu = ({
   dense,
   onAction,
   actionIcon,
+  onAction2,
+  actionIcon2,
 }) => {
   const translate = useTranslate()
   const classes = useStyles()
@@ -65,6 +67,14 @@ const SubMenu = ({
   const handleOnClick = (e) => {
     e.stopPropagation()
     onAction(e)
+    if (isSmall) {
+      dispatch(setSidebarVisibility(false))
+    }
+  }
+
+  const handleOnClick2 = (e) => {
+    e.stopPropagation()
+    onAction2(e)
     if (isSmall) {
       dispatch(setSidebarVisibility(false))
     }
@@ -84,6 +94,15 @@ const SubMenu = ({
         <Typography variant="inherit" color="textSecondary">
           {translate(name)}
         </Typography>
+        {onAction2 && sidebarIsOpen && (
+          <IconButton
+            size={'small'}
+            className={isDesktop ? classes.actionIcon : null}
+            onClick={handleOnClick2}
+          >
+            {actionIcon2}
+          </IconButton>
+        )}
         {onAction && sidebarIsOpen && (
           <IconButton
             size={'small'}

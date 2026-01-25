@@ -88,18 +88,36 @@ const RadioList = ({ permissions, ...props }) => {
 
   const toggleableFields = {
     name: <TextField source="name" />,
-    homePageUrl: (
-      <UrlField
-        source="homePageUrl"
-        onClick={(e) => e.stopPropagation()}
-        target="_blank"
-        rel="noopener noreferrer"
-      />
-    ),
-    streamUrl: <TextField source="streamUrl" />,
-    updatedAt: <DateField source="updatedAt" showTime />,
-    createdAt: <DateField source="createdAt" showTime />,
+    ...(isAdmin && {
+      homePageUrl: (
+        <UrlField
+          source="homePageUrl"
+          onClick={(e) => e.stopPropagation()}
+          target="_blank"
+          rel="noopener noreferrer"
+        />
+      ),
+      streamUrl: <TextField source="streamUrl" />,
+      updatedAt: <DateField source="updatedAt" showTime />,
+      createdAt: <DateField source="createdAt" showTime />,
+    }),
   }
+
+
+  // const toggleableFields = {
+  //   name: <TextField source="name" />,
+  //   homePageUrl: (
+  //     <UrlField
+  //       source="homePageUrl"
+  //       onClick={(e) => e.stopPropagation()}
+  //       target="_blank"
+  //       rel="noopener noreferrer"
+  //     />
+  //   ),
+  //   streamUrl: <TextField source="streamUrl" />,
+  //   updatedAt: <DateField source="updatedAt" showTime />,
+  //   createdAt: <DateField source="createdAt" showTime />,
+  // }
 
   const columns = useSelectedFields({
     resource: 'radio',

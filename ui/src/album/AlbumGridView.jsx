@@ -19,6 +19,16 @@ import clsx from 'clsx'
 import { AlbumDatesField } from './AlbumDatesField.jsx'
 import config from '../config'
 
+// Helper function to check if a date is within the last 7 days
+const isWithinLast7Days = (dateString) => {
+  if (!dateString) return false
+  const createdDate = new Date(dateString)
+  const now = new Date()
+  const diffTime = now - createdDate
+  const diffDays = diffTime / (1000 * 60 * 60 * 24)
+  return diffDays <= 7 && diffDays >= 0
+}
+
 const useStyles = makeStyles(
   (theme) => ({
     root: {
@@ -35,7 +45,7 @@ const useStyles = makeStyles(
     },
     tileBarMobile: {
       textAlign: 'left',
-      marginBottom: '3px',
+      //marginBottom: '3px',
       background:
         'linear-gradient(to top, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.4) 70%,rgba(0,0,0,0) 100%)',
     },
@@ -85,13 +95,34 @@ const useStyles = makeStyles(
     },
     albumContainer: {},
     albumPlayButton: { color: 'white' },
+    recentlyAddedCover: {
+      position: 'relative',
+      border: `3px solid ${theme.palette.primary.main}`,
+      borderRadius: '26px',
+      overflow: 'hidden',
+    },
+    recentlyAddedLabel: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.primary.contrastText,
+      padding: '4px 8px',
+      fontSize: '11px',
+      fontWeight: 'bold',
+      textAlign: 'center',
+      textTransform: 'uppercase',
+      zIndex: 10,
+      letterSpacing: '0.5px',
+    },
   }),
   { name: 'NDAlbumGridView' },
 )
 
 const useCoverStyles = makeStyles({
   cover: {
-    display: 'inline-block',
+    display: 'block',
     width: '100%',
     objectFit: (props) => props.objectFit,
     height: (props) => props.height,
@@ -121,6 +152,7 @@ const Cover = withContentRect('bounds')(({
     height: contentRect.bounds.width,
     objectFit: 'cover',
   })
+  const gridClasses = useStyles()
   const [imageLoading, setImageLoading] = React.useState(true)
   const [imageError, setImageError] = React.useState(false)
   const [, dragAlbumRef] = useDrag(
@@ -148,8 +180,16 @@ const Cover = withContentRect('bounds')(({
     setImageError(true)
   }, [])
 
+  const isRecentlyAdded = isWithinLast7Days(record.createdAt)
+
   return (
-    <div ref={measureRef}>
+    <div
+      ref={measureRef}
+      className={isRecentlyAdded ? gridClasses.recentlyAddedCover : ''}
+    >
+      {isRecentlyAdded && (
+        <div className={gridClasses.recentlyAddedLabel}>Recently Added</div>
+      )}
       <div ref={dragAlbumRef}>
         <img
           key={record.id} // Force re-render when record changes

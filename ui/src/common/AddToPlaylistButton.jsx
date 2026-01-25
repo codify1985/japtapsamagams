@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { Button, useTranslate, useUnselectAll } from 'react-admin'
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd'
 import { openAddToPlaylist } from '../actions'
+import AlbumButton from '../album/AlbumButton'
 
 export const AddToPlaylistButton = ({ resource, selectedIds, className }) => {
   const translate = useTranslate()
@@ -20,15 +21,24 @@ export const AddToPlaylistButton = ({ resource, selectedIds, className }) => {
   }
 
   return (
-    <Button
+    <AlbumButton
+      onClick={handleClick}
+      label={translate('resources.song.actions.addToPlaylist')}
       aria-controls="simple-menu"
       aria-haspopup="true"
-      onClick={handleClick}
-      className={className}
-      label={translate('resources.song.actions.addToPlaylist')}
     >
       <PlaylistAddIcon />
-    </Button>
+    </AlbumButton>
+
+    // <Button
+    //   aria-controls="simple-menu"
+    //   aria-haspopup="true"
+    //   onClick={handleClick}
+    //   className={className}
+    //   label={translate('resources.song.actions.addToPlaylist')}
+    // >
+    //   <PlaylistAddIcon />
+    // </Button>
   )
 }
 
