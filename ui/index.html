@@ -2,10 +2,16 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    {{ if .ShareDescription }}
+    <meta name="description" content="{{ .ShareDescription }}" />
+    <meta property="og:description" content="{{ .ShareDescription }}" />
+    {{ else }}
     <meta
         name="description"
         content="JapTap Kirtan (2025–2026) – Gurbani shabads and samagam recordings for the sangat, accessible on any device."
     />
+    <meta property="og:description" content="JapTap Kirtan (2025–2026) – Gurbani shabads and samagam recordings for the sangat, accessible on any device." />
+    {{ end }}
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
@@ -22,7 +28,11 @@
     <link rel="manifest" href="./manifest.webmanifest" />
     <meta property="og:site_name" content="Jap Tap Samagams - Gurbani Kirtan">
     <meta property="og:url" content="{{ .ShareURL }}">
+    {{ if .ShareDescription }}
+    <meta property="og:title" content="{{ .ShareDescription }}">
+    {{ else }}
     <meta property="og:title" content="Jap Tap Samagams">
+    {{ end }}
 
     <meta property="og:image" content="{{ .ShareImageURL }}">
     <meta property="og:image:width" content="300">
@@ -38,16 +48,6 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
   </body>
   <script type="module" src="/src/index.jsx?v=2024092301"></script>
 </html>

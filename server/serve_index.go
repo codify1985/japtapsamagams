@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/fs"
 	"net/http"
+	"net/url"
 	"os"
 	"path"
 	"strings"
@@ -147,6 +148,19 @@ type shareTrack struct {
 
 func addShareData(r *http.Request, data map[string]interface{}, shareInfo *model.Share) {
 	ctx := r.Context()
+
+	// Check for description in URL query parameter first (for any page)
+	descFromURL := r.URL.Query().Get("desc")
+	if descFromURL != "" {
+		// URL decode the description
+		decodedDesc, err := url.QueryUnescape(descFromURL)
+		if err == nil {
+			data["ShareDescription"] = decodedDesc
+		} else {
+			data["ShareDescription"] = descFromURL
+		}
+	}
+
 	if shareInfo == nil || shareInfo.ID == "" {
 		return
 	}
@@ -173,10 +187,13 @@ func addShareData(r *http.Request, data map[string]interface{}, shareInfo *model
 		log.Trace(ctx, "Injecting shareInfo in index.html", "config", string(shareInfoJson))
 	}
 
-	if shareInfo.Description != "" {
-		data["ShareDescription"] = shareInfo.Description
-	} else {
-		data["ShareDescription"] = shareInfo.Contents
+	// Only set ShareDescription from shareInfo if not already set from URL
+	if data["ShareDescription"] == nil || data["ShareDescription"] == "" {
+		if shareInfo.Description != "" {
+			data["ShareDescription"] = shareInfo.Description
+		} else {
+			data["ShareDescription"] = shareInfo.Contents
+		}
 	}
 	data["ShareURL"] = shareInfo.URL
 	data["ShareImageURL"] = shareInfo.ImageURL
