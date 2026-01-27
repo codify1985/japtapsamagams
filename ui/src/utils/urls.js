@@ -17,11 +17,15 @@ export const shareUrl = (path) => {
   return baseUrl(path)
 }
 
-export const sharePlayerUrl = (id) => {
+export const sharePlayerUrl = (id, description) => {
   const url = new URL(
     shareUrl(config.publicBaseUrl + '/' + id),
     window.location.href,
   )
+  // Add description as URL parameter if provided
+  if (description) {
+    url.searchParams.set('desc', encodeURIComponent(description))
+  }
   return url.href
 }
 

@@ -52,7 +52,7 @@ export const ShareDialog = () => {
     },
     {
       onSuccess: (res) => {
-        const url = sharePlayerUrl(res?.data?.id)
+        const url = sharePlayerUrl(res?.data?.id, description)
         if (navigator.clipboard && window.isSecureContext) {
           navigator.clipboard
             .writeText(url)
