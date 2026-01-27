@@ -122,12 +122,14 @@ export const ShareDialog = () => {
               resource={'share'}
               source={'downloadable'}
               defaultValue={downloadable}
+              disabled={config.defaultDownloadableShare}
               onChange={(value) => {
                 setDownloadable(value)
               }}
             />
           )}
           <TranscodingOptionsInput
+            disabled={downloadable && originalFormat}
             fullWidth
             label={translate('message.shareOriginalFormat')}
           />

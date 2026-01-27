@@ -190,6 +190,32 @@ const japtapLight = createTheme({
       },
     },
 
+    // Remove outer border/background from list pages (album list, etc.)
+    RaList: {
+      root: {
+        '& > .MuiCard-root, & > .MuiPaper-root': {
+          border: 'none !important',
+          boxShadow: 'none !important',
+          background: 'transparent !important',
+          backgroundImage: 'none !important',
+        },
+      },
+      content: {
+        backgroundColor: 'transparent !important',
+        backgroundImage: 'none !important',
+        border: 'none !important',
+        boxShadow: 'none !important',
+      },
+      main: {
+        '& > .MuiCard-root, & > .MuiPaper-root': {
+          border: 'none !important',
+          boxShadow: 'none !important',
+          background: 'transparent !important',
+          backgroundImage: 'none !important',
+        },
+      },
+    },
+
     RaListToolbar: {
       toolbar: {
         paddingLeft: '0 !important',

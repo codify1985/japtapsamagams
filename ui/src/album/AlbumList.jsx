@@ -75,6 +75,13 @@ const useFilterStyles = makeStyles((theme) => ({
 
 const useAlbumListStyles = makeStyles((theme) => ({
   albumListContainer: {
+    // Remove outer border from the list container (MuiCard/MuiPaper wrapper)
+    '& > .MuiCard-root, & > .MuiPaper-root': {
+      border: 'none !important',
+      boxShadow: 'none !important',
+      background: 'transparent',
+      backgroundImage: 'none',
+    },
     '& [class*="RaListToolbar-toolbar"]': {
       // paddingLeft: '0 !important',
       paddingRight: '0 !important',

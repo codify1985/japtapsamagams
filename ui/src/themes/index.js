@@ -30,20 +30,21 @@ import japtapLight from './japtapLight'
 
 export default {
   // Classic default themes
-  LightTheme,
-  japtapHighContrast,
   japtapLight,
+  japtapHighContrast,
+  NordTheme,
+  LightTheme,
   DarkTheme,
-  JaptapAppleTheme,
+  SpotifyTheme,
+  // JaptapAppleTheme,
   // New themes should be added here, in alphabetic order
   CatppuccinMacchiatoTheme,
   ExtraDarkTheme,
   GruvboxDarkTheme,
-  NordTheme,
   NuclearTheme,
-  SpotifyTheme,
+  
   JaptapMidnightTheme,
-  appleLiquidGlassTheme,
+  // appleLiquidGlassTheme,
   // ElectricPurpleTheme,
   // GreenTheme,
   //LigeraTheme,
