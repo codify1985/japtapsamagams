@@ -42,7 +42,7 @@ export default {
   ExtraDarkTheme,
   GruvboxDarkTheme,
   NuclearTheme,
-  
+
   JaptapMidnightTheme,
   // appleLiquidGlassTheme,
   // ElectricPurpleTheme,
