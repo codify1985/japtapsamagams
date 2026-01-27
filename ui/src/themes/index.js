@@ -14,6 +14,7 @@ import JaptapMidnightTheme from './japtapMidnight'
 import JaptapAppleTheme from './japtapApple'
 import appleLiquidGlassTheme from './appleLiquidGlassTheme'
 import japtapHighContrast from './japtapHighContrast'
+import japtapLight from './japtapLight'
 
 // To add a new theme, create a new file in this directory, define the theme
 // using createTheme(), and then import it here and add it to the export below.
@@ -31,6 +32,7 @@ export default {
   // Classic default themes
   LightTheme,
   japtapHighContrast,
+  japtapLight,
   DarkTheme,
   JaptapAppleTheme,
   // New themes should be added here, in alphabetic order

@@ -29,7 +29,7 @@ const defaultConfig = {
   lastFMEnabled: true,
   listenBrainzEnabled: true,
   enableExternalServices: true,
-  enableCoverAnimation: true,
+  enableCoverAnimation: false,
   enableNowPlaying: true,
   devShowArtistPage: true,
   devUIShowConfig: true,
