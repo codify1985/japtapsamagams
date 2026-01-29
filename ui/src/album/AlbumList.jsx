@@ -112,12 +112,13 @@ const YearDropdown = ({
 }) => {
   const location = useLocation()
   const isHomePage = location.pathname.includes('recentlyAdded')
-  const currentYear = new Date().getFullYear()
+  const ct = new Date().getFullYear()
+  const currentYear = ct >= config.maxYears ? ct : config.maxYears
 
   const yearChoices = React.useMemo(() => {
     const choices = []
-    const maxYears = config.maxYears || 2009 // from 2009 to current year
-    for (let y = currentYear; y >= maxYears; y--) {
+    const minsYears = config.minsYears || 2009 // from 2009 to current year
+    for (let y = currentYear; y >= minsYears; y--) {
       choices.push({ id: y, name: String(y) })
     }
     return choices
