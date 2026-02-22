@@ -1,0 +1,58 @@
+Port = 4633
+ScanSchedule = "@startup"
+MusicFolder = "/home/gagan/development/kirtans"
+LogLevel = "info"
+LogFile = "/home/gagan/development/japtapsamagams/logs/log.txt"
+DevAutoCreateAdminPassword = "admin12"
+DataFolder = "/home/gagan/development/data"
+EnableSharing = true
+ShareURL = "https://www.japtapsamagams.org"
+
+# Add or modify these settings
+EventTimeOut = "3000s"     # 5 minutes instead of 30s
+HttpTimeout = "300s"       # Increase HTTP timeout
+SessionTimeout = "24h"    # Keep sessions alive longer
+EnableInsightsCollector = false
+
+
+
+# Cache settings to prevent expiration
+AlbumCacheTime = "24h"        # How long to cache album metadata (default: 1h)
+ArtistCacheTime = "24h"       # How long to cache artist metadata (default: 1h) 
+CoverArtCacheTime = "365d"    # How long to cache cover art (default: 1h)
+MetadataCacheTime = "24h"     # General metadata cache time (default: 1h)
+
+# Use the correct parameter names (based on loaded config)
+DevArtistInfoTimeToLive = "168h"      # 7 days instead of 24h
+DevAlbumInfoTimeToLive = "168h"       # 7 days instead of current 7 da
+
+# External metadata settings (these affect the "AlbumInfo" cache you're seeing)
+Agents = ""                   # Disable external agents to prevent cache refresh
+LastFM.Enabled = false        # Disable LastFM lookups
+Spotify.Enabled = false       # Disable Spotify lookups
+
+# Add these lines to further reduce background tasks
+EnableExternalServices = false        # Disable all external services
+Deezer.Enabled = false               # Disable Deezer lookups  
+ListenBrainz.Enabled = false         # Disable ListenBrainz
+DevEnablePlayerInsights = false      # Disable player insights
+DevEnablePluginsInsights = false     # Disable plugin insights
+DevNewEventStream = false
+
+# Added on September 28th
+DefaultTheme = "Japtap Light"
+DevAutoLoginUsername = "japtaptest"
+# Enable reverse proxy authentication
+ReverseProxyUserHeader = "Remote-User"
+ReverseProxyWhitelist = "127.0.0.1/32,::1/128"
+EnableStarRating = false
+DefaultUser = "japtaptest"
+EnableUserSelfSignup =  true
+EnableUserEditing = true
+MinYears =  2016
+MaxYears =  2026
+DefaultAlbumView = 'grid'
+EnableCoverAnimation = false
+PID.Album = "musicbrainz_albumid|folder,album"
+DefaultDownloadableShare = true
+EnableDownloads = true

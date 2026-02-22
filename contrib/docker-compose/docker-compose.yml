@@ -5,16 +5,16 @@ services:
     container_name: "navidrome"
     image: navidrome-local:latest
     restart: unless-stopped
-    read_only: true
     ports:
       - "4633:4633"
     volumes:
-      - /home/gagan/japtapsamagams/navidrome/data:/data
-      - /home/gagan/music-dev:/music:ro
-      - /home/gagan/japtapsamagams/logs:/logs
+      - /home/gagan/development/data:/data
+      - /home/gagan/development/kirtans:/music:ro
+      - /home/gagan/development/japtapsamagams/logs:/logs
     environment:
       ND_MUSICFOLDER: /music
       ND_DATAFOLDER: /data
       ND_PORT: 4633
       ND_LOGFILE: /logs/log.txt
       ND_FFMPEGPATH: /usr/bin/ffmpeg
+      ND_REVERSEPROXYWHITELIST: "0.0.0.0/0,::/0"
