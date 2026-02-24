@@ -23,8 +23,8 @@ vouch:
 
 oauth:
   provider: google
-  client_id: "YOUR_GOOGLE_CLIENT_ID"        # ← paste from Google Cloud Console
-  client_secret: "YOUR_GOOGLE_CLIENT_SECRET"  # ← paste from Google Cloud Console
+  client_id: ""        # ← paste from Google Cloud Console
+  client_secret: ""  # ← paste from Google Cloud Console
 
   # Google redirects here after the user authenticates.
   # Must match EXACTLY what you registered in Google Cloud Console → Credentials.

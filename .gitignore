@@ -24,6 +24,7 @@ docker-compose.yml
 !contrib/docker-compose.yml
 binaries
 navidrome-*
+!contrib/docker-compose/vouch-nginx/nginx/conf.d/navidrome-*.conf
 AGENTS.md
 .github/prompts
 .github/instructions
