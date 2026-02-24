@@ -1,14 +1,10 @@
 import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import {
-  Logout as RALogout,
-  useGetIdentity,
-  useRedirect,
-  useTranslate,
-} from 'react-admin'
+import { useGetIdentity, useTranslate } from 'react-admin'
 import { MenuItem, ListItemIcon, useMediaQuery } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import LockOpenIcon from '@material-ui/icons/LockOpen'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import clsx from 'clsx'
 import { clearQueue } from '../actions'
 import config from '../config'
@@ -24,10 +20,9 @@ const useMenuItemStyles = makeStyles(
 )
 
 const Logout = (props) => {
-  const { className, icon, ...rest } = props
+  const { className } = props
   const dispatch = useDispatch()
   const { identity } = useGetIdentity()
-  const redirect = useRedirect()
   const translate = useTranslate()
   const classes = useMenuItemStyles()
   const isXSmall = useMediaQuery((theme) => theme?.breakpoints.down('xs'))
@@ -38,10 +33,36 @@ const Logout = (props) => {
 
   const handleClearQueue = useCallback(() => dispatch(clearQueue()), [dispatch])
 
+  // Guest → Login: clear the existing japtaptest JWT first, then redirect.
+  // Navidrome checks JWT before Remote-User header — if old token stays in localStorage
+  // Navidrome will use it and ignore the Google user from Vouch.
   const handleLoginClick = useCallback(() => {
     handleClearQueue()
-    redirect('/login')
-  }, [handleClearQueue, redirect])
+    localStorage.removeItem('token')
+    localStorage.removeItem('userId')
+    localStorage.removeItem('avatar')
+    localStorage.removeItem('subsonic-salt')
+    localStorage.removeItem('subsonic-token')
+    localStorage.removeItem('is-authenticated')
+    localStorage.removeItem('username')
+    localStorage.removeItem('name')
+    window.location.assign('/login')
+  }, [handleClearQueue])
+
+  // Authenticated → Logout: clear Navidrome's JWT then redirect to Nginx /logout
+  // which tells Vouch to clear the OAuth cookie, then sends user back to / as guest
+  const handleLogoutClick = useCallback(() => {
+    handleClearQueue()
+    localStorage.removeItem('token')
+    localStorage.removeItem('userId')
+    localStorage.removeItem('avatar')
+    localStorage.removeItem('subsonic-salt')
+    localStorage.removeItem('subsonic-token')
+    localStorage.removeItem('is-authenticated')
+    localStorage.removeItem('username')
+    localStorage.removeItem('name')
+    window.location.assign('/logout')
+  }, [handleClearQueue])
 
   if (isDefaultUser) {
     return (
@@ -51,7 +72,7 @@ const Logout = (props) => {
         onClick={handleLoginClick}
       >
         <ListItemIcon className={classes.icon}>
-          {icon || <LockOpenIcon />}
+          <LockOpenIcon />
         </ListItemIcon>
         {translate('ra.auth.sign_in')}
       </MenuItem>
@@ -59,9 +80,16 @@ const Logout = (props) => {
   }
 
   return (
-    <span onClick={handleClearQueue}>
-      <RALogout className={className} icon={icon} {...rest} />
-    </span>
+    <MenuItem
+      className={clsx('logout', classes.menuItem, className)}
+      component={isXSmall ? 'span' : 'li'}
+      onClick={handleLogoutClick}
+    >
+      <ListItemIcon className={classes.icon}>
+        <ExitToAppIcon />
+      </ListItemIcon>
+      {translate('ra.auth.logout')}
+    </MenuItem>
   )
 }
 

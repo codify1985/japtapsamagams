@@ -355,19 +355,18 @@ const Login = () => {
   )
 
   const handleContinueAsGuest = useCallback(() => {
-    localStorage.setItem('ND_GUEST', 'true')
-    localStorage.setItem('is-authenticated', 'guest')
-    localStorage.setItem('role', 'guest')
-    localStorage.setItem('username', 'guest')
+    // Clear any stale auth state — Nginx's @guest fallback sends Remote-User: japtaptest
+    // so Navidrome will issue a fresh guest session on the next page load
     localStorage.removeItem('token')
     localStorage.removeItem('userId')
     localStorage.removeItem('avatar')
     localStorage.removeItem('subsonic-salt')
     localStorage.removeItem('subsonic-token')
-    localStorage.setItem('name', 'Guest')
+    localStorage.removeItem('is-authenticated')
+    localStorage.removeItem('username')
+    localStorage.removeItem('name')
     dispatch(clearQueue())
-    const target = `${window.location.origin}${window.location.pathname}`
-    window.location.assign(target)
+    window.location.assign('/')
   }, [dispatch])
 
   const handleOpenSignup = useCallback(() => {

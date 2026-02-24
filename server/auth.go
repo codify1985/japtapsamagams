@@ -343,7 +343,19 @@ func handleLoginFromHeaders(ds model.DataStore, r *http.Request) map[string]inte
 		return nil
 	}
 
-	return buildAuthPayload(user)
+	payload := buildAuthPayload(user)
+
+	// Issue a JWT so the frontend session persists beyond the Vouch/OAuth cookie.
+	// Without this token, every page load depends entirely on the Vouch cookie being
+	// present — if it expires or the container restarts, the user reverts to guest.
+	tokenString, err := auth.CreateToken(user)
+	if err != nil {
+		log.Error(r, "Could not create token for reverse-proxy authenticated user", "user", username, err)
+	} else {
+		payload["token"] = tokenString
+	}
+
+	return payload
 }
 
 func validateIPAgainstList(ip string, comaSeparatedList string) bool {
