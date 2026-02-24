@@ -1,10 +1,10 @@
 Port = 4633
 ScanSchedule = "@startup"
-MusicFolder = "/home/gagan/development/kirtans"
+MusicFolder = "./music"
 LogLevel = "info"
-LogFile = "/home/gagan/development/japtapsamagams/logs/log.txt"
+LogFile = "/Users/gagan/MyCodebae/japtapsamagams/logs/log.txt"
 DevAutoCreateAdminPassword = "admin12"
-DataFolder = "/home/gagan/development/data"
+DataFolder = "./data"
 EnableSharing = true
 ShareURL = "https://www.japtapsamagams.org"
 
@@ -41,14 +41,14 @@ DevNewEventStream = false
 
 # Added on September 28th
 DefaultTheme = "Japtap Light"
-DevAutoLoginUsername = "japtaptest"
+# DevAutoLoginUsername = "japtaptest"   # DISABLED — Vouch Proxy handles authentication
 # Enable reverse proxy authentication
 ReverseProxyUserHeader = "Remote-User"
 ReverseProxyWhitelist = "127.0.0.1/32,::1/128"
 EnableStarRating = false
 DefaultUser = "japtaptest"
-EnableUserSelfSignup =  true
-EnableUserEditing = true
+EnableUserSelfSignup = false   # Disabled — only Google-authed users can access
+EnableUserEditing = false      # Disabled — auth is managed by Vouch/OAuth
 MinYears =  2016
 MaxYears =  2026
 DefaultAlbumView = 'grid'

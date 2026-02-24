@@ -1,0 +1,95 @@
+version: '3.6'
+
+# Production HTTPS stack: Nginx + Vouch Proxy + Navidrome + Certbot
+#
+# Usage:
+#   1. Copy vouch-config-prod.yml.template → vouch-config-prod.yml
+#   2. Fill in your Google Client ID, Secret, and real domain in vouch-config-prod.yml
+#   3. Update DOMAIN placeholders in nginx/conf.d/navidrome-prod.conf
+#   4. Obtain TLS certs first (see Step 5 in googleauth-option3.md)
+#   5. Run: docker compose -f docker-compose-prod.yml up -d
+
+services:
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Navidrome — Music Server
+  # Not exposed directly; traffic reaches it only through Nginx
+  # ─────────────────────────────────────────────────────────────────────────────
+  navidrome:
+    image: navidrome-local:latest
+    restart: unless-stopped
+    volumes:
+      - /home/gagan/development/data:/data
+      - /home/gagan/development/kirtans:/music:ro
+      - /home/gagan/development/japtapsamagams/logs:/logs
+    environment:
+      ND_MUSICFOLDER: /music
+      ND_DATAFOLDER: /data
+      ND_PORT: 4633
+      ND_LOGFILE: /logs/log.txt
+      ND_FFMPEGPATH: /usr/bin/ffmpeg
+
+      # Reverse proxy auth — only trust traffic from Nginx on this network
+      ND_REVERSEPROXYWHITELIST: "172.20.0.0/16"
+      ND_REVERSEPROXYUSERHEADER: "Remote-User"
+
+      # Disable auto-login so Vouch controls access
+      ND_DEVAUTOLOGINUSERNAME: ""
+
+      # Lock down user management
+      ND_ENABLEUSEREDITING: "false"
+      ND_ENABLEUSERSELFSNIGNUP: "false"
+
+      # Session timeout for the web UI
+      ND_SESSIONTIMEOUT: "48h"
+    networks:
+      - internal
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Vouch Proxy — Google OAuth Handler
+  # Internal only; not exposed to the host
+  # ─────────────────────────────────────────────────────────────────────────────
+  vouch:
+    image: quay.io/vouch/vouch-proxy:latest
+    restart: unless-stopped
+    volumes:
+      - ./vouch-config-prod.yml:/config/config.yml:ro
+    networks:
+      - internal
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Nginx — Reverse Proxy + TLS Termination
+  # ─────────────────────────────────────────────────────────────────────────────
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d/navidrome-prod.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./certbot/conf:/etc/letsencrypt:ro
+      - ./certbot/www:/var/www/certbot:ro
+    depends_on:
+      - navidrome
+      - vouch
+    networks:
+      - internal
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Certbot — TLS Certificate Auto-Renewal
+  # ─────────────────────────────────────────────────────────────────────────────
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
+networks:
+  internal:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

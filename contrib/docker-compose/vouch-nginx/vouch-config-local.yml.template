@@ -1,0 +1,36 @@
+vouch:
+  # Listen port inside the container
+  port: 9090
+
+  # Cookie domain for local testing — must be "localhost" so the cookie is shared
+  # between localhost:9090 (Vouch) and localhost:8080 (Nginx → Navidrome)
+  domains:
+    - localhost
+
+  cookie:
+    domain: localhost
+    secure: false      # MUST be false for HTTP (no TLS in local testing)
+    httpOnly: true
+    sameSite: lax
+    maxAge: 86400      # 1 day in seconds
+    name: VouchCookie
+
+  # Restrict which Google accounts can log in.
+  # Remove this block to allow any Google account.
+  whiteList:
+    - your-email@gmail.com
+
+oauth:
+  provider: google
+  client_id: YOUR_GOOGLE_CLIENT_ID        # ← paste from Google Cloud Console
+  client_secret: YOUR_GOOGLE_CLIENT_SECRET  # ← paste from Google Cloud Console
+
+  # Google redirects here after the user authenticates.
+  # Must match EXACTLY what you registered in Google Cloud Console → Credentials.
+  # For local testing: http://localhost:9090/auth  (Google allows http://localhost)
+  callback_url: http://localhost:9090/auth
+
+  scopes:
+    - openid
+    - email
+    - profile

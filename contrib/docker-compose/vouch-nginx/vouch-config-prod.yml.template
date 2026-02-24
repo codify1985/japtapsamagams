@@ -1,0 +1,35 @@
+vouch:
+  # Listen port inside the container
+  port: 9090
+
+  # Parent domain shared by music.yourdomain.com and vouch.yourdomain.com
+  # The cookie is set here so both subdomains can read it.
+  domains:
+    - yourdomain.com      # ← replace with your actual domain
+
+  cookie:
+    domain: yourdomain.com  # ← replace with your actual domain
+    secure: true           # HTTPS only
+    httpOnly: true
+    sameSite: lax
+    maxAge: 2592000        # 30 days in seconds
+    name: VouchCookie
+
+  # Restrict which Google accounts can log in.
+  # Remove this block to allow any Google account.
+  whiteList:
+    - user1@gmail.com     # ← replace with allowed emails
+    - user2@gmail.com
+
+oauth:
+  provider: google
+  client_id: YOUR_GOOGLE_CLIENT_ID        # ← paste from Google Cloud Console
+  client_secret: YOUR_GOOGLE_CLIENT_SECRET  # ← paste from Google Cloud Console
+
+  # Must match EXACTLY what you registered in Google Cloud Console → Credentials
+  callback_url: https://vouch.yourdomain.com/auth  # ← replace yourdomain.com
+
+  scopes:
+    - openid
+    - email
+    - profile
