@@ -1,0 +1,138 @@
+services:
+
+  # ─────────────────────────────────────────────────
+  # Authentik — PostgreSQL backend
+  # ─────────────────────────────────────────────────
+  authentik-db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: authentik
+      POSTGRES_USER: authentik
+      POSTGRES_PASSWORD: ${AUTHENTIK_DB_PASSWORD}
+    volumes:
+      - authentik-db:/var/lib/postgresql/data
+    networks:
+      - internal
+
+  # ─────────────────────────────────────────────────
+  # Authentik — Redis cache
+  # ─────────────────────────────────────────────────
+  authentik-redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    networks:
+      - internal
+
+  # ─────────────────────────────────────────────────
+  # Authentik — Server (web UI + embedded outpost)
+  # DO NOT expose port 9000 in production.
+  # Admin UI is accessed through Caddy at auth.yourdomain.com.
+  # Temporarily add ports: ["9000:9000"] only for the initial setup step.
+  # ─────────────────────────────────────────────────
+  authentik-server:
+    image: ghcr.io/goauthentik/server:2024.12.3
+    restart: unless-stopped
+    command: server
+    environment:
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
+      AUTHENTIK_REDIS__HOST: authentik-redis
+      AUTHENTIK_POSTGRESQL__HOST: authentik-db
+      AUTHENTIK_POSTGRESQL__USER: authentik
+      AUTHENTIK_POSTGRESQL__NAME: authentik
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${AUTHENTIK_DB_PASSWORD}
+      AUTHENTIK_ERROR_REPORTING__ENABLED: "false"
+    depends_on:
+      - authentik-db
+      - authentik-redis
+    networks:
+      - internal
+
+  # ─────────────────────────────────────────────────
+  # Authentik — Worker (background tasks)
+  # ─────────────────────────────────────────────────
+  authentik-worker:
+    image: ghcr.io/goauthentik/server:2024.12.3
+    restart: unless-stopped
+    command: worker
+    environment:
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
+      AUTHENTIK_REDIS__HOST: authentik-redis
+      AUTHENTIK_POSTGRESQL__HOST: authentik-db
+      AUTHENTIK_POSTGRESQL__USER: authentik
+      AUTHENTIK_POSTGRESQL__NAME: authentik
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${AUTHENTIK_DB_PASSWORD}
+    depends_on:
+      - authentik-db
+      - authentik-redis
+    networks:
+      - internal
+
+  # ─────────────────────────────────────────────────
+  # Navidrome — music server
+  # Build from local source (project root is ../ relative to this file).
+  # Run `docker compose -f deploy/docker-compose-caddy.yml build navidrome`
+  # to (re)build after code changes.
+  # ─────────────────────────────────────────────────
+  navidrome:
+    container_name: "japtapsamagams"
+    build:
+      context: ../       # project root — one level up from deploy/
+      dockerfile: Dockerfile
+    image: navidrome-local:latest
+    restart: unless-stopped
+    # WARNING: Do NOT expose this port in production — all traffic must go through Caddy.
+    # Uncomment only for local pre-flight / debugging (§17 Step 8), then remove again.
+    # ports:
+    #   - "4633:4633"
+    volumes:
+      - /Users/gagan/MyCodebae/japtapsamagams/data:/data
+      - /Users/gagan/MyCodebae/japtapsamagams/music:/music:ro
+      - /Users/gagan/MyCodebae/japtapsamagams/logs:/logs
+    environment:
+      ND_MUSICFOLDER: /music
+      ND_DATAFOLDER: /data
+      ND_PORT: 4633
+      ND_LOGFILE: /logs/log.txt
+      ND_FFMPEGPATH: /usr/bin/ffmpeg
+      # Correct keys for this codebase (conf/configuration.go:90-91).
+      # NOT ND_EXTAUTH_* — those keys do not exist in this fork.
+      ND_REVERSEPROXYWHITELIST: "172.18.0.0/16"
+      ND_REVERSEPROXYUSERHEADER: "Remote-User"
+      ND_ENABLEUSEREDITING: "false"
+      ND_ENABLEUSERSELFSIGNUP: "false"
+    networks:
+      - internal
+
+  # ─────────────────────────────────────────────────
+  # Caddy — reverse proxy + automatic TLS
+  # Caddyfile lives at deploy/caddy/Caddyfile (./caddy/Caddyfile relative to this file).
+  # ─────────────────────────────────────────────────
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"    # HTTP/3
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    networks:
+      - internal
+    depends_on:
+      - navidrome
+      - authentik-server
+
+networks:
+  internal:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16   # Fixed subnet — matches ND_REVERSEPROXYWHITELIST
+
+volumes:
+  authentik-db:
+  caddy-data:
+  caddy-config:

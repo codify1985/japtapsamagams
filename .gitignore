@@ -31,3 +31,4 @@ AGENTS.md
 *.exe
 *.test
 *.wasm
+.env

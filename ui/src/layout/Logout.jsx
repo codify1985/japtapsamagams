@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux'
 import {
   Logout as RALogout,
   useGetIdentity,
-  useRedirect,
   useTranslate,
 } from 'react-admin'
 import { MenuItem, ListItemIcon, useMediaQuery } from '@material-ui/core'
@@ -27,7 +26,6 @@ const Logout = (props) => {
   const { className, icon, ...rest } = props
   const dispatch = useDispatch()
   const { identity } = useGetIdentity()
-  const redirect = useRedirect()
   const translate = useTranslate()
   const classes = useMenuItemStyles()
   const isXSmall = useMediaQuery((theme) => theme?.breakpoints.down('xs'))
@@ -40,8 +38,11 @@ const Logout = (props) => {
 
   const handleLoginClick = useCallback(() => {
     handleClearQueue()
-    redirect('/login')
-  }, [handleClearQueue, redirect])
+    // Hard redirect to Authentik outpost start URL.
+    // 'rd' tells Authentik where to return the user after OAuth success.
+    window.location.href =
+      '/outpost.goauthentik.io/start?rd=' + encodeURIComponent(window.location.href)
+  }, [handleClearQueue])
 
   if (isDefaultUser) {
     return (

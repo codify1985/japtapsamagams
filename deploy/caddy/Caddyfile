@@ -1,0 +1,115 @@
+# Global options
+{
+    email admin@yourdomain.com
+}
+
+# ─────────────────────────────────────────────────
+# Navidrome — music player
+# Replace music.yourdomain.com with your actual domain.
+# ─────────────────────────────────────────────────
+music.yourdomain.com {
+
+    # ── 1. Authentik outpost endpoints ──────────────
+    # Must be first. Handles:
+    #   /outpost.goauthentik.io/start     — Login button redirects here
+    #   /outpost.goauthentik.io/sign_out  — Logout button redirects here
+    #   /source/oauth/callback/*          — Google/Facebook OAuth callbacks
+    handle /outpost.goauthentik.io/* {
+        reverse_proxy authentik-server:9000 {
+            header_up Host              {upstream_hostport}
+            header_up X-Real-IP         {remote_host}
+            header_up X-Forwarded-For   {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
+    }
+
+    # ── 2. Subsonic API — bypass auth entirely ──────
+    # Subsonic clients (DSub, Symfonium, etc.) use password/token auth.
+    # They cannot do OAuth. Navidrome validates their credentials natively.
+    handle /rest/* {
+        reverse_proxy navidrome:4633 {
+            header_up Host              {upstream_hostport}
+            header_up X-Real-IP         {remote_host}
+            header_up X-Forwarded-For   {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
+    }
+
+    # ── 3. Public share links — bypass auth ─────────
+    handle /share/* {
+        reverse_proxy navidrome:4633 {
+            header_up Host              {upstream_hostport}
+            header_up X-Real-IP         {remote_host}
+            header_up X-Forwarded-For   {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
+    }
+
+    # ── 4. All other requests — optional Authentik auth ──
+    # This is NOT standard forward_auth — see AuthImplementationCaddy.md §5
+    # for why we use the full reverse_proxy + handle_response pattern instead.
+    handle {
+        reverse_proxy authentik-server:9000 {
+            # Rewrite the sub-request to the Authentik forward-auth endpoint
+            method GET
+            rewrite /outpost.goauthentik.io/auth/caddy
+
+            # Tell Authentik the original URL (used for redirect-after-login)
+            header_up X-Original-URL    {scheme}://{host}{uri}
+            header_up X-Real-IP         {remote_host}
+            header_up X-Forwarded-For   {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+            # Authentik response must be uncompressed so headers are readable
+            header_up Accept-Encoding   ""
+
+            # ── Branch A: Authentik says authenticated (HTTP 2xx) ──
+            # Copy the verified username into Remote-User for Navidrome.
+            # Navidrome reads this via ReverseProxyUserHeader = "Remote-User"
+            # and trusts it because the request IP is in ReverseProxyWhitelist.
+            @authed status 2xx
+            handle_response @authed {
+                request_header +Remote-User {http.reverse_proxy.header.X-Authentik-Username}
+
+                reverse_proxy navidrome:4633 {
+                    header_up Host              {upstream_hostport}
+                    header_up X-Real-IP         {remote_host}
+                    header_up X-Forwarded-For   {remote_host}
+                    header_up X-Forwarded-Proto {scheme}
+                    # WebSocket support (Navidrome uses SSE / WS for real-time updates)
+                    header_up Upgrade    {>Upgrade}
+                    header_up Connection {>Connection}
+                }
+            }
+
+            # ── Branch B: No Authentik session (302 redirect, 401, or 403) ──
+            # Instead of redirecting to Authentik login, inject the default user
+            # and proxy to Navidrome transparently. This is what gives first-time
+            # visitors the "japtaptest" experience without any login wall.
+            handle_response {
+                request_header +Remote-User japtaptest
+
+                reverse_proxy navidrome:4633 {
+                    header_up Host              {upstream_hostport}
+                    header_up X-Real-IP         {remote_host}
+                    header_up X-Forwarded-For   {remote_host}
+                    header_up X-Forwarded-Proto {scheme}
+                    header_up Upgrade    {>Upgrade}
+                    header_up Connection {>Connection}
+                }
+            }
+        }
+    }
+}
+
+# ─────────────────────────────────────────────────
+# Authentik admin portal
+# Replace auth.yourdomain.com with your actual domain.
+# ─────────────────────────────────────────────────
+auth.yourdomain.com {
+    reverse_proxy authentik-server:9000 {
+        header_up Host              {upstream_hostport}
+        header_up X-Real-IP         {remote_host}
+        header_up X-Forwarded-For   {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+    }
+}

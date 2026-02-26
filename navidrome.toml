@@ -41,13 +41,13 @@ DevNewEventStream = false
 
 # Added on September 28th
 DefaultTheme = "Japtap Light"
-# DevAutoLoginUsername = "japtaptest"   # DISABLED — Vouch Proxy handles authentication
+# DevAutoLoginUsername = "japtaptest"   # DISABLED — overrides reverse proxy auth (server/auth.go:230-240)
 # Enable reverse proxy authentication
 ReverseProxyUserHeader = "Remote-User"
-ReverseProxyWhitelist = "127.0.0.1/32,::1/128"
+ReverseProxyWhitelist = "172.18.0.0/16"   # Updated: Docker internal network (was 127.0.0.1/32 — Caddy IP rejected)
 EnableStarRating = false
-DefaultUser = "japtaptest"
-EnableUserSelfSignup = false   # Disabled — only Google-authed users can access
+# DefaultUser = "japtaptest"   # REMOVED — not a valid config key (conf/configuration.go has no such field)
+EnableUserSelfSignup = true    # Enabled — allows username/password signup at /login alongside OAuth
 EnableUserEditing = false      # Disabled — auth is managed by Vouch/OAuth
 MinYears =  2016
 MaxYears =  2026

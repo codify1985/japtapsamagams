@@ -1,0 +1,155 @@
+# Local testing stack for Caddy + Authentik.
+# DO NOT use this file for production — use docker-compose-caddy.yml instead.
+#
+# Phase 1 (infra test — no OAuth, no real domain):
+#   docker compose -f deploy/docker-compose-local.yml build navidrome
+#   docker compose -f deploy/docker-compose-local.yml up -d
+#   Open: http://localhost (music UI) | http://localhost:9000 (Authentik admin)
+#
+# Phase 2 (full OAuth test — requires Cloudflare Tunnel):
+#   cloudflared tunnel --url http://localhost:80
+#   → copy the tunnel URL (e.g. https://abc-def.trycloudflare.com)
+#   → update music/auth domain in deploy/caddy/Caddyfile.local
+#   → register OAuth callback in Google/Facebook console
+#   docker compose -f deploy/docker-compose-local.yml restart caddy
+#
+# Key differences from production:
+#   - Authentik port 9000 exposed (no Caddy needed for admin setup)
+#   - Navidrome port 4633 exposed (for pre-flight user management)
+#   - Caddyfile.local uses http:// with localhost (no Let's Encrypt)
+
+services:
+
+  # ─────────────────────────────────────────────────
+  # Authentik — PostgreSQL backend
+  # ─────────────────────────────────────────────────
+  authentik-db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: authentik
+      POSTGRES_USER: authentik
+      POSTGRES_PASSWORD: ${AUTHENTIK_DB_PASSWORD}
+    volumes:
+      - authentik-db-local:/var/lib/postgresql/data
+    networks:
+      - internal
+
+  # ─────────────────────────────────────────────────
+  # Authentik — Redis cache
+  # ─────────────────────────────────────────────────
+  authentik-redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    networks:
+      - internal
+
+  # ─────────────────────────────────────────────────
+  # Authentik — Server (web UI + embedded outpost)
+  # Port 9000 is exposed for direct local access — initial setup and admin UI.
+  # ─────────────────────────────────────────────────
+  authentik-server:
+    image: ghcr.io/goauthentik/server:2024.12.3
+    restart: unless-stopped
+    command: server
+    ports:
+      - "9000:9000"   # Exposed locally — not exposed in production
+    environment:
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
+      AUTHENTIK_REDIS__HOST: authentik-redis
+      AUTHENTIK_POSTGRESQL__HOST: authentik-db
+      AUTHENTIK_POSTGRESQL__USER: authentik
+      AUTHENTIK_POSTGRESQL__NAME: authentik
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${AUTHENTIK_DB_PASSWORD}
+      AUTHENTIK_ERROR_REPORTING__ENABLED: "false"
+    depends_on:
+      - authentik-db
+      - authentik-redis
+    networks:
+      - internal
+
+  # ─────────────────────────────────────────────────
+  # Authentik — Worker (background tasks)
+  # ─────────────────────────────────────────────────
+  authentik-worker:
+    image: ghcr.io/goauthentik/server:2024.12.3
+    restart: unless-stopped
+    command: worker
+    environment:
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
+      AUTHENTIK_REDIS__HOST: authentik-redis
+      AUTHENTIK_POSTGRESQL__HOST: authentik-db
+      AUTHENTIK_POSTGRESQL__USER: authentik
+      AUTHENTIK_POSTGRESQL__NAME: authentik
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${AUTHENTIK_DB_PASSWORD}
+    depends_on:
+      - authentik-db
+      - authentik-redis
+    networks:
+      - internal
+
+  # ─────────────────────────────────────────────────
+  # Navidrome — music server
+  # Port 4633 exposed locally for pre-flight user management.
+  # In production this port is NOT exposed.
+  # ─────────────────────────────────────────────────
+  navidrome:
+    container_name: "japtapsamagams-local"
+    build:
+      context: ../       # project root — one level up from deploy/
+      dockerfile: Dockerfile
+    image: navidrome-local:latest
+    restart: unless-stopped
+    ports:
+      - "4633:4633"   # Exposed locally for pre-flight access
+    volumes:
+      - /Users/gagan/MyCodebae/japtapsamagams/data:/data
+      - /Users/gagan/MyCodebae/japtapsamagams/music:/music:ro
+      - /Users/gagan/MyCodebae/japtapsamagams/logs:/logs
+    environment:
+      ND_MUSICFOLDER: /music
+      ND_DATAFOLDER: /data
+      ND_PORT: 4633
+      ND_LOGFILE: /logs/log.txt
+      ND_FFMPEGPATH: /usr/bin/ffmpeg
+      ND_REVERSEPROXYWHITELIST: "172.19.0.0/16"   # Must match the subnet above
+      ND_REVERSEPROXYUSERHEADER: "Remote-User"
+      ND_ENABLEUSEREDITING: "false"
+      ND_ENABLEUSERSELFSIGNUP: "false"
+    networks:
+      - internal
+
+  # ─────────────────────────────────────────────────
+  # Caddy — reverse proxy
+  # Uses Caddyfile.local (http:// on localhost, no Let's Encrypt).
+  # For Phase 2 OAuth testing, update Caddyfile.local with the
+  # Cloudflare Tunnel URL and restart this service.
+  # ─────────────────────────────────────────────────
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./caddy/Caddyfile.local:/etc/caddy/Caddyfile:ro
+      - caddy-data-local:/data
+      - caddy-config-local:/config
+    networks:
+      - internal
+    depends_on:
+      - navidrome
+      - authentik-server
+
+networks:
+  internal:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.19.0.0/16   # 172.18 is taken by samagam-flights_default — using 172.19 for local
+
+volumes:
+  authentik-db-local:   # Separate volume from prod — keeps local DB isolated
+  caddy-data-local:
+  caddy-config-local:

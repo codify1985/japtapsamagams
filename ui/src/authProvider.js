@@ -89,6 +89,12 @@ const authProvider = {
 
   logout: () => {
     removeItems()
+    // Redirect to Authentik outpost sign_out to clear the server-side session.
+    // Authentik clears its session cookie then redirects to 'rd' (home page).
+    // On return, Caddy injects Remote-User: japtaptest (no Authentik session)
+    // and serve_index.go re-injects japtaptest auth into window.__APP_CONFIG__.
+    window.location.href =
+      '/outpost.goauthentik.io/sign_out?rd=' + encodeURIComponent(window.location.origin + '/')
     return Promise.resolve()
   },
 
