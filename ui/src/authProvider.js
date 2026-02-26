@@ -94,7 +94,8 @@ const authProvider = {
     // On return, Caddy injects Remote-User: japtaptest (no Authentik session)
     // and serve_index.go re-injects japtaptest auth into window.__APP_CONFIG__.
     window.location.href =
-      '/outpost.goauthentik.io/sign_out?rd=' + encodeURIComponent(window.location.origin + '/')
+      '/outpost.goauthentik.io/sign_out?rd=' +
+      encodeURIComponent(window.location.origin + '/')
     return Promise.resolve()
   },
 

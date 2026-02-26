@@ -1,10 +1,6 @@
 import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import {
-  Logout as RALogout,
-  useGetIdentity,
-  useTranslate,
-} from 'react-admin'
+import { Logout as RALogout, useGetIdentity, useTranslate } from 'react-admin'
 import { MenuItem, ListItemIcon, useMediaQuery } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import LockOpenIcon from '@material-ui/icons/LockOpen'
@@ -41,7 +37,8 @@ const Logout = (props) => {
     // Hard redirect to Authentik outpost start URL.
     // 'rd' tells Authentik where to return the user after OAuth success.
     window.location.href =
-      '/outpost.goauthentik.io/start?rd=' + encodeURIComponent(window.location.href)
+      '/outpost.goauthentik.io/start?rd=' +
+      encodeURIComponent(window.location.href)
   }, [handleClearQueue])
 
   if (isDefaultUser) {
