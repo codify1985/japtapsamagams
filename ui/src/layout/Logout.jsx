@@ -37,8 +37,7 @@ const Logout = (props) => {
     // Hard redirect to NextAuth.js sign-in page.
     // 'callbackUrl' tells Auth.js where to return the user after OAuth success.
     window.location.href =
-      '/api/auth/signin?callbackUrl=' +
-      encodeURIComponent(window.location.href)
+      '/api/auth/signin?callbackUrl=' + encodeURIComponent(window.location.href)
   }, [handleClearQueue])
 
   if (isDefaultUser) {
