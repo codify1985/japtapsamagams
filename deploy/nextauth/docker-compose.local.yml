@@ -1,0 +1,112 @@
+# Local testing stack: NextAuth.js + Navidrome + Caddy
+# DO NOT use this file for production — use docker-compose.yml instead.
+#
+# Phase 1 (infra test — no OAuth):
+#   docker compose --env-file .env -f deploy/nextauth/docker-compose.local.yml build
+#   docker compose --env-file .env -f deploy/nextauth/docker-compose.local.yml up -d
+#   Open: http://localhost (music UI) | http://localhost:3000 (NextAuth.js direct)
+#
+# Phase 2 (full OAuth test — requires Cloudflare Tunnel):
+#   cloudflared tunnel --url http://localhost:80
+#   → copy the tunnel URL (e.g. https://abc-def.trycloudflare.com)
+#   → update domain in deploy/caddy/nextauth/Caddyfile.local
+#   → register OAuth callback in Google console:
+#     https://abc-def.trycloudflare.com/api/auth/callback/google
+#   docker compose --env-file .env -f deploy/nextauth/docker-compose.local.yml restart caddy
+#
+# Key differences from production:
+#   - NextAuth.js port 3000 exposed (for direct testing of auth endpoints)
+#   - Navidrome port 4633 exposed (for pre-flight user management)
+#   - Caddyfile.local uses http:// with localhost (no Let's Encrypt)
+#   - Separate volumes (avoid mixing with production data)
+#   - Subnet 172.19.0.0/16 (separate from production 172.18.0.0/16)
+
+services:
+
+  # ─────────────────────────────────────────────────
+  # NextAuth.js — authentication gateway
+  # Port 3000 is exposed locally for direct endpoint testing.
+  # ─────────────────────────────────────────────────
+  nextauth:
+    build:
+      context: ../../nextauth   # nextauth/ at project root
+      dockerfile: Dockerfile
+    image: nextauth-gateway:latest
+    restart: unless-stopped
+    ports:
+      - "3000:3000"   # Exposed locally for testing — not exposed in production
+    environment:
+      AUTH_SECRET: ${AUTH_SECRET:?Set AUTH_SECRET via --env-file .env}
+      AUTH_TRUST_HOST: "true"
+      AUTH_GOOGLE_ID: ${AUTH_GOOGLE_ID:-}
+      AUTH_GOOGLE_SECRET: ${AUTH_GOOGLE_SECRET:-}
+      AUTH_FACEBOOK_ID: ${AUTH_FACEBOOK_ID:-}
+      AUTH_FACEBOOK_SECRET: ${AUTH_FACEBOOK_SECRET:-}
+      AUTH_GITHUB_ID: ${AUTH_GITHUB_ID:-}
+      AUTH_GITHUB_SECRET: ${AUTH_GITHUB_SECRET:-}
+    networks:
+      - internal
+
+  # ─────────────────────────────────────────────────
+  # Navidrome — music server
+  # Port 4633 exposed locally for pre-flight access.
+  # ─────────────────────────────────────────────────
+  navidrome:
+    container_name: "japtapsamagams-local"
+    build:
+      context: ../../       # project root
+      dockerfile: Dockerfile
+    image: navidrome-local:latest
+    restart: unless-stopped
+    ports:
+      - "4633:4633"   # Exposed locally for pre-flight access
+    volumes:
+      - ../../data:/data
+      - ../../music:/music:ro
+      - ../../logs:/logs
+    environment:
+      ND_MUSICFOLDER: /music
+      ND_DATAFOLDER: /data
+      ND_PORT: 4633
+      ND_LOGFILE: /logs/log.txt
+      ND_FFMPEGPATH: /usr/bin/ffmpeg
+      ND_REVERSEPROXYWHITELIST: "172.19.0.0/16"   # Must match the subnet below
+      ND_REVERSEPROXYUSERHEADER: "Remote-User"
+      ND_ENABLEUSEREDITING: "false"
+      ND_ENABLEUSERSELFSIGNUP: "false"
+    networks:
+      - internal
+
+  # ─────────────────────────────────────────────────
+  # Caddy — reverse proxy
+  # Uses Caddyfile.local (http:// on localhost, no Let's Encrypt).
+  # ─────────────────────────────────────────────────
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      DEFAULT_USER: ${DEFAULT_USER:-japtaptest}
+    volumes:
+      - ../caddy/nextauth/Caddyfile.local:/etc/caddy/Caddyfile:ro
+      - caddy-data-local:/data
+      - caddy-config-local:/config
+    networks:
+      - internal
+    depends_on:
+      - navidrome
+      - nextauth
+
+networks:
+  internal:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.19.0.0/16   # Separate from production (172.18.0.0/16)
+
+volumes:
+  caddy-data-local:
+  caddy-config-local:

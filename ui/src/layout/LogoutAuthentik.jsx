@@ -34,10 +34,10 @@ const Logout = (props) => {
 
   const handleLoginClick = useCallback(() => {
     handleClearQueue()
-    // Hard redirect to NextAuth.js sign-in page.
-    // 'callbackUrl' tells Auth.js where to return the user after OAuth success.
+    // Hard redirect to Authentik outpost start URL.
+    // 'rd' tells Authentik where to return the user after OAuth success.
     window.location.href =
-      '/api/auth/signin?callbackUrl=' +
+      '/outpost.goauthentik.io/start?rd=' +
       encodeURIComponent(window.location.href)
   }, [handleClearQueue])
 

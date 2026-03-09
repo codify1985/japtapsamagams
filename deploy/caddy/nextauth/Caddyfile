@@ -1,0 +1,126 @@
+# Production Caddyfile for NextAuth.js + Navidrome
+# Replaces the Authentik-based Caddyfile at deploy/caddy/authentik/Caddyfile.
+#
+# Architecture:
+#   Browser → Caddy (port 443) → NextAuth.js (auth check) → Navidrome (music)
+#
+# Auth flow:
+#   1. Every non-bypass request triggers a sub-request to NextAuth.js /api/auth/caddy
+#   2. If NextAuth.js returns 200 → copy X-NextAuth-Username into Remote-User
+#   3. If NextAuth.js returns 401 → inject Remote-User: {$DEFAULT_USER} (default user)
+#   4. Navidrome reads Remote-User and auto-creates/authenticates the user
+#
+# Replace music.yourdomain.com with your actual domain.
+
+# Global options
+{
+    email admin@yourdomain.com
+}
+
+# ─────────────────────────────────────────────────
+# Navidrome — music player
+# ─────────────────────────────────────────────────
+music.yourdomain.com {
+
+    # ── 1. NextAuth.js endpoints ────────────────────
+    # Must be first. Handles:
+    #   /api/auth/signin           — Sign-in page (lists Google, Facebook, GitHub buttons)
+    #   /api/auth/signout          — Sign-out (clears session cookie)
+    #   /api/auth/callback/*       — OAuth callbacks from providers
+    #   /api/auth/session          — Session info (JSON)
+    #   /api/auth/csrf             — CSRF token
+    #   /api/auth/providers        — List of configured providers
+    #   /api/auth/caddy            — Custom auth-check endpoint (used by block 4)
+    #
+    # IMPORTANT: Forward the browser's cookies so Auth.js can read its session cookie.
+    handle /api/auth/* {
+        reverse_proxy nextauth:3000 {
+            header_up Host              {upstream_hostport}
+            header_up X-Real-IP         {remote_host}
+            header_up X-Forwarded-For   {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
+    }
+
+    # ── 2. Subsonic API — bypass auth entirely ──────
+    # Subsonic clients (DSub, Symfonium, etc.) use password/token auth.
+    # They cannot do OAuth. Navidrome validates their credentials natively.
+    handle /rest/* {
+        reverse_proxy navidrome:4633 {
+            header_up Host              {upstream_hostport}
+            header_up X-Real-IP         {remote_host}
+            header_up X-Forwarded-For   {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
+    }
+
+    # ── 3. Public share links — bypass auth ─────────
+    handle /share/* {
+        reverse_proxy navidrome:4633 {
+            header_up Host              {upstream_hostport}
+            header_up X-Real-IP         {remote_host}
+            header_up X-Forwarded-For   {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
+    }
+
+    # ── 4. All other requests — optional NextAuth.js auth ──
+    # Same pattern as the Authentik Caddyfile (reverse_proxy + handle_response),
+    # but sub-requests go to NextAuth.js instead of Authentik.
+    #
+    # Why NOT forward_auth: standard forward_auth redirects unauthenticated users
+    # to a login page. We want unauthenticated visitors to seamlessly land as
+    # the default guest user ({$DEFAULT_USER}) — no login wall.
+    handle {
+        reverse_proxy nextauth:3000 {
+            # Rewrite the sub-request to our custom Caddy auth-check endpoint
+            method GET
+            rewrite /api/auth/caddy
+
+            # Forward the original request URL (for logging/debugging)
+            header_up X-Original-URL    {scheme}://{host}{uri}
+            header_up X-Real-IP         {remote_host}
+            header_up X-Forwarded-For   {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+            # Forward the browser's cookies so Auth.js can read its session cookie
+            header_up Cookie            {http.request.header.Cookie}
+
+            # ── Branch A: NextAuth.js says authenticated (HTTP 200) ──
+            # Copy the verified email into Remote-User for Navidrome.
+            # Navidrome reads this via ReverseProxyUserHeader = "Remote-User"
+            # and trusts it because the request IP is in ReverseProxyWhitelist.
+            @authed status 2xx
+            handle_response @authed {
+                request_header +Remote-User {http.reverse_proxy.header.X-NextAuth-Username}
+
+                reverse_proxy navidrome:4633 {
+                    header_up Host              {upstream_hostport}
+                    header_up X-Real-IP         {remote_host}
+                    header_up X-Forwarded-For   {remote_host}
+                    header_up X-Forwarded-Proto {scheme}
+                    # WebSocket support (Navidrome uses SSE / WS for real-time updates)
+                    header_up Upgrade    {>Upgrade}
+                    header_up Connection {>Connection}
+                }
+            }
+
+            # ── Branch B: No NextAuth.js session (401) ──────────────
+            # Instead of redirecting to login, inject the default user
+            # and proxy to Navidrome transparently. This is what gives
+            # first-time visitors the default guest experience without
+            # any login wall. DEFAULT_USER is set via env var (see .env).
+            handle_response {
+                request_header +Remote-User {$DEFAULT_USER:japtaptest}
+
+                reverse_proxy navidrome:4633 {
+                    header_up Host              {upstream_hostport}
+                    header_up X-Real-IP         {remote_host}
+                    header_up X-Forwarded-For   {remote_host}
+                    header_up X-Forwarded-Proto {scheme}
+                    header_up Upgrade    {>Upgrade}
+                    header_up Connection {>Connection}
+                }
+            }
+        }
+    }
+}

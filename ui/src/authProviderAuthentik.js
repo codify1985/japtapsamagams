@@ -89,13 +89,12 @@ const authProvider = {
 
   logout: () => {
     removeItems()
-    // Redirect to NextAuth.js signout to clear the Auth.js session cookie.
-    // After signout, the user is redirected to the home page (callbackUrl).
-    // On return, Caddy sub-requests /api/auth/caddy → gets 401 (no session) →
-    // injects Remote-User: japtaptest, and serve_index.go re-injects
-    // japtaptest auth into window.__APP_CONFIG__.
+    // Redirect to Authentik outpost sign_out to clear the server-side session.
+    // Authentik clears its session cookie then redirects to 'rd' (home page).
+    // On return, Caddy injects Remote-User: japtaptest (no Authentik session)
+    // and serve_index.go re-injects japtaptest auth into window.__APP_CONFIG__.
     window.location.href =
-      '/api/auth/signout?callbackUrl=' +
+      '/outpost.goauthentik.io/sign_out?rd=' +
       encodeURIComponent(window.location.origin + '/')
     return Promise.resolve()
   },
