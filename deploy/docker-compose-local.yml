@@ -2,8 +2,8 @@
 # DO NOT use this file for production — use docker-compose-caddy.yml instead.
 #
 # Phase 1 (infra test — no OAuth, no real domain):
-#   docker compose -f deploy/docker-compose-local.yml build navidrome
-#   docker compose -f deploy/docker-compose-local.yml up -d
+#   docker compose --env-file .env -f deploy/docker-compose-local.yml build navidrome
+#   docker compose --env-file .env -f deploy/docker-compose-local.yml up -d
 #   Open: http://localhost (music UI) | http://localhost:9000 (Authentik admin)
 #
 # Phase 2 (full OAuth test — requires Cloudflare Tunnel):
@@ -11,7 +11,12 @@
 #   → copy the tunnel URL (e.g. https://abc-def.trycloudflare.com)
 #   → update music/auth domain in deploy/caddy/Caddyfile.local
 #   → register OAuth callback in Google/Facebook console
-#   docker compose -f deploy/docker-compose-local.yml restart caddy
+#   docker compose --env-file .env -f deploy/docker-compose-local.yml restart caddy
+#
+# Important:
+#   When you run `docker compose -f deploy/docker-compose-local.yml ...`, Docker Compose
+#   uses `deploy/` as the project directory, so it will not automatically read a repo-root
+#   `.env` file. Pass `--env-file .env` from the repo root so Authentik secrets resolve.
 #
 # Key differences from production:
 #   - Authentik port 9000 exposed (no Caddy needed for admin setup)
@@ -29,7 +34,12 @@ services:
     environment:
       POSTGRES_DB: authentik
       POSTGRES_USER: authentik
-      POSTGRES_PASSWORD: ${AUTHENTIK_DB_PASSWORD}
+      POSTGRES_PASSWORD: ${AUTHENTIK_DB_PASSWORD:?Set AUTHENTIK_DB_PASSWORD via --env-file .env}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U authentik"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - authentik-db-local:/var/lib/postgresql/data
     networks:
@@ -49,22 +59,24 @@ services:
   # Port 9000 is exposed for direct local access — initial setup and admin UI.
   # ─────────────────────────────────────────────────
   authentik-server:
-    image: ghcr.io/goauthentik/server:2026.2.1
+    image: ghcr.io/goauthentik/server:2024.12.3
     restart: unless-stopped
     command: server
     ports:
       - "9000:9000"   # Exposed locally — not exposed in production
     environment:
-      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?Set AUTHENTIK_SECRET_KEY via --env-file .env}
       AUTHENTIK_REDIS__HOST: authentik-redis
       AUTHENTIK_POSTGRESQL__HOST: authentik-db
       AUTHENTIK_POSTGRESQL__USER: authentik
       AUTHENTIK_POSTGRESQL__NAME: authentik
-      AUTHENTIK_POSTGRESQL__PASSWORD: ${AUTHENTIK_DB_PASSWORD}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${AUTHENTIK_DB_PASSWORD:?Set AUTHENTIK_DB_PASSWORD via --env-file .env}
       AUTHENTIK_ERROR_REPORTING__ENABLED: "false"
     depends_on:
-      - authentik-db
-      - authentik-redis
+      authentik-db:
+        condition: service_healthy
+      authentik-redis:
+        condition: service_started
     networks:
       - internal
 
@@ -72,19 +84,21 @@ services:
   # Authentik — Worker (background tasks)
   # ─────────────────────────────────────────────────
   authentik-worker:
-    image: ghcr.io/goauthentik/server:2026.2.1
+    image: ghcr.io/goauthentik/server:2024.12.3
     restart: unless-stopped
     command: worker
     environment:
-      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?Set AUTHENTIK_SECRET_KEY via --env-file .env}
       AUTHENTIK_REDIS__HOST: authentik-redis
       AUTHENTIK_POSTGRESQL__HOST: authentik-db
       AUTHENTIK_POSTGRESQL__USER: authentik
       AUTHENTIK_POSTGRESQL__NAME: authentik
-      AUTHENTIK_POSTGRESQL__PASSWORD: ${AUTHENTIK_DB_PASSWORD}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${AUTHENTIK_DB_PASSWORD:?Set AUTHENTIK_DB_PASSWORD via --env-file .env}
     depends_on:
-      - authentik-db
-      - authentik-redis
+      authentik-db:
+        condition: service_healthy
+      authentik-redis:
+        condition: service_started
     networks:
       - internal
 
@@ -103,9 +117,9 @@ services:
     ports:
       - "4633:4633"   # Exposed locally for pre-flight access
     volumes:
-      - /Users/gagan/MyCodebae/japtapsamagams/data:/data
-      - /Users/gagan/MyCodebae/japtapsamagams/music:/music:ro
-      - /Users/gagan/MyCodebae/japtapsamagams/logs:/logs
+      - ../data:/data
+      - ../music:/music:ro
+      - ../logs:/logs
     environment:
       ND_MUSICFOLDER: /music
       ND_DATAFOLDER: /data
@@ -147,7 +161,7 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.19.0.0/16   # 172.18 is taken by samagam-flights_default — using 172.19 for local
+        - subnet: 172.19.0.0/16
 
 volumes:
   authentik-db-local:   # Separate volume from prod — keeps local DB isolated

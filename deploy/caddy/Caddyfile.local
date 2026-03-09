@@ -23,8 +23,17 @@
 # Navidrome — music player (local)
 # Phase 1: http://localhost
 # Phase 2: replace with https://your-tunnel.trycloudflare.com
+# curl -I http://localhost -H 'Host: altered-empirical-accommodations-wrestling.trycloudflare.com'
 # ─────────────────────────────────────────────────
+
+# {
+#    auto_https off
+# }
+
+# https://altered-empirical-accommodations-wrestling.trycloudflare.com {
+
 http://localhost {
+
 
     # ── 1. Authentik outpost endpoints ──────────────
     handle /outpost.goauthentik.io/* {
