@@ -38,6 +38,7 @@ services:
     environment:
       AUTH_SECRET: ${AUTH_SECRET:?Set AUTH_SECRET via --env-file .env}
       AUTH_TRUST_HOST: "true"
+      AUTH_URL: ${AUTH_URL:-http://localhost}
       AUTH_GOOGLE_ID: ${AUTH_GOOGLE_ID:-}
       AUTH_GOOGLE_SECRET: ${AUTH_GOOGLE_SECRET:-}
       AUTH_FACEBOOK_ID: ${AUTH_FACEBOOK_ID:-}
@@ -72,8 +73,8 @@ services:
       ND_FFMPEGPATH: /usr/bin/ffmpeg
       ND_REVERSEPROXYWHITELIST: "172.19.0.0/16"   # Must match the subnet below
       ND_REVERSEPROXYUSERHEADER: "Remote-User"
-      ND_ENABLEUSEREDITING: "false"
-      ND_ENABLEUSERSELFSIGNUP: "false"
+      ND_ENABLEUSEREDITING: "true"
+      ND_ENABLEUSERSELFSIGNUP: "true"
     networks:
       - internal
 
@@ -85,9 +86,9 @@ services:
     image: caddy:2-alpine
     restart: unless-stopped
     ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"
+      - "80:80" # HTTP only — Cloudflare Tunnel handles TLS
+      # - "443:443"
+      # - "443:443/udp"
     environment:
       DEFAULT_USER: ${DEFAULT_USER:-japtaptest}
     volumes:

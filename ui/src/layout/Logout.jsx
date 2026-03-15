@@ -34,10 +34,12 @@ const Logout = (props) => {
 
   const handleLoginClick = useCallback(() => {
     handleClearQueue()
-    // Hard redirect to NextAuth.js sign-in page.
-    // 'callbackUrl' tells Auth.js where to return the user after OAuth success.
+    // Redirect to the Navidrome login page, which shows the hybrid
+    // username/password + Google sign-in form.
+    // 'callbackUrl' is passed through so the Google button can return
+    // the user to the page they were on after OAuth completes.
     window.location.href =
-      '/api/auth/signin?callbackUrl=' + encodeURIComponent(window.location.href)
+      '/app/#/login?callbackUrl=' + encodeURIComponent(window.location.href)
   }, [handleClearQueue])
 
   if (isDefaultUser) {

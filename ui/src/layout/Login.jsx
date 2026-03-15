@@ -49,6 +49,7 @@ const FormLogin = ({
   validate,
   onContinueAsGuest,
   onOpenSignup,
+  onGoogleSignIn,
   showGuestActions,
   showSelfSignup,
 }) => {
@@ -114,6 +115,18 @@ const FormLogin = ({
                 >
                   {loading && <CircularProgress size={25} thickness={2} />}
                   {translate('ra.auth.sign_in')}
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  type="button"
+                  onClick={onGoogleSignIn}
+                  disabled={loading}
+                  className={`${classes.button} ${classes.guestOutlinedButton}`}
+                  fullWidth
+                  disableElevation
+                >
+                  Sign in with Google
                 </Button>
               </CardActions>
               {showGuestActions && (
@@ -381,6 +394,29 @@ const Login = () => {
     history.replace('/login')
   }, [history])
 
+  // The callbackUrl is set by Logout.jsx when it redirects the user here.
+  // It carries the original page so the user lands back there after Google OAuth.
+  const callbackUrl =
+    searchParams.get('callbackUrl') ||
+    window.location.origin + '/app/'
+
+  const handleGoogleSignIn = useCallback(() => {
+    // Clear the existing japtaptest session from localStorage before redirecting
+    // to Google. Without this, authProvider.js's hasValidSessionForDifferentUser
+    // guard sees the existing token as valid and refuses to store the new Google
+    // user's auth info when we return from OAuth, leaving the UI stuck as japtaptest.
+    localStorage.removeItem('token')
+    localStorage.removeItem('userId')
+    localStorage.removeItem('name')
+    localStorage.removeItem('username')
+    localStorage.removeItem('role')
+    localStorage.removeItem('is-authenticated')
+    // Use /api/auth/google (our custom GET handler) instead of
+    // /api/auth/signin/google, which requires a POST + CSRF token in Auth.js v5.
+    window.location.href =
+      '/api/auth/google?callbackUrl=' + encodeURIComponent(callbackUrl)
+  }, [callbackUrl])
+
   const showUserSignup = allowSelfSignup && !needsAdmin && wantsSignup
 
   if (needsAdmin) {
@@ -402,6 +438,7 @@ const Login = () => {
       loading={loading}
       onContinueAsGuest={handleContinueAsGuest}
       onOpenSignup={handleOpenSignup}
+      onGoogleSignIn={handleGoogleSignIn}
       showGuestActions={!needsAdmin}
       showSelfSignup={allowSelfSignup && !needsAdmin}
     />

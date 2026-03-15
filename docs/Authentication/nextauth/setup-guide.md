@@ -276,10 +276,15 @@ japtapsamagams    navidrome   running
 1. Open `https://music.yourdomain.com` in your browser
 2. You should see the app as `japtaptest` (default user) — **this confirms the stack is working**
 3. Click **"Sign In"** in the user menu (top right)
-4. You'll see the Auth.js sign-in page with a **"Sign in with Google"** button
-5. Click it → complete the Google OAuth flow
-6. You'll be redirected back to the app as `youremail@gmail.com`
-7. **You are now the admin** (first user created via reverse proxy gets `IsAdmin: true`)
+4. You'll be taken to the **Navidrome login page** (`/app/#/login`) — not the NextAuth.js page
+5. Click **"Sign in with Google"**
+6. Complete the Google OAuth consent flow
+7. You'll be redirected back to the app as `youremail@gmail.com`
+8. **You are now the admin** (first user created via reverse proxy gets `IsAdmin: true`)
+
+> **Why the login page instead of the NextAuth.js page?**
+> The "Sign In" button now redirects to Navidrome's own login page, which combines native
+> username/password login and the "Sign in with Google" button in one familiar UI.
 
 To verify admin status:
 - Go to **Settings** → you should see the **Users** section
@@ -293,13 +298,14 @@ Run through these test cases:
 
 | # | Test | Expected Result |
 |---|------|----------------|
-| 1 | Visit `https://music.yourdomain.com` with no cookies | See app as `japtaptest`, "Sign In" visible |
-| 2 | Click "Sign In" → Google | Redirected to Google consent → back to app as your email |
-| 3 | Refresh the page | Still logged in as your email (session cookie persists) |
-| 4 | Open incognito window → visit site | See app as `japtaptest` (separate cookie jar) |
-| 5 | Click "Logout" | Session cleared, back to `japtaptest` |
-| 6 | Visit `/rest/ping` | Navidrome responds directly (auth bypassed) |
-| 7 | Visit `/share/*` | Public share loads (auth bypassed) |
+| 1 | Visit `https://music.yourdomain.com` with no cookies | See app as `japtaptest`, "Sign In" visible in top-right menu |
+| 2 | Click "Sign In" | Redirected to `/app/#/login` (Navidrome login page, NOT the NextAuth.js page) |
+| 3 | Click "Sign in with Google" on the login page | Redirected to Google consent → back to original page as your email |
+| 4 | Refresh the page | Still logged in as your email (session cookie persists) |
+| 5 | Open incognito window → visit site | See app as `japtaptest` (separate cookie jar) |
+| 6 | Click "Logout" | localStorage cleared, redirected to `/app/#/login` |
+| 7 | Visit `/rest/ping` | Navidrome responds directly (auth bypassed for Subsonic clients) |
+| 8 | Visit `/share/*` | Public share loads (auth bypassed) |
 
 ---
 

@@ -89,14 +89,12 @@ const authProvider = {
 
   logout: () => {
     removeItems()
-    // Redirect to NextAuth.js signout to clear the Auth.js session cookie.
-    // After signout, the user is redirected to the home page (callbackUrl).
-    // On return, Caddy sub-requests /api/auth/caddy → gets 401 (no session) →
-    // injects Remote-User: japtaptest, and serve_index.go re-injects
-    // japtaptest auth into window.__APP_CONFIG__.
+    // Use /api/auth/logout (our custom GET handler) instead of
+    // /api/auth/signout, which requires a POST + CSRF token in Auth.js v5.
+    // After signout, return to the login page so the user sees the login form.
     window.location.href =
-      '/api/auth/signout?callbackUrl=' +
-      encodeURIComponent(window.location.origin + '/')
+      '/api/auth/logout?callbackUrl=' +
+      encodeURIComponent(window.location.origin + '/app/#/login')
     return Promise.resolve()
   },
 

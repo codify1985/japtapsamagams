@@ -68,7 +68,7 @@ These are set in the Docker Compose `environment` block for the `navidrome` serv
 | `ND_REVERSEPROXYWHITELIST` | CIDR range(s) of trusted proxy IPs | `172.18.0.0/16` (prod), `172.19.0.0/16` (local) | Must match Docker network subnet |
 | `ND_REVERSEPROXYUSERHEADER` | HTTP header containing the authenticated username | `Remote-User` | Caddy sets this header |
 | `ND_ENABLEUSEREDITING` | Allow users to edit their own profile | `false` | Prevent users from changing auth settings |
-| `ND_ENABLEUSERSELFSIGNUP` | Allow username/password self-registration | `false` | All users come through OAuth |
+| `ND_ENABLEUSERSELFSIGNUP` | Allow username/password self-registration | `false` (Google-only) or `true` (hybrid) | Set `false` when all users come through Google OAuth. Set `true` to also allow native username/password self-registration via the Sign Up button on the login page. |
 | `ND_MUSICFOLDER` | Path to music files inside container | `/music` | Mounted from host |
 | `ND_DATAFOLDER` | Path to data directory inside container | `/data` | Contains SQLite DB |
 | `ND_PORT` | HTTP port Navidrome listens on | `4633` | Internal to Docker network |

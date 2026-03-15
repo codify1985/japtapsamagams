@@ -83,9 +83,10 @@ docker compose --env-file .env -f deploy/nextauth/docker-compose.local.yml logs 
 ### 1.4 What to Look For
 
 - ✅ Visiting `http://localhost` shows the app as `japtaptest`
-- ✅ "Sign In" button is visible in the user menu
-- ✅ Clicking "Sign In" redirects to `/api/auth/signin` (shows Auth.js page)
-- ✅ Auth.js page shows "Sign in with Google" button (even if credentials are empty — the button just won't work yet)
+- ✅ "Sign In" button is visible in the user menu (top right)
+- ✅ Clicking "Sign In" redirects to `/app/#/login` (Navidrome login page — **not** the Auth.js page)
+- ✅ The login page shows: Username field, Password field, "Sign In" button, "Sign in with Google" button, Guest button
+- ✅ The "Sign in with Google" button is visible (even if Google credentials are empty — the button won't complete OAuth yet)
 - ✅ Subsonic API at `/rest/ping` returns XML directly (not redirected to auth)
 
 ---
@@ -156,22 +157,24 @@ docker compose --env-file .env -f deploy/nextauth/docker-compose.local.yml up -d
 
 1. Open `https://random-words-here.trycloudflare.com` in your browser
 2. You should see the app as `japtaptest` ✅
-3. Click **"Sign In"** → redirected to Auth.js sign-in page
+3. Click **"Sign In"** → you are taken to `/app/#/login` (Navidrome login page) ✅
 4. Click **"Sign in with Google"** → Google OAuth flow
-5. After authorizing → redirected back to the app as `youremail@gmail.com` ✅
-6. Click **"Logout"** → back to `japtaptest` ✅
+5. After authorizing → redirected back to the original page as `youremail@gmail.com` ✅
+6. Your email is visible in the top-right menu, and "Logout" replaces "Sign In" ✅
+7. Click **"Logout"** → localStorage cleared, redirected to `/app/#/login` ✅
 
 ### 2.8 Test Cases
 
 | # | Test | Expected |
 |---|------|----------|
-| TC-1 | Visit tunnel URL (no cookies) | App as `japtaptest`, "Sign In" visible |
-| TC-2 | Click "Sign In" → Google | Google consent → back to app as your email |
-| TC-3 | Refresh page | Still logged in (session cookie persists) |
-| TC-4 | Open incognito → visit tunnel URL | App as `japtaptest` (separate cookies) |
-| TC-5 | Click "Logout" | Session cleared, back to `japtaptest` |
-| TC-6 | Visit `/rest/ping` via tunnel | Navidrome XML response (auth bypassed) |
-| TC-7 | Direct `http://localhost:3000/api/auth/caddy` | HTTP 401 (no session) |
+| TC-1 | Visit tunnel URL (no cookies) | App as `japtaptest`, "Sign In" visible in top-right |
+| TC-2 | Click "Sign In" | Redirected to `/app/#/login` (NOT the NextAuth.js page) |
+| TC-3 | Click "Sign in with Google" on login page | Google consent → back to original page as your email |
+| TC-4 | Refresh page | Still logged in (session cookie persists) |
+| TC-5 | Open incognito → visit tunnel URL | App as `japtaptest` (separate cookies) |
+| TC-6 | Click "Logout" | Session cleared, redirected to `/app/#/login` |
+| TC-7 | Visit `/rest/ping` via tunnel | Navidrome XML response (auth bypassed) |
+| TC-8 | Direct `http://localhost:3000/api/auth/caddy` | HTTP 401 (no session) |
 
 ---
 

@@ -1,110 +1,57 @@
-# LOCAL TESTING Caddyfile — do NOT use in production.
-# Production file: deploy/caddy/nextauth/Caddyfile
+# ─────────────────────────────────────────────────────────────────────
+# Local Development Caddyfile — NextAuth.js + Navidrome
+# ─────────────────────────────────────────────────────────────────────
+# HTTP only (no TLS). For local testing on http://localhost.
 #
-# ─────────────────────────────────────────────────────────────────────────────
-# PHASE 1 (infra test — no OAuth):
-#   Serves http://localhost (music).
-#   Caddy uses port 80. NextAuth.js is internal (not exposed to host).
-#   Test: does japtaptest load? does Caddy routing work?
-#
-# PHASE 2 (OAuth test — Cloudflare Tunnel):
-#   1. Run: cloudflared tunnel --url http://localhost:80
-#   2. You get a URL like: https://random-words.trycloudflare.com
-#   3. Replace "localhost" below with your tunnel URL (keep https://)
-#   4. Register the tunnel URL as the OAuth callback in Google console:
-#      https://random-words.trycloudflare.com/api/auth/callback/google
-#   5. docker compose -f deploy/nextauth/docker-compose.local.yml restart caddy
-# ─────────────────────────────────────────────────────────────────────────────
+# For Phase 2 (Cloudflare Tunnel), comment out "http://localhost" and
+# uncomment the tunnel URL block below.
+# ─────────────────────────────────────────────────────────────────────
 
-# No global TLS options needed — using http:// for Phase 1
-# For Phase 2 with a real tunnel domain, Caddy handles TLS automatically.
+# http://localhost {
+http://dev.japtapsamagams.org {
 
-# ─────────────────────────────────────────────────
-# Navidrome — music player (local)
-# Phase 1: http://localhost
-# Phase 2: replace with https://your-tunnel.trycloudflare.com
-# ─────────────────────────────────────────────────
-
-# {
-#    auto_https off
-# }
-
-# https://your-tunnel.trycloudflare.com {
-
-http://localhost {
-
-    # ── 1. NextAuth.js endpoints ────────────────────
+    # ── Auth.js routes ──────────────────────────────────────  ────────
     handle /api/auth/* {
         reverse_proxy nextauth:3000 {
-            header_up Host              {upstream_hostport}
-            header_up X-Real-IP         {remote_host}
-            header_up X-Forwarded-For   {remote_host}
-            header_up X-Forwarded-Proto {scheme}
+            header_up Host {host}
+            header_up X-Forwarded-Proto https
         }
     }
 
-    # ── 2. Subsonic API — bypass auth ───────────────
+    # ── Subsonic/OpenSubsonic API ───────────────────────────────────
     handle /rest/* {
-        reverse_proxy navidrome:4633 {
-            header_up Host              {upstream_hostport}
-            header_up X-Real-IP         {remote_host}
-            header_up X-Forwarded-For   {remote_host}
-            header_up X-Forwarded-Proto {scheme}
-        }
+        reverse_proxy navidrome:4633
     }
 
-    # ── 3. Public share links — bypass auth ─────────
+    # ── Share links ─────────────────────────────────────────────────
+    # Public share URLs — no auth required.
     handle /share/* {
-        reverse_proxy navidrome:4633 {
-            header_up Host              {upstream_hostport}
-            header_up X-Real-IP         {remote_host}
-            header_up X-Forwarded-For   {remote_host}
-            header_up X-Forwarded-Proto {scheme}
-        }
+        reverse_proxy navidrome:4633
     }
 
-    # ── 4. All other requests — optional NextAuth.js auth ──
-    # Same logic as production: if NextAuth.js has a session → forward real username;
-    # if no session (401) → inject Remote-User: japtaptest and allow through.
+    # ── Everything else — auth-check then proxy ─────────────────────
+    # Uses forward_auth (purpose-built for auth sub-requests):
+    #   1. Caddy sub-requests NextAuth.js /api/auth/caddy
+    #   2. If 200 → copy Remote-User from auth response into request
+    #   3. If not 200 → handle_response injects default guest user
+    #   4. Proxy to Navidrome with Remote-User header set
     handle {
-        reverse_proxy nextauth:3000 {
-            method GET
-            rewrite /api/auth/caddy
+        forward_auth nextauth:3000 {
+            uri /api/auth/caddy
+            header_up Host {host}
+            header_up X-Forwarded-Proto https
+            copy_headers Remote-User
 
-            header_up X-Original-URL    {scheme}://{host}{uri}
-            header_up X-Real-IP         {remote_host}
-            header_up X-Forwarded-For   {remote_host}
-            header_up X-Forwarded-Proto {scheme}
-            # Forward the browser's cookies so Auth.js can read its session cookie
-            header_up Cookie            {http.request.header.Cookie}
-
-            @authed status 2xx
-            handle_response @authed {
-                request_header +Remote-User {http.reverse_proxy.header.X-NextAuth-Username}
-
-                reverse_proxy navidrome:4633 {
-                    header_up Host              {upstream_hostport}
-                    header_up X-Real-IP         {remote_host}
-                    header_up X-Forwarded-For   {remote_host}
-                    header_up X-Forwarded-Proto {scheme}
-                    header_up Upgrade    {>Upgrade}
-                    header_up Connection {>Connection}
-                }
+            @unauthed status 4xx 5xx
+            handle_response @unauthed {
+                # No valid session — inject default guest user (no login wall)
+                request_header Remote-User {$DEFAULT_USER:japtaptest}
             }
+        }
 
-            # No session — use default user (core behaviour being tested)
-            handle_response {
-                request_header +Remote-User {$DEFAULT_USER:japtaptest}
-
-                reverse_proxy navidrome:4633 {
-                    header_up Host              {upstream_hostport}
-                    header_up X-Real-IP         {remote_host}
-                    header_up X-Forwarded-For   {remote_host}
-                    header_up X-Forwarded-Proto {scheme}
-                    header_up Upgrade    {>Upgrade}
-                    header_up Connection {>Connection}
-                }
-            }
+        reverse_proxy navidrome:4633 {
+            header_up Host {upstream_hostport}
+            header_up X-Real-IP {remote_host}
         }
     }
 }

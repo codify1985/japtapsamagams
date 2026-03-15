@@ -101,6 +101,7 @@ make run-docker tag=deluan/navidrome:develop    # Run a Docker image locally
 - Frontend code lives in `/ui/src/`
 - Uses Vite for development server and building
 - In development mode, Vite runs on port 8080 and proxies API requests to backend on port 4633
+- Vite proxies paths matching `^/(auth|api|rest|backgrounds)/.*` — the `/auth` prefix is reserved for the NextAuth.js gateway in production
 - Frontend commands (from `/ui/` directory):
   ```bash
   npm start              # Start Vite dev server
@@ -169,6 +170,17 @@ make run-docker tag=deluan/navidrome:develop    # Run a Docker image locally
   /src/audioplayer   Music player components
   /src/album         Album browsing and display
   /src/artist        Artist browsing and display
+/nextauth              Next.js 15 + Auth.js v5 SSO authentication gateway (port 3000)
+                       Provides Google OAuth and other SSO for Navidrome via reverse proxy
+/deploy                Production Docker Compose configurations
+  docker-compose-caddy.yml    Caddy + Authentik production stack
+  docker-compose-local.yml    Local testing stack (Caddy + Authentik, no TLS)
+  caddy/                      Caddyfile configurations
+/contrib               Community deployment configs
+  docker-compose/     Variant docker-compose setups (vouch-nginx, traefik)
+  k8s/               Kubernetes manifests
+  navidrome.service  systemd service file
+/docs/Authentication   Auth implementation guides and roadmap
 ```
 
 ### Dependency Injection with Wire
@@ -241,6 +253,21 @@ Navidrome serves two APIs from the same backend:
 2. **Subsonic API** (`/rest/*`): Subsonic v1.16.1 compatible (XML/JSON responses)
 
 Both APIs share the same DataStore and business logic layer.
+
+### Authentication Architecture (Phase 1 - Active Development)
+
+This repo is implementing SSO authentication via an external auth gateway. The current branch (`dev-gs/phase1-authentication-changes`) adds:
+
+- **`/nextauth`** - Standalone Next.js 15 app using Auth.js v5 (`next-auth@5`) as an OAuth/SSO gateway
+  - Runs on port 3000; sits between the client and Navidrome
+  - Dev: `npm run dev` from `/nextauth/`; Prod: `npm start`
+  - `AUTH_TRUST_HOST=true` is **required** when deployed behind a reverse proxy (Caddy, Nginx, etc.)
+- **Deployment options** (see `/docs/Authentication/Options/`):
+  - **Option 1 (Primary):** Caddy + Authentik — configs in `/deploy/` and `/deploy/caddy/`
+  - **Option 2:** Caddy + NextAuth.js gateway — configs in `/nextauth/` + `/deploy/`
+  - **Option 3:** Vouch Proxy + Nginx — configs in `/contrib/docker-compose/vouch-nginx/`
+- **Local testing:** Use `/contrib/docker-compose/vouch-nginx/docker-compose-local.yml` or `/deploy/docker-compose-local.yml`
+  - Vouch config at `vouch-config-local.yml`: add allowed email domains to `vouch.domains` list; `AUTH_TRUST_HOST=true` in `.env`
 
 ## Key Implementation Notes
 

@@ -10,12 +10,13 @@
 1. [Architecture Overview](#architecture-overview)
 2. [Authentication Flow](#authentication-flow)
 3. [Default User Flow (japtaptest)](#default-user-flow-japtaptest)
-4. [OAuth Sign-In Flow](#oauth-sign-in-flow)
-5. [Logout Flow](#logout-flow)
-6. [Provider Support](#provider-support)
-7. [Comparison: Authentik vs NextAuth.js](#comparison-authentik-vs-nextauthjs)
-8. [File Inventory](#file-inventory)
-9. [Related Docs](#related-docs)
+4. [Hybrid Login Page](#hybrid-login-page)
+5. [OAuth Sign-In Flow](#oauth-sign-in-flow)
+6. [Logout Flow](#logout-flow)
+7. [Provider Support](#provider-support)
+8. [Comparison: Authentik vs NextAuth.js](#comparison-authentik-vs-nextauthjs)
+9. [File Inventory](#file-inventory)
+10. [Related Docs](#related-docs)
 
 ---
 
@@ -39,8 +40,8 @@
 │                     │   (port 3000)     │                               │
 │                     │                   │                               │
 │                     │  /api/auth/caddy  │  ← Caddy auth-check           │
-│                     │  /api/auth/signin │  ← Default sign-in page       │
-│                     │  /api/auth/signout│  ← Sign-out                   │
+│                     │  /api/auth/signin │  ← OAuth provider redirect    │
+│                     │  /api/auth/signout│  ← Sign-out + cookie clear    │
 │                     │  /api/auth/callback/* ← OAuth callbacks           │
 │                     └───────────────────┘                               │
 │                                                                          │
@@ -71,7 +72,7 @@
 ```
 Browser request → Caddy
   │
-  ├─ /api/auth/*  → proxy to NextAuth.js (sign-in/out pages, callbacks)
+  ├─ /api/auth/*  → proxy to NextAuth.js (OAuth callbacks, signout)
   ├─ /rest/*      → proxy to Navidrome directly (Subsonic client auth)
   ├─ /share/*     → proxy to Navidrome directly (public share links)
   │
@@ -130,33 +131,85 @@ When an **unauthenticated** visitor hits the app for the first time:
 6. Navidrome → handleLoginFromHeaders finds/creates "japtaptest" user
 7. Navidrome → injects auth payload into window.__APP_CONFIG__
 8. Browser → authProvider.js reads config.auth → saves to localStorage
-9. User sees the app as "japtaptest" with a "Sign In" button
+9. User sees the app as "japtaptest" with a "Sign In" button in the top-right menu
 ```
 
 **No login wall. No redirect. Instant access.**
+
+When the japtaptest user clicks **"Sign In"**, they are taken to the Navidrome login page
+(`/app/#/login`) — not the NextAuth.js default page. See [Hybrid Login Page](#hybrid-login-page).
+
+---
+
+## Hybrid Login Page
+
+The Navidrome login page (`/app/#/login`) serves as the **single entry point for all authentication methods**. It combines native Navidrome credentials and Google OAuth in one familiar UI.
+
+### Login Page Layout
+
+```
+┌────────────────────────────────────────────┐
+│              [disc logo]                   │
+│           Jap Tap Samagams                 │
+│                                            │
+│  Username  ____________________________    │
+│  Password  ____________________________    │
+│                                            │
+│  [          Sign In           ]            │
+│  [      Sign in with Google   ]  ← NEW    │
+│  [ Guest ]       [ Sign Up ]               │
+└────────────────────────────────────────────┘
+```
+
+### callbackUrl Passthrough
+
+When `Logout.jsx` redirects to the login page, it encodes the **original page** as a `callbackUrl`
+query parameter:
+
+```
+/app/#/login?callbackUrl=https%3A%2F%2Fdev.japtapsamagams.org%2Fapp%2F%23%2Falbum%2FrecentlyAdded
+```
+
+When the user clicks **"Sign in with Google"**, the login page reads this `callbackUrl` and passes
+it on to NextAuth.js:
+
+```
+/api/auth/signin/google?callbackUrl=<originalPage>
+```
+
+After OAuth completes, NextAuth.js redirects the user back to `<originalPage>` so they land exactly
+where they started.
+
+### After Successful Login
+
+Regardless of method (native or Google), after login:
+- The top-right menu shows the user's **username** (native) or **email address** (Google)
+- The menu shows a **Logout** item (replaces "Sign In")
+- The app is fully functional under the logged-in identity
 
 ---
 
 ## OAuth Sign-In Flow
 
-When a visitor clicks **"Sign In"**:
+When a visitor clicks **"Sign In"** in the top-right menu, then clicks **"Sign in with Google"** on the login page:
 
 ```
-1. Logout.jsx → redirects to /api/auth/signin?callbackUrl=<currentPage>
-2. Caddy → proxies /api/auth/signin to NextAuth.js
-3. NextAuth.js → shows default sign-in page with Google/Facebook/GitHub buttons
-4. User clicks "Sign in with Google"
-5. Browser → redirects to Google OAuth consent screen
-6. User authorizes → Google redirects to /api/auth/callback/google
-7. Caddy → proxies callback to NextAuth.js
-8. NextAuth.js → validates OAuth response, creates JWT session cookie
-9. NextAuth.js → redirects to callbackUrl (the page user was on)
-10. Browser → requests the original page with Auth.js session cookie
-11. Caddy → sub-request to /api/auth/caddy → gets 200 + X-NextAuth-Username
-12. Caddy → sets Remote-User: user@gmail.com → proxies to Navidrome
-13. Navidrome → auto-creates "user@gmail.com" user (or finds existing)
-14. Navidrome → injects auth payload with real user info
-15. User sees the app as "user@gmail.com" with a "Logout" button
+1.  Logout.jsx → redirects to /app/#/login?callbackUrl=<currentPage>
+2.  Navidrome renders the login page (Username, Password, Sign in with Google, Guest)
+3.  User clicks "Sign in with Google"
+4.  Login.jsx → redirects to /api/auth/signin/google?callbackUrl=<currentPage>
+5.  Caddy → proxies /api/auth/signin/* to NextAuth.js
+6.  NextAuth.js → redirects browser to Google OAuth consent screen
+7.  User authorizes → Google redirects to /api/auth/callback/google
+8.  Caddy → proxies callback to NextAuth.js
+9.  NextAuth.js → validates OAuth response, creates JWT session cookie
+10. NextAuth.js → redirects to callbackUrl (the original page the user was on)
+11. Browser → requests the original page with Auth.js session cookie
+12. Caddy → sub-request to /api/auth/caddy → gets 200 + X-NextAuth-Username
+13. Caddy → sets Remote-User: user@gmail.com → proxies to Navidrome
+14. Navidrome → auto-creates "user@gmail.com" user (or finds existing)
+15. Navidrome → injects auth payload with real user info
+16. User sees the app as "user@gmail.com" with a "Logout" button
 ```
 
 ---
@@ -167,14 +220,16 @@ When an authenticated user clicks **"Logout"**:
 
 ```
 1. authProvider.js → clears all localStorage items
-2. authProvider.js → redirects to /api/auth/signout?callbackUrl=<origin>/
+   (token, userId, name, username, avatar, role, subsonic tokens, is-authenticated flag)
+2. authProvider.js → redirects to /api/auth/signout?callbackUrl=<origin>/app/#/login
 3. Caddy → proxies to NextAuth.js
-4. NextAuth.js → clears Auth.js session cookie → redirects to callbackUrl
-5. Browser → requests / with no session cookie
-6. Caddy → sub-request to /api/auth/caddy → gets 401
-7. Caddy → injects Remote-User: japtaptest → proxies to Navidrome
-8. User is back as the default japtaptest user
+4. NextAuth.js → clears Auth.js session cookie → redirects to /app/#/login
+5. User lands on the Navidrome login page
+   (NOT redirected home as japtaptest — they see the login form instead)
 ```
+
+> **Note:** The callbackUrl for signout points to `/app/#/login` (not `/`).
+> This ensures users land on the login page rather than silently becoming japtaptest.
 
 ---
 
@@ -226,6 +281,7 @@ Providers are **environment-variable-driven**. No code changes needed to add/rem
 - 🟢 **80+ auth providers** via Auth.js ecosystem
 - 🟢 **Same tech stack** as frontend (JavaScript/TypeScript)
 - 🟢 **Env-var-driven providers** — add Google/Facebook/GitHub by setting env vars
+- 🟢 **Hybrid login page** — native + OAuth combined in the Navidrome UI (no generic Auth.js page)
 
 ### Cons of NextAuth.js
 
@@ -270,10 +326,11 @@ Providers are **environment-variable-driven**. No code changes needed to add/rem
 
 | File | Change |
 |------|--------|
+| `ui/src/layout/Logout.jsx` | Redirects to `/app/#/login?callbackUrl=<currentPage>` instead of `/api/auth/signin` |
+| `ui/src/layout/Login.jsx` | Adds "Sign in with Google" button that triggers `/api/auth/signin/google?callbackUrl=<page>` |
+| `ui/src/authProvider.js` | Logout redirects to `/api/auth/signout?callbackUrl=<origin>/app/#/login` instead of `<origin>/` |
 | `ui/src/layout/LogoutAuthentik.jsx` | Backup of original Logout.jsx (Authentik URLs) |
-| `ui/src/layout/Logout.jsx` | Updated — redirects to `/api/auth/signin` instead of Authentik |
 | `ui/src/authProviderAuthentik.js` | Backup of original authProvider.js (Authentik URLs) |
-| `ui/src/authProvider.js` | Updated — redirects to `/api/auth/signout` instead of Authentik |
 
 ### Documentation (`docs/Authentication/nextauth/`)
 
