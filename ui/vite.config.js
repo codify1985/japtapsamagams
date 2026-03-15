@@ -8,6 +8,10 @@ const frontendPort = parseInt(process.env.PORT) || 4533
 const backendPort = process.env.BACKEND_PORT
   ? parseInt(process.env.BACKEND_PORT)
   : frontendPort + 100
+// NextAuth.js gateway port for /api/auth/* routes (local dev only)
+const nextauthPort = process.env.NEXTAUTH_PORT
+  ? parseInt(process.env.NEXTAUTH_PORT)
+  : 3000
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -40,27 +44,31 @@ export default defineConfig({
       .split(',')
       .map((h) => h.trim())
       .filter(Boolean),
-    /// TODO: Review these 3 settings for security implications
-    // TRY REMOVING THIS AND TEST  
-    hmr: {
-      protocol: 'wss',     // behind Tunnel/Cloudflare
-      clientPort: 443,
-      timeout: 60000,      // tolerate phone sleep
-      overlay: true
-    }, 
-    // proxy: {
-    //   '^/(auth|api|rest|backgrounds)/.*': 'http://localhost:' + backendPort,
-    // },
+    // HMR: use WSS/443 when behind Cloudflare Tunnel, default (ws) for localhost
+    ...(process.env.ALLOWED_HOSTS
+      ? {
+          hmr: {
+            protocol: 'wss',
+            clientPort: 443,
+            timeout: 60000,
+            overlay: true,
+          },
+        }
+      : {}),
     proxy: {
+      // NextAuth.js routes → NextAuth gateway (port 3000)
+      '^/api/auth/.*': {
+        target: 'http://localhost:' + nextauthPort,
+      },
+      // Everything else → Navidrome backend
       '^/(auth|api|rest|backgrounds)/.*': {
         target: 'http://localhost:' + backendPort,
         headers: {
-          'Remote-User': 'japtaptest' // Add this for testing
-        }
-      }
+          'Remote-User': 'japtaptest',
+        },
+      },
     },
 
-    
   },
   base: './',
   build: {

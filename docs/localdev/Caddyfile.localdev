@@ -1,0 +1,50 @@
+# ─────────────────────────────────────────────────────────────────────
+# Local Development Caddyfile — NextAuth.js + Navidrome (host processes)
+# ─────────────────────────────────────────────────────────────────────
+# This Caddyfile runs inside a Docker container but proxies to services
+# running directly on the host machine (via host.docker.internal).
+#
+# Used by: docs/localdev/start-localdev.sh
+# ─────────────────────────────────────────────────────────────────────
+
+http://localhost {
+
+    # ── Auth.js routes ────────────────────────────────────────────────
+    handle /api/auth/* {
+        reverse_proxy host.docker.internal:3000 {
+            header_up Host {host}
+            header_up X-Forwarded-Proto http
+        }
+    }
+
+    # ── Subsonic/OpenSubsonic API ─────────────────────────────────────
+    handle /rest/* {
+        reverse_proxy host.docker.internal:4633
+    }
+
+    # ── Share links ───────────────────────────────────────────────────
+    handle /share/* {
+        reverse_proxy host.docker.internal:4633
+    }
+
+    # ── Everything else — auth-check then proxy ───────────────────────
+    handle {
+        forward_auth host.docker.internal:3000 {
+            uri /api/auth/caddy
+            header_up Host {host}
+            header_up X-Forwarded-Proto http
+            copy_headers Remote-User
+
+            @unauthed status 4xx 5xx
+            handle_response @unauthed {
+                # No valid session — inject default guest user (no login wall)
+                request_header Remote-User {$DEFAULT_USER:japtaptest}
+            }
+        }
+
+        reverse_proxy host.docker.internal:4633 {
+            header_up Host {upstream_hostport}
+            header_up X-Real-IP {remote_host}
+        }
+    }
+}
