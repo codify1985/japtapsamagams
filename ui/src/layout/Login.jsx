@@ -397,8 +397,7 @@ const Login = () => {
   // The callbackUrl is set by Logout.jsx when it redirects the user here.
   // It carries the original page so the user lands back there after Google OAuth.
   const callbackUrl =
-    searchParams.get('callbackUrl') ||
-    window.location.origin + '/app/'
+    searchParams.get('callbackUrl') || window.location.origin + '/app/'
 
   const handleGoogleSignIn = useCallback(() => {
     // Clear the existing japtaptest session from localStorage before redirecting
